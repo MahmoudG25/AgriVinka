@@ -4,7 +4,7 @@ import { addToast, openModal } from '../../store/slices/uiSlice';
 import { userService } from '../../services/userService';
 import { enrollmentService } from '../../services/enrollmentService';
 import { logger } from '../../utils/logger';
-import { MdSearch, MdPeople, MdShield, MdEdit } from 'react-icons/md';
+import { MdSearch, MdPeople, MdShield, MdEdit, MdBlock, MdCheckCircle } from 'react-icons/md';
 
 const ROLE_OPTIONS = [
   { value: 'student', label: 'طالب', color: 'bg-blue-100 text-blue-700' },
@@ -99,6 +99,34 @@ const UsersListPage = () => {
     }));
   }, [dispatch]);
 
+  const handleToggleStatus = useCallback((user) => {
+    const isBlocked = user.status === 'blocked';
+    const newStatus = isBlocked ? 'active' : 'blocked';
+    const actionText = isBlocked ? 'تنشيط' : 'حظر';
+
+    dispatch(openModal({
+      type: 'CONFIRM',
+      props: {
+        title: `${actionText} المستخدم`,
+        message: `هل أنت متأكد من أنك تريد ${actionText} حساب "${user.displayName || user.email}"؟ \nالمستخدم المحظور لن يتمكن من تسجيل الدخول للمنصة.`,
+        confirmText: `نعم، ${actionText}`,
+        cancelText: 'إلغاء',
+        isDestructive: !isBlocked,
+        onConfirm: async () => {
+          try {
+            await userService.updateUserStatus(user.id, newStatus);
+            dispatch(addToast({ type: 'success', message: `تم ${actionText} المستخدم بنجاح` }));
+            // Update local state
+            setUsers(prev => prev.map(u => u.id === user.id ? { ...u, status: newStatus } : u));
+          } catch (error) {
+            logger.error(`Failed to ${actionText} user:`, error);
+            dispatch(addToast({ type: 'error', message: `فشل ${actionText} المستخدم` }));
+          }
+        }
+      }
+    }));
+  }, [dispatch]);
+
   const formatDate = (val) => {
     if (!val) return '-';
     if (val.seconds) return new Date(val.seconds * 1000).toLocaleDateString('ar-EG');
@@ -145,6 +173,7 @@ const UsersListPage = () => {
             <thead className="bg-background-alt text-gray-500 font-medium">
               <tr>
                 <th className="p-4">المستخدم</th>
+                <th className="p-4">الحالة</th>
                 <th className="p-4">الدور</th>
                 <th className="p-4">تاريخ التسجيل</th>
                 <th className="p-4">آخر دخول</th>
@@ -171,6 +200,13 @@ const UsersListPage = () => {
                         </div>
                       </div>
                     </td>
+                    <td className="p-4">
+                      {user.status === 'blocked' ? (
+                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-red-100 text-red-700">محظور</span>
+                      ) : (
+                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-700">نشط</span>
+                      )}
+                    </td>
                     <td className="p-4">{getRoleBadge(user.role)}</td>
                     <td className="p-4 text-sm text-gray-600">{formatDate(user.createdAt)}</td>
                     <td className="p-4 text-sm text-gray-600">{formatDate(user.lastLoginAt)}</td>
@@ -180,14 +216,30 @@ const UsersListPage = () => {
                       </span>
                     </td>
                     <td className="p-4">
-                      <button
-                        onClick={() => handleChangeRole(user)}
-                        className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
-                        title="تغيير الدور"
-                      >
-                        <MdShield size={18} />
-                        <span className="text-xs hidden sm:inline">تغيير الدور</span>
-                      </button>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          onClick={() => handleChangeRole(user)}
+                          className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
+                          title="تغيير الدور"
+                        >
+                          <MdShield size={18} />
+                          <span className="text-xs hidden sm:inline">الدور</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleToggleStatus(user)}
+                          className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${user.status === 'blocked'
+                              ? 'text-green-600 hover:bg-green-50'
+                              : 'text-red-500 hover:bg-red-50'
+                            }`}
+                          title={user.status === 'blocked' ? 'إلغاء الحظر' : 'حظر المستخدم'}
+                        >
+                          {user.status === 'blocked' ? <MdCheckCircle size={18} /> : <MdBlock size={18} />}
+                          <span className="text-xs hidden sm:inline">
+                            {user.status === 'blocked' ? 'تنشيط' : 'حظر'}
+                          </span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

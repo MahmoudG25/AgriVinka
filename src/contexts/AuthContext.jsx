@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 import { auth } from '../firebase/config';
 import { userService } from '../services/userService';
 import { logger } from '../utils/logger';
@@ -25,6 +26,18 @@ export const AuthProvider = ({ children }) => {
           setCurrentUser(user);
           // Fetch additional user data from Firestore
           const profile = await userService.getProfile(user.uid);
+
+          if (profile?.status === 'blocked') {
+            await signOut(auth);
+            toast.error('تم إيقاف حسابك. يرجى التواصل مع الإدارة.', { duration: 5000, id: 'auth_block' });
+            setCurrentUser(null);
+            setUserData(null);
+            setIsAdmin(false);
+            dispatch(clearAuth());
+            setLoading(false);
+            return;
+          }
+
           setUserData(profile);
           const adminStatus = profile?.role === 'admin' || profile?.role === 'editor';
           setIsAdmin(adminStatus);

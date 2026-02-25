@@ -218,7 +218,8 @@ export const enrollmentService = {
       await updateDoc(enrollmentRef, {
         certificateId,
         isCompleted: true,
-        progressPercentage: 100
+        progressPercentage: 100,
+        completedAt: serverTimestamp()
       });
     } catch (error) {
       logger.error('Error updating enrollment certificate:', error);

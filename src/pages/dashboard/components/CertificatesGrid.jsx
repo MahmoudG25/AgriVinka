@@ -41,10 +41,10 @@ const CertificatesGrid = ({ certificates, loading }) => {
                 <span className="material-symbols-outlined">verified</span>
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold text-sm text-heading-dark truncate">{cert.courseName}</h3>
+                <h3 className="font-bold text-sm text-heading-dark truncate">{cert.courseTitle}</h3>
                 <p className="text-[10px] text-gray-400 mt-0.5">
-                  {cert.issuedAt?.seconds
-                    ? new Date(cert.issuedAt.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
+                  {cert.issueDate?.seconds
+                    ? new Date(cert.issueDate.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
                     : '-'}
                 </p>
               </div>
@@ -59,8 +59,8 @@ const CertificatesGrid = ({ certificates, loading }) => {
                   rel="noopener noreferrer"
                   className="flex-1 py-2 bg-amber-500 text-white font-bold rounded-lg text-xs text-center hover:bg-amber-600 transition-colors flex items-center justify-center gap-1"
                 >
-                  <span className="material-symbols-outlined text-xs">download</span>
-                  تحميل
+                  <span className="material-symbols-outlined text-xs">visibility</span>
+                  عرض الشهادة
                 </a>
               )}
               <Link

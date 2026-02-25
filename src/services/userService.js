@@ -43,7 +43,8 @@ export const userService = {
         lastLoginAt: new Date(),
         preferences: { language: 'ar', theme: 'light' },
         subscriptionStatus: 'none',
-        purchasedCourses: []
+        purchasedCourses: [],
+        status: data.status || 'active' // active | blocked
       };
 
       await setDoc(docRef, newProfile);
@@ -122,6 +123,23 @@ export const userService = {
       await updateDoc(docRef, { role, updatedAt: new Date() });
     } catch (error) {
       logger.error('Error updating user role:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update a user's status (block/unblock)
+   * @param {string} uid 
+   * @param {string} status - 'active' or 'blocked'
+   */
+  async updateUserStatus(uid, status) {
+    if (!uid || !status) throw new Error('UID and status are required');
+    try {
+      const docRef = doc(db, 'users', uid);
+      await updateDoc(docRef, { status, updatedAt: new Date() });
+      return status;
+    } catch (error) {
+      logger.error('Error updating user status:', error);
       throw error;
     }
   }

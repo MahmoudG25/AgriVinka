@@ -98,7 +98,7 @@ const PathOverview = ({ roadmap }) => {
       )}
 
       {/* Partners/Credibility */}
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <p className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">
           المشاريع داخل المسار
         </p>
@@ -107,7 +107,7 @@ const PathOverview = ({ roadmap }) => {
             <img key={idx} src={logo.url} alt={logo.name} className="h-5 object-contain" />
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Outcomes */}
       <OutcomesSection outcomes={outcomes} />
