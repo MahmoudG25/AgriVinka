@@ -1,0 +1,38 @@
+# Shams Al-Arab - Robots.txt
+# Generated for SEO optimization
+
+# Allow all crawlers by default
+User-agent: *
+Allow: /
+
+# Disallow admin routes from indexing
+Disallow: /admin/
+Disallow: /admin/*
+
+# Disallow private routes
+Disallow: /private/
+Disallow: /checkout/payment
+Disallow: /checkout/review
+
+# Allow crawlers to discover sitemap
+Sitemap: https://shamsalarab.com/sitemap.xml
+
+# Crawl delay (optional - respect server resources)
+Crawl-delay: 1
+
+# Request rate limit for Googlebot
+User-agent: Googlebot
+Crawl-delay: 0
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
