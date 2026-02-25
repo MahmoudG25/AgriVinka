@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "namaa-academy-f0e35"
+    "default": "namaa-academy-f0e35",
+    "prod": "namaa-academy-f0e35"
   },
   "targets": {},
   "etags": {}

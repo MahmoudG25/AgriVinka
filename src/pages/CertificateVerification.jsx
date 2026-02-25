@@ -88,23 +88,25 @@ const CertificateVerification = () => {
                 <div className="bg-gray-50 rounded-2xl p-6 text-right space-y-4 mb-8 border border-gray-100">
                   <div>
                     <span className="block text-xs font-bold text-gray-400 mb-1 uppercase">اسم المتدرب</span>
-                    <strong className="text-lg text-heading-dark">{certificate.userName}</strong>
+                    <strong className="text-lg text-heading-dark">{certificate.studentName || certificate.userName}</strong>
                   </div>
                   <div>
                     <span className="block text-xs font-bold text-gray-400 mb-1 uppercase">الدورة التدريبية</span>
-                    <strong className="text-lg text-primary">{certificate.courseName}</strong>
+                    <strong className="text-lg text-primary">{certificate.courseTitle || certificate.courseName}</strong>
                   </div>
                   <div>
                     <span className="block text-xs font-bold text-gray-400 mb-1 uppercase">تاريخ الإصدار</span>
                     <strong className="text-lg text-heading-dark">
-                      {certificate.issuedAt?.toDate ? certificate.issuedAt.toDate().toLocaleDateString('ar-EG') : new Date().toLocaleDateString('ar-EG')}
+                      {certificate.completedAt?.toDate ? certificate.completedAt.toDate().toLocaleDateString('ar-EG') :
+                        certificate.issuedAt?.toDate ? certificate.issuedAt.toDate().toLocaleDateString('ar-EG') :
+                          new Date().toLocaleDateString('ar-EG')}
                     </strong>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
-                    href={certificate.pdfUrl}
+                    href={certificate.certificateUrl || certificate.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:bg-primary-hover hover:-translate-y-1 transition-all"

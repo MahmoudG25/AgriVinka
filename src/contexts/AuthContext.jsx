@@ -29,7 +29,26 @@ export const AuthProvider = ({ children }) => {
           const adminStatus = profile?.role === 'admin' || profile?.role === 'editor';
           setIsAdmin(adminStatus);
 
-          dispatch(setAuthStatus({ user, profile, isAdmin: adminStatus }));
+          // Sanitize user object for Redux (non-serializable Error fix)
+          const serializableUser = {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            emailVerified: user.emailVerified,
+          };
+          // Sanitize profile object (Convert Firestore Timestamps to ISO strings for Redux)
+          const serializableProfile = profile ? { ...profile } : null;
+          if (serializableProfile) {
+            // Check common timestamp fields
+            ['createdAt', 'updatedAt', 'lastLogin', 'lastLoginAt'].forEach(field => {
+              if (serializableProfile[field] && typeof serializableProfile[field].toDate === 'function') {
+                serializableProfile[field] = serializableProfile[field].toDate().toISOString();
+              }
+            });
+          }
+
+          dispatch(setAuthStatus({ user: serializableUser, profile: serializableProfile, isAdmin: adminStatus }));
         } else {
           setCurrentUser(null);
           setUserData(null);

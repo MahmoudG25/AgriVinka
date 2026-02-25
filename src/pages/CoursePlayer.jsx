@@ -23,6 +23,9 @@ const CoursePlayer = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedModules, setExpandedModules] = useState({});
 
+  const [hasCertificate, setHasCertificate] = useState(false);
+  const [certificateId, setCertificateId] = useState(null);
+
   useEffect(() => {
     const fetchCourseData = async () => {
       if (!currentUser?.uid) return;
@@ -50,6 +53,11 @@ const CoursePlayer = () => {
         const enrollments = await enrollmentService.getUserEnrollments(currentUser.uid);
         const thisEnrollment = enrollments.find(e => e.courseId === courseId);
         const lastLessonId = thisEnrollment?.lastLessonId;
+        const certId = thisEnrollment?.certificateId;
+
+        // Store certId in a state to avoid excessive fetching
+        setHasCertificate(!!certId);
+        setCertificateId(certId);
 
         // 4. Set Initial Active Lesson
         if (loadedModules.length > 0 && loadedModules[0].lessons?.length > 0) {
@@ -102,28 +110,7 @@ const CoursePlayer = () => {
         progressPercentage,
         progressPercentage === 100,
         activeLesson?.id || activeLesson?.title
-      ).then(async () => {
-        // Auto-generate certificate logic on 100%
-        if (progressPercentage === 100 && course) {
-          try {
-            const enrollments = await enrollmentService.getUserEnrollments(currentUser.uid);
-            const enr = enrollments.find(e => e.courseId === courseId);
-            if (!enr?.certificateId) {
-              const studentName = currentUser.displayName || 'طالب نماء';
-              const cert = await certificateService.issueCertificate(
-                currentUser.uid,
-                studentName,
-                course.id,
-                course.title,
-                course.instructorName || 'أكاديمية نماء'
-              );
-              await enrollmentService.updateEnrollmentCertificate(currentUser.uid, courseId, cert.id);
-            }
-          } catch (certError) {
-            logger.error('Failed to issue certificate', certError);
-          }
-        }
-      }).catch(err => logger.error('Failed to update global progress', err));
+      ).catch(err => logger.error('Failed to update global progress', err));
     }
   }, [progressPercentage, courseId, currentUser, totalLessons, course, activeLesson]);
 
@@ -182,10 +169,10 @@ const CoursePlayer = () => {
             <h1 className="font-bold text-lg hidden sm:block truncate ">{course.title}</h1>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-3">
+          <div className="flex flex-1 items-center justify-end gap-2 sm:gap-6">
+            <div className="hidden lg:flex items-center gap-3">
               <div className="text-sm font-medium text-gray-300">% {progressPercentage} مكتمل</div>
-              <div className="w-48 h-2 bg-gray-700 rounded-full overflow-hidden">
+              <div className="w-32 xl:w-48 h-2 bg-gray-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all duration-500"
                   style={{ width: `${progressPercentage}%` }}
@@ -194,40 +181,60 @@ const CoursePlayer = () => {
             </div>
 
             {progressPercentage === 100 && (
-              <button
-                onClick={async () => {
-                  if (!course || !currentUser) return;
-                  try {
-                    const { certificateService } = await import('../services/certificateService');
-                    let currentEnrollment = await enrollmentService.getUserEnrollments(currentUser.uid).then(res => res.find(e => e.courseId === courseId));
-                    if (currentEnrollment?.certificateId) {
-                      navigate(`/dashboard`);
-                      return;
-                    }
-                    alert('جاري إصدار الشهادة... يرجى الانتظار لحين تحميل خطوط الطباعة');
-                    const newCert = await certificateService.issueCertificate(
-                      currentUser.uid,
-                      currentUser.displayName || 'متدرب نماء',
-                      course.id,
-                      course.title
-                    );
+              <div className="flex gap-2 text-xs sm:text-sm shrink-0">
+                {!hasCertificate ? (
+                  <button
+                    onClick={async () => {
+                      if (!course || !currentUser) return;
+                      try {
+                        const { certificateService } = await import('../services/certificateService');
+                        const toast = (await import('react-hot-toast')).default;
 
-                    // Update enrollment
-                    await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, newCert.id);
+                        toast.loading('جاري إصدار الشهادة...', { id: 'cert_player' });
+                        const newCert = await certificateService.issueCertificate(
+                          currentUser.uid,
+                          currentUser.displayName || 'متدرب نماء',
+                          course.id,
+                          course.title,
+                          course.instructorName || 'أكاديمية نماء'
+                        );
 
-                    alert('تم إصدار الشهادة بنجاح! يمكنك تحميلها من لوحة التحكم.');
-                    navigate('/dashboard');
+                        await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, newCert.id);
+                        setHasCertificate(true);
+                        setCertificateId(newCert.id);
 
-                  } catch (err) {
-                    logger.error('Failed to issue certificate', err);
-                    alert('عفواً، لا يمكن إصدار الشهادة حالياً لعدم توفر متطلبات الطباعة في الخادم.');
-                  }
-                }}
-                className="flex items-center gap-2 bg-accent text-heading-dark px-4 py-2 rounded-lg font-bold hover:shadow-glow transition-all"
-              >
-                <FaCertificate />
-                طلب الشهادة
-              </button>
+                        toast.success('تم الإصدار بنجاح', { id: 'cert_player' });
+
+                      } catch (err) {
+                        logger.error('Failed to issue certificate', err);
+                        toast.error('عفواً، فشل الإصدار. حاول مجدداً', { id: 'cert_player' });
+                      }
+                    }}
+                    className="flex items-center gap-1 sm:gap-2 bg-yellow-500 text-heading-dark px-3 sm:px-4 py-2 rounded-lg font-bold hover:bg-yellow-400 transition-all"
+                  >
+                    <FaCertificate />
+                    <span className="hidden sm:inline">استخراج الشهادة</span>
+                    <span className="sm:hidden">استخراج</span>
+                  </button>
+                ) : (
+                  <Link
+                    to={`/verify/${certificateId}`}
+                    target="_blank"
+                    className="flex items-center gap-1 sm:gap-2 bg-green-500 text-white px-3 sm:px-4 py-2 rounded-lg font-bold hover:bg-green-400 transition-all"
+                  >
+                    <FaCheckCircle />
+                    <span className="hidden sm:inline">عرض الشهادة</span>
+                    <span className="sm:hidden">الشهادة</span>
+                  </Link>
+                )}
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-1 sm:gap-2 bg-gray-600 text-white px-3 sm:px-4 py-2 rounded-lg font-bold hover:bg-gray-500 transition-all"
+                >
+                  <FaChevronRight className="sm:hidden" />
+                  <span className="hidden sm:inline">العودة للوحة</span>
+                </Link>
+              </div>
             )}
 
             <button

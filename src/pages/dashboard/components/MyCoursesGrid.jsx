@@ -69,7 +69,7 @@ const MyCoursesGrid = ({ courses, loading }) => {
           const isCompleted = course.enrollment?.isCompleted || progress === 100;
           const isFree = !course.pricing?.price || course.pricing?.price === 0;
 
-          const actionLink = isRoadmap ? `/ roadmaps / ${course.id} /play` : `/courses / ${course.id}/play`;
+          const actionLink = isRoadmap ? `/roadmaps/${course.id}/play` : `/courses/${course.id}/play`;
 
           const generateCert = async (courseId, courseTitle, instructorName) => {
             if (!currentUser) return;

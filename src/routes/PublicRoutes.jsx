@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { pageService } from '../services/pageService';
@@ -27,6 +27,7 @@ const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'));
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
 const UserDashboard = lazy(() => import('../pages/dashboard/UserDashboard'));
 const CoursePlayer = lazy(() => import('../pages/CoursePlayer'));
+const PathPlayer = lazy(() => import('../pages/PathPlayer'));
 const CertificateVerification = lazy(() => import('../pages/CertificateVerification'));
 
 import RequireAuth from '../admin/components/RequireAuth';
@@ -44,6 +45,9 @@ const PageLoader = () => (
 const PublicRoutes = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [pageData, setPageData] = useState(null);
+
+  const location = useLocation();
+  const isPlayerRoute = location.pathname.includes('/play');
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -75,13 +79,15 @@ const PublicRoutes = () => {
 
   return (
     <div dir="rtl" className="bg-surface-white dark:bg-background-dark font-display text-body-text dark:text-gray-100 antialiased selection:bg-primary/30 min-h-screen transition-colors duration-300">
-      <Navbar
-        data={pageData.navbar}
-        isDarkMode={isDarkMode}
-        toggleDarkMode={toggleDarkMode}
-      />
+      {!isPlayerRoute && (
+        <Navbar
+          data={pageData.navbar}
+          isDarkMode={isDarkMode}
+          toggleDarkMode={toggleDarkMode}
+        />
+      )}
 
-      <div className="w-full min-h-[calc(100vh-80px)]">
+      <div className={`w-full ${!isPlayerRoute ? 'min-h-[calc(100vh-80px)]' : 'min-h-screen'}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -114,11 +120,16 @@ const PublicRoutes = () => {
                 <CoursePlayer />
               </RequireAuth>
             } />
+            <Route path="/roadmaps/:id/play" element={
+              <RequireAuth requireAdmin={false}>
+                <PathPlayer />
+              </RequireAuth>
+            } />
           </Routes>
         </Suspense>
       </div>
 
-      <Footer data={pageData.footer} />
+      {!isPlayerRoute && <Footer data={pageData.footer} />}
     </div>
   );
 };
