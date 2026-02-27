@@ -459,7 +459,7 @@ const HomeEditPage = () => {
               <h3 className="font-bold text-lg">المسارات التعليمية</h3>
               <button
                 type="button"
-                onClick={() => addItem('tracks', { title: '', category: 'All', tag: '', from: '', to: '', image: '' })}
+                onClick={() => addItem('tracks.items', { title: '', category: 'All', tag: '', from: '', to: '', image: '' })}
                 className="text-primary flex items-center gap-1 font-bold text-sm"
               >
                 <MdAdd size={20} /> إضافة مسار
