@@ -48,17 +48,27 @@ export const SectionRegistry = {
   },
 
   learningPaths: {
-    name: 'المسارات التعليمية (Roadmaps)',
+    name: 'خارطة الطريق (Roadmap)',
     component: LearningPaths,
     schema: [
-      { key: 'title', label: 'عنوان القسم', type: 'text' },
-      { key: 'subtitle', label: 'الوصف', type: 'textarea' },
-      { key: 'limit', label: 'عدد المسارات المعروضة', type: 'number' }
+      { key: 'title', label: 'عنوان القسم', type: 'text', placeholder: 'مثال: خارطة طريقك من الصفر' },
+      { key: 'subtitle', label: 'العنوان الفرعي', type: 'text', placeholder: 'مثال: إلى الاحتراف والدخل' },
+      { key: 'description', label: 'الوصف', type: 'textarea', placeholder: 'وصف القسم' },
+      { key: 'studentCount', label: 'عدد الطلاب (نص)', type: 'text', placeholder: 'مثال: +1.2k' },
+      { key: 'finalTitle', label: 'عنوان القسم النهائي', type: 'text', placeholder: 'مثال: من الصفر...' },
+      { key: 'finalIncome', label: 'الدخل النهائي (نص)', type: 'text', placeholder: 'مثال: $1,250.00' },
+      { key: 'finalDesc', label: 'وصف القسم النهائي', type: 'textarea', placeholder: 'وصف الجائزة الكبرى' },
+      { key: 'steps', label: 'خطوات خارطة الطريق (مصفوفة JSON)', type: 'json', placeholder: '[{ "stepNumber": "01", "title": "...", "subtitle": "...", "description": "...", "icon": "architecture", "color": "from-blue-500 to-blue-700", "shadow": "shadow-blue-500/30", "duration": "4 أسابيع", "outcome": "...", "income": "...", "emotional": "...", "progress": 20 }]' }
     ],
     defaultData: {
-      title: 'مسارات تعليمية متكاملة',
-      subtitle: 'خطط دراسية مصممة لبناء مهاراتك من الصفر وحتى الاحتراف.',
-      limit: 3
+      title: 'خارطة طريقك من الصفر',
+      subtitle: 'إلى الاحتراف والدخل',
+      description: 'لا نبيع لك كورسات، نحن نصمم لك رحلة تحول كاملة. خطوات مدروسة علمياً لتضمن وصولك للهدف دون تشتت.',
+      studentCount: '+1.2k',
+      finalTitle: 'من الصفر...',
+      finalIncome: '$1,250.00',
+      finalDesc: 'هذه ليست مجرد دورة تعليمية، هذا استثمار في مستقبلك.',
+      steps: []
     }
   },
 

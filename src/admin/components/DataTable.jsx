@@ -16,7 +16,7 @@ const DataTable = ({
   // Debounced and memoized filter - prevents excessive re-filtering
   const filteredData = useMemo(() => {
     if (!searchTerm.trim()) return data;
-    
+
     return data.filter(item =>
       Object.values(item).some(val =>
         String(val).toLowerCase().includes(searchTerm.toLowerCase())

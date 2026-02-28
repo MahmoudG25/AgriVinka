@@ -15,6 +15,7 @@ const NAVBAR_LINK_ROUTES = {
   'المسارات': '/learning-paths',
   'خرائط الطريق': '/learning-paths',
   'الكورسات': '/courses',
+  'التدريب العملي': '/practical-training',
   'عن المنصة': '/about',
   'من نحن': '/about',
   'تواصل معنا': '/contact',
@@ -32,6 +33,7 @@ const defaultNavbarData = {
     { text: 'الرئيسية', href: '/' },
     { text: 'المسارات', href: '/learning-paths' },
     { text: 'الكورسات', href: '/courses' },
+    { text: 'التدريب العملي', href: '/practical-training' },
     { text: 'عن المنصة', href: '/about' }
   ]
 };
@@ -125,8 +127,9 @@ const Navbar = ({ data = defaultNavbarData }) => {
           <Link to="/" className="hover:text-primary transition-colors">الرئيسية</Link>
           <Link to="/courses" className="hover:text-primary transition-colors">الكورسات</Link>
           <Link to="/learning-paths" className="hover:text-primary transition-colors">المسارات</Link>
+          <Link to="/practical-training" className="hover:text-primary transition-colors">التدريب العملي</Link>
           {data?.links && data.links
-            .filter(link => !['الرئيسية', 'المسارات', 'المسارات التعليمية', 'الكورسات'].includes(link.text))
+            .filter(link => !['الرئيسية', 'المسارات', 'المسارات التعليمية', 'الكورسات', 'التدريب العملي'].includes(link.text))
             .map((link, index) => (
               <Link key={index} to={resolveHref(link)} className="hover:text-primary transition-colors">
                 {link.text}
@@ -175,6 +178,12 @@ const Navbar = ({ data = defaultNavbarData }) => {
                     <Link to="/dashboard" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-heading-dark hover:bg-primary/5 hover:text-primary transition-colors">
                       <FaTachometerAlt className="text-gray-400" size={14} />
                       لوحة التحكم
+                    </Link>
+
+                    {/* Practical Training Dashboard */}
+                    <Link to="/dashboard/practical-training" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-heading-dark hover:bg-primary/5 hover:text-primary transition-colors">
+                      <FaUser className="text-gray-400" size={14} />
+                      طلبات التدريب
                     </Link>
 
                     {/* Admin Panel */}
@@ -282,8 +291,9 @@ const Navbar = ({ data = defaultNavbarData }) => {
               <Link to="/" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الرئيسية</Link>
               <Link to="/courses" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الكورسات</Link>
               <Link to="/learning-paths" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">المسارات</Link>
+              <Link to="/practical-training" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">التدريب العملي</Link>
               {data?.links && data.links
-                .filter(link => !['الرئيسية', 'المسارات', 'المسارات التعليمية', 'الكورسات'].includes(link.text))
+                .filter(link => !['الرئيسية', 'المسارات', 'المسارات التعليمية', 'الكورسات', 'التدريب العملي'].includes(link.text))
                 .map((link, index) => (
                   <Link key={index} to={resolveHref(link)} onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">
                     {link.text}
@@ -294,6 +304,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
               {currentUser && (
                 <>
                   <Link to="/dashboard" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">لوحة التحكم</Link>
+                  <Link to="/dashboard/practical-training" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">طلبات التدريب</Link>
                   {isAdmin && (
                     <Link to="/admin" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الإدارة</Link>
                   )}

@@ -38,6 +38,10 @@ service cloud.firestore {
         allow read: if isOwner(uid) || isAdmin();
         allow write: if isOwner(uid);
       }
+      match /trainingApplications/{appId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow write: if isOwner(uid) || isAdmin();
+      }
     }
 
     match /courses/{courseId} {
@@ -72,6 +76,17 @@ service cloud.firestore {
     match /courseRequests/{requestId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
+    }
+    
+    match /trainings/{trainingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /trainingApplications/{appId} {
+      allow create: if isAuth();
+      allow read: if isAdmin() || (isAuth() && resource.data.uid == request.auth.uid);
+      allow update, delete: if isAdmin();
     }
   }
 }

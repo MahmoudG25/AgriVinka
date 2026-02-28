@@ -73,7 +73,7 @@ const CourseRequestsPage = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-heading-dark">طلبات الدورات</h1>
+      <h1 className="text-2xl font-bold text-heading-dark">الكورسات المطلوبة</h1>
 
       {/* Filter Tabs */}
       <div className="flex gap-2 border-b border-border-light pb-4 overflow-x-auto">

@@ -18,6 +18,8 @@ const CourseRequestsPage = lazy(() => import('../pages/CourseRequestsPage'));
 const UsersListPage = lazy(() => import('../pages/UsersListPage'));
 const PageBuilder = lazy(() => import('../pages/PageBuilder'));
 const ThemeManager = lazy(() => import('../pages/ThemeManager'));
+const AdminTrainingsPage = lazy(() => import('../pages/AdminTrainingsPage'));
+const AdminTrainingEdit = lazy(() => import('../pages/AdminTrainingEdit'));
 
 // Loading skeleton
 const AdminPageLoader = () => (
@@ -120,6 +122,18 @@ const AdminRoutes = () => {
         <Route path="course-requests" element={
           <Suspense fallback={<AdminPageLoader />}>
             <CourseRequestsPage />
+          </Suspense>
+        } />
+
+        <Route path="trainings" element={
+          <Suspense fallback={<AdminPageLoader />}>
+            <AdminTrainingsPage />
+          </Suspense>
+        } />
+
+        <Route path="trainings/:id" element={
+          <Suspense fallback={<AdminPageLoader />}>
+            <AdminTrainingEdit />
           </Suspense>
         } />
 

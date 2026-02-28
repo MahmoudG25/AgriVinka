@@ -229,8 +229,8 @@ const UsersListPage = () => {
                         <button
                           onClick={() => handleToggleStatus(user)}
                           className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${user.status === 'blocked'
-                              ? 'text-green-600 hover:bg-green-50'
-                              : 'text-red-500 hover:bg-red-50'
+                            ? 'text-green-600 hover:bg-green-50'
+                            : 'text-red-500 hover:bg-red-50'
                             }`}
                           title={user.status === 'blocked' ? 'إلغاء الحظر' : 'حظر المستخدم'}
                         >

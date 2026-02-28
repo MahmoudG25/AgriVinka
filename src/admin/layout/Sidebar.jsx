@@ -11,7 +11,9 @@ import {
   MdLibraryBooks,
   MdInfo,
   MdDashboardCustomize,
-  MdPalette
+  MdPalette,
+  MdWork,
+  MdAssignment
 } from 'react-icons/md';
 import clsx from 'clsx';
 import { signOut } from 'firebase/auth';
@@ -29,7 +31,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     { label: 'الدورات', path: '/admin/courses', icon: MdClass },
     { label: 'المسارات', path: '/admin/roadmaps', icon: MdMap },
     { label: 'الطلبات', path: '/admin/orders', icon: MdPeople },
-    { label: 'طلبات الدورات', path: '/admin/course-requests', icon: MdLibraryBooks },
+    { label: 'الكورسات المطلوبة', path: '/admin/course-requests', icon: MdLibraryBooks },
+    { label: 'التدريب العملي', path: '/admin/trainings', icon: MdAssignment },
     { label: 'المستخدمين', path: '/admin/users', icon: MdPeople },
   ];
 
@@ -66,7 +69,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           <h1 className="text-xl font-bold text-heading-dark">أكاديمية نماء <span className="text-primary text-xs">Admin</span></h1>
         </div>
 
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-140px)] scrollbar-thin scrollbar-thumb-gray-200">
           {links.map((link) => (
             <NavLink
               key={link.path}
@@ -80,8 +83,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                   : "text-gray-600 hover:bg-gray-50 hover:text-heading-dark"
               )}
             >
-              <link.icon size={22} />
-              <span>{link.label}</span>
+              <link.icon size={22} className="shrink-0" />
+              <span className="truncate">{link.label}</span>
             </NavLink>
           ))}
         </nav>

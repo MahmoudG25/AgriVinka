@@ -20,12 +20,15 @@ const TermsPage = lazy(() => import('../pages/TermsPage'));
 const HelpCenterPage = lazy(() => import('../pages/HelpCenterPage'));
 const RequestCoursePage = lazy(() => import('../pages/RequestCoursePage'));
 const AIDiagnosisPage = lazy(() => import('../pages/ai/AIDiagnosisPage'));
+const PracticalTrainingPage = lazy(() => import('../pages/PracticalTrainingPage'));
+const ApplyTrainingPage = lazy(() => import('../pages/ApplyTrainingPage'));
 
 // Auth Pages
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'));
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
 const UserDashboard = lazy(() => import('../pages/dashboard/UserDashboard'));
+const UserPracticalTrainingPage = lazy(() => import('../pages/dashboard/UserPracticalTrainingPage'));
 const CoursePlayer = lazy(() => import('../pages/CoursePlayer'));
 const PathPlayer = lazy(() => import('../pages/PathPlayer'));
 const CertificateVerification = lazy(() => import('../pages/CertificateVerification'));
@@ -105,6 +108,7 @@ const PublicRoutes = () => {
             <Route path="/request-course" element={<RequestCoursePage />} />
             <Route path="/verify/:code" element={<CertificateVerification />} />
             <Route path="/ai/diagnose" element={<AIDiagnosisPage />} />
+            <Route path="/practical-training" element={<PracticalTrainingPage />} />
 
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -115,6 +119,11 @@ const PublicRoutes = () => {
                 <UserDashboard />
               </RequireAuth>
             } />
+            <Route path="/dashboard/practical-training" element={
+              <RequireAuth requireAdmin={false}>
+                <UserPracticalTrainingPage />
+              </RequireAuth>
+            } />
             <Route path="/courses/:courseId/play" element={
               <RequireAuth requireAdmin={false}>
                 <CoursePlayer />
@@ -123,6 +132,11 @@ const PublicRoutes = () => {
             <Route path="/roadmaps/:id/play" element={
               <RequireAuth requireAdmin={false}>
                 <PathPlayer />
+              </RequireAuth>
+            } />
+            <Route path="/practical-training/apply/:trainingId" element={
+              <RequireAuth requireAdmin={false}>
+                <ApplyTrainingPage />
               </RequireAuth>
             } />
           </Routes>
