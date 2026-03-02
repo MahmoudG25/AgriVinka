@@ -1,104 +1,14 @@
-import React from 'react';
-import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-
-const styles = StyleSheet.create({
-  page: {
-    padding: 40,
-    backgroundColor: '#f9f7f2',
-    fontFamily: 'Helvetica',
-  },
-  border: {
-    flex: 1,
-    borderWidth: 2,
-    borderColor: '#0f3b1c',
-    padding: 16,
-  },
-  innerBorder: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#d9c58d',
-    padding: 24,
-    justifyContent: 'space-between',
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  academyName: {
-    fontSize: 14,
-    color: '#0f3b1c',
-    letterSpacing: 4,
-    textTransform: 'uppercase',
-    marginBottom: 4,
-  },
-  title: {
-    fontSize: 26,
-    color: '#0f3b1c',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 11,
-    color: '#b38b10',
-  },
-  sectionLabel: {
-    fontSize: 10,
-    color: '#666666',
-    marginBottom: 4,
-  },
-  nameText: {
-    fontSize: 20,
-    color: '#0f3b1c',
-    marginBottom: 16,
-  },
-  bodyText: {
-    fontSize: 11,
-    color: '#333333',
-    marginBottom: 24,
-  },
-  strong: {
-    fontSize: 12,
-    color: '#0f3b1c',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  col: {
-    width: '48%',
-  },
-  label: {
-    fontSize: 9,
-    color: '#777777',
-    textTransform: 'uppercase',
-    marginBottom: 4,
-  },
-  value: {
-    fontSize: 11,
-    color: '#111111',
-  },
-  footerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 32,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e0d9c2',
-  },
-  signature: {
-    fontSize: 11,
-    color: '#0f3b1c',
-  },
-  serial: {
-    fontSize: 9,
-    color: '#666666',
-  },
-});
+import React, { useMemo } from 'react';
+import { Document, Page, Text, View, Image } from '@react-pdf/renderer';
+import { registerCertificateFonts, hasArabic, certificateTemplateConfig, generateQrDataUrl } from './assets.js';
+import { certificateStyles as styles } from './styles.js';
 
 /**
  * @param {{ certificate: import('../types').Certificate }} props
  */
 const CertificateDocument = ({ certificate }) => {
+  registerCertificateFonts();
+
   const issuedDate = certificate.issuedAt?.toDate
     ? certificate.issuedAt.toDate()
     : new Date();
@@ -109,63 +19,112 @@ const CertificateDocument = ({ certificate }) => {
     day: 'numeric',
   });
 
+  const studentIsArabic = hasArabic(certificate.studentName);
+  const courseIsArabic = hasArabic(certificate.courseName);
+
+  const qrDataUrl = useMemo(
+    () => generateQrDataUrl(certificate.verificationUrl),
+    [certificate.verificationUrl],
+  );
+
+  const idLine = `ID: ${certificate.id}`;
+  const serialLine = `Serial: ${certificate.serialNumber}`;
+
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.border}>
+      <Page size="A4" orientation="landscape" style={styles.page}>
+        <View style={styles.outerBorder}>
           <View style={styles.innerBorder}>
-            <View>
-              <View style={styles.header}>
-                <Text style={styles.academyName}>NAMAA ACADEMY</Text>
-                <Text style={styles.title}>Certificate of Completion</Text>
-                <Text style={styles.subtitle}>This certifies the successful completion of a course</Text>
+            {/* Watermark */}
+            <Text style={styles.watermark}>Namaa Academy</Text>
+
+            {/* Header */}
+            <View style={styles.headerRow}>
+              <View style={styles.logoBox}>
+                <Text style={{ fontSize: 22, color: certificateTemplateConfig.colors.accent }}>ن</Text>
               </View>
 
-              <View>
-                <Text style={styles.sectionLabel}>Presented to</Text>
-                <Text style={styles.nameText}>{certificate.studentName}</Text>
+              <View style={styles.headerTextBlock}>
+                <Text style={styles.academyNameEn}>{certificateTemplateConfig.branding.academyEn}</Text>
+                <Text style={styles.academyNameAr}>{certificateTemplateConfig.branding.academyAr}</Text>
+                <Text style={styles.title}>Certificate of Completion</Text>
+                <Text style={styles.subtitle}>This certifies the successful completion of an accredited course</Text>
+              </View>
 
-                <Text style={styles.bodyText}>
-                  <Text>This is to certify that </Text>
-                  <Text style={styles.strong}>{certificate.studentName}</Text>
-                  <Text> has successfully completed the course </Text>
-                  <Text style={styles.strong}>{certificate.courseName}</Text>
-                  <Text> provided by Namaa Academy.</Text>
-                </Text>
+              <View style={styles.logoBox}>
+                {/* Empty for now; can be replaced with Image logo later */}
+              </View>
+            </View>
 
-                <View style={styles.row}>
-                  <View style={styles.col}>
-                    <Text style={styles.label}>Instructor</Text>
-                    <Text style={styles.value}>{certificate.instructorName}</Text>
-                  </View>
-                  <View style={styles.col}>
-                    <Text style={styles.label}>Issued on</Text>
-                    <Text style={styles.value}>{issuedDateFormatted}</Text>
-                  </View>
+            {/* Body */}
+            <View style={styles.body}>
+              <Text style={styles.label}>Presented to</Text>
+              <Text
+                style={[
+                  styles.recipientName,
+                  studentIsArabic && { fontFamily: 'NamaaArabic' },
+                ]}
+              >
+                {certificate.studentName}
+              </Text>
+
+              <Text style={styles.statement}>
+                This is to certify that{' '}
+                <Text style={{ fontFamily: 'NamaaSerif' }}>{certificate.studentName}</Text>{' '}
+                has successfully completed the course
+              </Text>
+
+              <Text
+                style={[
+                  styles.courseTitle,
+                  courseIsArabic && { fontFamily: 'NamaaArabic' },
+                ]}
+              >
+                {certificate.courseName}
+              </Text>
+
+              <View style={styles.metaRow}>
+                <View style={styles.metaCol}>
+                  <Text style={styles.metaLabel}>Instructor</Text>
+                  <Text style={styles.metaValue}>{certificate.instructorName}</Text>
+                </View>
+                <View style={styles.metaCol}>
+                  <Text style={styles.metaLabel}>Issued on</Text>
+                  <Text style={styles.metaValue}>{issuedDateFormatted}</Text>
                 </View>
               </View>
             </View>
 
+            {/* Footer: signature, seal, QR */}
             <View>
               <View style={styles.footerRow}>
-                <View>
-                  <Text style={styles.label}>Certificate ID</Text>
-                  <Text style={styles.value}>{certificate.id}</Text>
+                <View style={styles.signatureBlock}>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signatureName}>{certificate.instructorName}</Text>
+                  <Text style={styles.signatureLabel}>Instructor Signature</Text>
                 </View>
-                <View>
-                  <Text style={styles.label}>Serial Number</Text>
-                  <Text style={styles.value}>{certificate.serialNumber}</Text>
+
+                <View style={styles.sealBlock}>
+                  <View style={styles.sealCircle}>
+                    <View style={styles.sealInner}>
+                      <Text style={styles.sealText}>Certified</Text>
+                      <Text style={styles.sealText}>Namaa Academy</Text>
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.qrBlock}>
+                  <Text style={styles.qrLabel}>Scan to verify</Text>
+                  {qrDataUrl && <Image style={styles.qrCode} src={qrDataUrl} />}
                 </View>
               </View>
-              <View style={styles.footerRow}>
-                <View>
-                  <Text style={styles.label}>Status</Text>
-                  <Text style={styles.value}>{certificate.status === 'valid' ? 'Valid' : 'Revoked'}</Text>
-                </View>
-                <View>
-                  <Text style={styles.label}>Authorized by</Text>
-                  <Text style={styles.signature}>Namaa Academy</Text>
-                </View>
+
+              <View style={styles.bottomMetaRow}>
+                <Text style={styles.bottomMetaText}>{idLine}</Text>
+                <Text style={styles.bottomMetaText}>{serialLine}</Text>
+                <Text style={styles.bottomMetaText}>
+                  Verify at {certificate.verificationUrl}
+                </Text>
               </View>
             </View>
           </View>
