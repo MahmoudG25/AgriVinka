@@ -33,6 +33,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { label: 'الطلبات', path: '/admin/orders', icon: MdPeople },
     { label: 'الكورسات المطلوبة', path: '/admin/course-requests', icon: MdLibraryBooks },
     { label: 'التدريب العملي', path: '/admin/trainings', icon: MdAssignment },
+    { label: 'الشهادات', path: '/admin/certificates', icon: MdWork },
     { label: 'المستخدمين', path: '/admin/users', icon: MdPeople },
   ];
 

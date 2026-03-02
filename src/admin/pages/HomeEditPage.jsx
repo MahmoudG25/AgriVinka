@@ -30,7 +30,6 @@ const HomeEditPage = () => {
     mission: { title: '', description: '', features: [] },
     diagnosis: { title: '', subtitle: '', items: [] }, // NEW: Problem Agitation
     tracks: { title: '', subtitle: '', items: [] },
-    trackFeatures: [],
     roadmap: { title: '', subtitle: '', steps: [] }, // NEW: Journey
     testimonials: [],
     faq: [],
@@ -108,6 +107,8 @@ const HomeEditPage = () => {
     setLoading(true);
     try {
       await pageService.updatePageData('home', formData);
+      // Invalidate cache so changes appear immediately on refresh
+      try { localStorage.removeItem('namaa_page_cache_home'); } catch (_e) { /* ignore */ }
       dispatch(addToast({ type: 'success', message: 'تم تحديث الصفحة الرئيسية بنجاح' }));
     } catch (error) {
       logger.error('Error updating home page:', error);

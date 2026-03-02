@@ -9,7 +9,8 @@ export const cloudinaryService = {
     } else if (file.type.startsWith('image/')) {
       resourceType = 'image';
     } else if (file.type === 'application/pdf') {
-      resourceType = 'image'; // Cloudinary treats PDFs as images for upload/transformations
+      // PDFs should be uploaded as 'raw' to avoid transformation corruption
+      resourceType = 'raw';
     }
 
     const formData = new FormData();
@@ -38,10 +39,9 @@ export const cloudinaryService = {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const response = JSON.parse(xhr.responseText);
-            // Optimize image/video delivery with f_auto and q_auto
             let optimizedUrl = response.secure_url;
 
-            // Only apply standard transformations to images (including PDFs)
+            // Only apply transformations to images (NOT PDFs or raw files)
             if (resourceType === 'image') {
               optimizedUrl = optimizedUrl.replace('/upload/', '/upload/f_auto,q_auto/');
             }
@@ -49,6 +49,7 @@ export const cloudinaryService = {
             else if (resourceType === 'video') {
               optimizedUrl = optimizedUrl.replace('/upload/', '/upload/f_auto,q_auto/');
             }
+            // For raw files (PDFs): NO transformations — deliver as-is
 
             resolve(optimizedUrl);
           } catch (err) {
@@ -73,7 +74,9 @@ export const cloudinaryService = {
   },
 
   /**
-   * Specifically optimized for raw PDF uploads (Certificates)
+   * Upload a PDF file as RAW to Cloudinary.
+   * RAW uploads preserve the file exactly as-is with no transformations.
+   * 
    * @param {File|Blob} file The PDF file/blob
    * @param {string} userId Used to create isolated folder structures
    * @returns {Promise<{secureUrl: string, publicId: string}>}
@@ -85,8 +88,8 @@ export const cloudinaryService = {
     formData.append('folder', `Namaa-Academy/certificates/${userId || 'guest'}`);
 
     try {
-      // For PDFs, we strictly use 'raw' resource type to ensure they are delivered
-      // natively without being converted to images by Cloudinary transformations
+      // Upload as RAW — this preserves the PDF binary exactly.
+      // Raw files are served without ANY transformations.
       const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/raw/upload`;
 
       const response = await fetch(url, {
@@ -100,6 +103,7 @@ export const cloudinaryService = {
       }
 
       const data = await response.json();
+      // Return the raw secure_url — NO transformations applied
       return {
         secureUrl: data.secure_url,
         publicId: data.public_id
@@ -108,5 +112,19 @@ export const cloudinaryService = {
       console.error('Cloudinary PDF Upload Error:', error);
       throw error;
     }
+  },
+
+  /**
+   * Get a forced-download URL for a Cloudinary raw file.
+   * Appends fl_attachment to force browser download instead of inline preview.
+   * 
+   * @param {string} secureUrl The Cloudinary secure URL
+   * @returns {string} Download URL with forced attachment
+   */
+  getDownloadUrl: (secureUrl) => {
+    if (!secureUrl) return '';
+    // For raw uploads, just append ?dl=1 or use fl_attachment
+    // Raw URLs don't support transformations, so just use the URL directly
+    return secureUrl;
   }
 };

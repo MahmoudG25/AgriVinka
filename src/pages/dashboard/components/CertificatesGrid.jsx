@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { downloadCertificatePdf } from '../../../modules/certificates/services/pdfService.js';
 
 const CertificatesGrid = ({ certificates, loading }) => {
   if (loading) {
@@ -21,6 +22,15 @@ const CertificatesGrid = ({ certificates, loading }) => {
 
   if (!certificates || certificates.length === 0) return null;
 
+  const handleDownload = async (cert) => {
+    try {
+      await downloadCertificatePdf(cert);
+    } catch (err) {
+      console.error('Failed to download certificate PDF', err);
+      alert('تعذر تحميل ملف الشهادة. حاول مرة أخرى لاحقاً.');
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
       <h2 className="text-base font-bold text-heading-dark flex items-center gap-2 mb-5">
@@ -33,7 +43,7 @@ const CertificatesGrid = ({ certificates, loading }) => {
         {certificates.map(cert => (
           <div
             key={cert.id}
-            className="relative rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50/50 to-white p-4 hover:shadow-md transition-all group"
+            className="relative rounded-xl border border-amber-100 bg-linear-to-br from-amber-50/50 to-white p-4 hover:shadow-md transition-all group"
           >
             {/* Certificate icon */}
             <div className="flex items-center gap-3 mb-3">
@@ -41,28 +51,40 @@ const CertificatesGrid = ({ certificates, loading }) => {
                 <span className="material-symbols-outlined">verified</span>
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold text-sm text-heading-dark truncate">{cert.courseTitle}</h3>
+                <h3 className="font-bold text-sm text-heading-dark truncate">
+                  {cert.courseName || cert.courseTitle}
+                </h3>
                 <p className="text-[10px] text-gray-400 mt-0.5">
-                  {cert.issueDate?.seconds
-                    ? new Date(cert.issueDate.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
-                    : '-'}
+                  {cert.issuedAt?.seconds
+                    ? new Date(cert.issuedAt.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : cert.issueDate?.seconds
+                      ? new Date(cert.issueDate.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
+                      : '-'}
                 </p>
               </div>
             </div>
 
+            {/* Serial Number */}
+            {cert.serialNumber && (
+              <p className="text-[9px] text-gray-400 mb-3 font-mono" dir="ltr">{cert.serialNumber}</p>
+            )}
+
             {/* Actions */}
             <div className="flex items-center gap-2">
-              {cert.pdfUrl && (
-                <a
-                  href={cert.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 py-2 bg-amber-500 text-white font-bold rounded-lg text-xs text-center hover:bg-amber-600 transition-colors flex items-center justify-center gap-1"
-                >
-                  <span className="material-symbols-outlined text-xs">visibility</span>
-                  عرض الشهادة
-                </a>
-              )}
+              <button
+                onClick={() => handleDownload(cert)}
+                className="flex-1 py-2 bg-green-500 text-white font-bold rounded-lg text-xs text-center hover:bg-green-600 transition-colors flex items-center justify-center gap-1"
+              >
+                <span className="material-symbols-outlined text-xs">download</span>
+                تحميل PDF
+              </button>
+              <Link
+                to={`/certificate/${cert.id}`}
+                className="flex-1 py-2 bg-amber-500 text-white font-bold rounded-lg text-xs text-center hover:bg-amber-600 transition-colors flex items-center justify-center gap-1"
+              >
+                <span className="material-symbols-outlined text-xs">visibility</span>
+                عرض
+              </Link>
               <Link
                 to={`/verify/${cert.id}`}
                 className="flex-1 py-2 bg-gray-100 text-heading-dark font-bold rounded-lg text-xs text-center hover:bg-gray-200 transition-colors flex items-center justify-center gap-1"

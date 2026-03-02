@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { courseService } from '../services/courseService';
 import { enrollmentService } from '../services/enrollmentService';
 import { lessonProgressService } from '../services/lessonProgressService';
-import { certificateService } from '../services/certificateService';
 import { logger } from '../utils/logger';
 import SEOHead from '../components/common/SEOHead';
 import { FaChevronRight, FaPlayCircle, FaCheckCircle, FaLock, FaCertificate, FaListUl, FaTimes } from 'react-icons/fa';
+import { getOrCreateCertificate } from '../modules/certificates/services/certificateService.js';
 
 const CoursePlayer = () => {
   const { courseId } = useParams();
@@ -187,24 +188,21 @@ const CoursePlayer = () => {
                     onClick={async () => {
                       if (!course || !currentUser) return;
                       try {
-                        const { certificateService } = await import('../services/certificateService');
-                        const toast = (await import('react-hot-toast')).default;
-
                         toast.loading('جاري إصدار الشهادة...', { id: 'cert_player' });
-                        const newCert = await certificateService.issueCertificate(
-                          currentUser.uid,
-                          currentUser.displayName || 'متدرب نماء',
-                          course.id,
-                          course.title,
-                          course.instructorName || 'أكاديمية نماء'
-                        );
 
-                        await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, newCert.id);
+                        const cert = await getOrCreateCertificate({
+                          userId: currentUser.uid,
+                          courseId: course.id,
+                          studentName: currentUser.displayName || 'متدرب نماء',
+                          courseName: course.title,
+                          instructorName: course.instructorName || 'أكاديمية نماء',
+                        });
+
+                        await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, cert.id);
                         setHasCertificate(true);
-                        setCertificateId(newCert.id);
+                        setCertificateId(cert.id);
 
-                        toast.success('تم الإصدار بنجاح', { id: 'cert_player' });
-
+                        toast.success('تم إصدار الشهادة بنجاح', { id: 'cert_player' });
                       } catch (err) {
                         logger.error('Failed to issue certificate', err);
                         toast.error('عفواً، فشل الإصدار. حاول مجدداً', { id: 'cert_player' });

@@ -71,7 +71,7 @@ const Home = () => {
             <Partners data={homeData.partners} />
             <Diagnosis data={homeData.diagnosis} />
             <Tracks data={homeData.tracks} />
-            <Roadmap data={homeData.homeRoadmap || { steps: [] }} />
+            <Roadmap data={homeData.roadmap || { steps: [] }} />
             <Testimonials testimonials={homeData.testimonials} />
             <Pricing data={homeData.pricing} />
             <AboutPreview data={homeData.about} />

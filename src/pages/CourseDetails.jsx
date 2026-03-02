@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import SEOHead from '../components/common/SEOHead';
 import {
   FaChevronLeft,
@@ -37,6 +38,7 @@ import SidebarSkeleton from '../components/skeletons/SidebarSkeleton';
 import AccordionSkeleton from '../components/skeletons/AccordionSkeleton';
 import { ImageWithFallback } from '../utils/imageUtils';
 import { logger } from '../utils/logger';
+import { useIssueCertificate } from '../modules/certificates/hooks/useIssueCertificate.js';
 
 const CourseDetails = () => {
   const { courseId } = useParams();
@@ -56,6 +58,8 @@ const CourseDetails = () => {
   const [favLoading, setFavLoading] = useState(false);
   const [orderStatus, setOrderStatus] = useState(null); // null | 'pending' | 'rejected'
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  const { issueAndDownload, isLoading: issuingCertificate } = useIssueCertificate();
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -181,23 +185,28 @@ const CourseDetails = () => {
   };
 
   const generateCertificateAndView = async () => {
-    if (!currentUser || !course) return;
+    if (!currentUser || !course) {
+      return;
+    }
     try {
-      const { certificateService } = await import('../services/certificateService');
-      toast.loading('جاري إصدار الشهادة... يرجى الانتظار لحين تحميل المتطلبات', { id: 'cert' });
+      toast.loading('جاري إصدار الشهادة وتحميلها...', { id: 'cert' });
 
       const studentName = currentUser.displayName || 'متدرب نماء';
-      const newCert = await certificateService.issueCertificate(
-        currentUser.uid,
+      const newCert = await issueAndDownload({
+        userId: currentUser.uid,
+        courseId: course.id,
         studentName,
-        course.id,
-        course.title
-      );
+        courseName: course.title,
+        instructorName: course.instructor?.name || 'Namaa Academy',
+      });
 
-      await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, newCert.id);
-      setUserEnrollment(prev => ({ ...prev, certificateId: newCert.id }));
-      toast.success('تم الرفع، سيتم نقلك للشهادة', { id: 'cert' });
-      navigate(`/verify/${newCert.id}`);
+      if (newCert) {
+        await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, newCert.id);
+        setUserEnrollment(prev => ({ ...prev, certificateId: newCert.id }));
+        toast.success('تم إصدار الشهادة وتحميل ملف PDF بنجاح', { id: 'cert' });
+      } else {
+        toast.error('تعذر إصدار الشهادة. حاول مرة أخرى لاحقاً.', { id: 'cert' });
+      }
     } catch (err) {
       logger.error('Failed to issue certificate', err);
       toast.error('عفواً، فشل إصدار الشهادة. حاول مجدداً لاحقاً', { id: 'cert' });

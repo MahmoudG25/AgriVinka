@@ -4,6 +4,8 @@ import { MdSchool } from 'react-icons/md';
 import { useAuth } from '../../../contexts/AuthContext';
 import { enrollmentService } from '../../../services/enrollmentService';
 import toast from 'react-hot-toast';
+import { getOrCreateCertificate } from '../../../modules/certificates/services/certificateService.js';
+import { downloadCertificatePdf } from '../../../modules/certificates/services/pdfService.js';
 
 const MyCoursesGrid = ({ courses, loading }) => {
   const { currentUser } = useAuth();
@@ -74,23 +76,23 @@ const MyCoursesGrid = ({ courses, loading }) => {
           const generateCert = async (courseId, courseTitle, instructorName) => {
             if (!currentUser) return;
             try {
-              const { certificateService } = await import('../../../services/certificateService');
-              toast.loading('جاري إصدار الشهادة...', { id: 'cert_grid' });
-              const studentName = currentUser.displayName || 'متدرب نماء';
-              const newCert = await certificateService.issueCertificate(
-                currentUser.uid,
-                studentName,
+              toast.loading('جاري إصدار الشهادة وتحميلها...', { id: 'cert_grid' });
+
+              const cert = await getOrCreateCertificate({
+                userId: currentUser.uid,
                 courseId,
-                courseTitle,
-                instructorName || 'أكاديمية نماء'
-              );
-              await enrollmentService.updateEnrollmentCertificate(currentUser.uid, courseId, newCert.id);
-              toast.success('تم إصدار الشهادة بنجاح', { id: 'cert_grid' });
-              // Small reload to reflect changes
-              window.location.reload();
+                studentName: currentUser.displayName || 'متدرب نماء',
+                courseName: courseTitle,
+                instructorName: instructorName || 'أكاديمية نماء',
+              });
+
+              await enrollmentService.updateEnrollmentCertificate(currentUser.uid, courseId, cert.id);
+              await downloadCertificatePdf(cert);
+
+              toast.success('تم إصدار الشهادة وتحميل ملف PDF بنجاح', { id: 'cert_grid' });
             } catch (err) {
               console.error(err);
-              toast.error('فشل إصدار الشهادة', { id: 'cert_grid' });
+              toast.error('فشل إصدار الشهادة، حاول مرة أخرى لاحقاً', { id: 'cert_grid' });
             }
           };
 
@@ -162,13 +164,22 @@ const MyCoursesGrid = ({ courses, loading }) => {
                   {isCompleted ? (
                     <>
                       {course.enrollment?.certificateId ? (
-                        <Link
-                          to={`/verify/${course.enrollment.certificateId}`}
-                          className="flex-1 py-2 bg-green-50 text-green-600 font-bold rounded-lg text-xs text-center hover:bg-green-100 transition-colors flex items-center justify-center gap-1"
-                        >
-                          <span className="material-symbols-outlined text-sm">workspace_premium</span>
-                          الشهادة
-                        </Link>
+                        <>
+                          <Link
+                            to={`/verify/${course.enrollment.certificateId}`}
+                            className="flex-1 py-1 px-2 bg-green-50 text-green-600 font-bold rounded-lg text-[10px] text-center hover:bg-green-100 transition-colors flex flex-col items-center justify-center gap-0.5"
+                          >
+                            <span className="material-symbols-outlined text-sm">workspace_premium</span>
+                            عرض
+                          </Link>
+                          <button
+                            onClick={() => generateCert(course.id, course.title, course.instructorName)}
+                            className="flex-1 py-1 px-2 bg-amber-50 text-amber-600 font-bold rounded-lg text-[10px] text-center hover:bg-amber-100 transition-colors flex flex-col items-center justify-center gap-0.5"
+                          >
+                            <span className="material-symbols-outlined text-sm">autorenew</span>
+                            تحديث
+                          </button>
+                        </>
                       ) : !isRoadmap ? (
                         <button
                           onClick={() => generateCert(course.id, course.title, course.instructorName)}

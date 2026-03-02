@@ -20,6 +20,7 @@ const PageBuilder = lazy(() => import('../pages/PageBuilder'));
 const ThemeManager = lazy(() => import('../pages/ThemeManager'));
 const AdminTrainingsPage = lazy(() => import('../pages/AdminTrainingsPage'));
 const AdminTrainingEdit = lazy(() => import('../pages/AdminTrainingEdit'));
+const AdminCertificatesPage = lazy(() => import('../pages/AdminCertificatesPage'));
 
 // Loading skeleton
 const AdminPageLoader = () => (
@@ -140,6 +141,12 @@ const AdminRoutes = () => {
         <Route path="users" element={
           <Suspense fallback={<AdminPageLoader />}>
             <UsersListPage />
+          </Suspense>
+        } />
+
+        <Route path="certificates" element={
+          <Suspense fallback={<AdminPageLoader />}>
+            <AdminCertificatesPage />
           </Suspense>
         } />
       </Route>

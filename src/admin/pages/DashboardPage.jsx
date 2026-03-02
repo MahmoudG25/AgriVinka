@@ -1,18 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logger } from '../../utils/logger';
-import { MdClass, MdMap, MdPeople, MdPermMedia, MdCloudUpload } from 'react-icons/md';
+import {
+  MdClass,
+  MdMap,
+  MdPeople,
+  MdCloudUpload,
+  MdSchool,
+  MdPendingActions,
+  MdShoppingCart,
+  MdWorkspacePremium
+} from 'react-icons/md';
 import { addToast, openModal } from '../../store/slices/uiSlice';
 import { courseService } from '../../services/courseService';
 import { roadmapService } from '../../services/roadmapService';
-import { orderService } from '../../services/orderService';
+import { adminStatsService } from '../../services/adminStatsService';
 import { pageService } from '../../services/pageService';
 
-const StatCard = ({ title, value, icon: Icon, color }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm border border-border-light flex items-center justify-between">
+const StatCard = ({ title, value, icon: Icon, color, loading }) => (
+  <div className="bg-white p-5 rounded-2xl shadow-sm border border-border-light flex items-center justify-between hover:shadow-md transition-shadow">
     <div>
       <p className="text-gray-500 text-sm mb-1">{title}</p>
-      <h3 className="text-2xl font-bold text-heading-dark">{value}</h3>
+      {loading ? (
+        <div className="h-8 w-16 bg-gray-100 rounded animate-pulse" />
+      ) : (
+        <h3 className="text-2xl font-bold text-heading-dark">{value}</h3>
+      )}
     </div>
     <div className={`p-3 rounded-full ${color}`}>
       <Icon size={24} className="text-white" />
@@ -22,30 +35,50 @@ const StatCard = ({ title, value, icon: Icon, color }) => (
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
-  const [stats, setStats] = useState({ courses: 0, roadmaps: 0, orders: 0 });
+  const [contentStats, setContentStats] = useState({ courses: 0, roadmaps: 0 });
+  const [userMetrics, setUserMetrics] = useState({
+    totalUsers: 0,
+    totalCompleted: 0,
+    pendingOrders: 0,
+    totalOrders: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [metricsLoading, setMetricsLoading] = useState(true);
   const [seedLoading, setSeedLoading] = useState(false);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    // Fetch content stats (courses, roadmaps)
+    const fetchContentStats = async () => {
       try {
-        const [courses, roadmaps, orders] = await Promise.all([
-          courseService.getAllCourses(false), // Fetch all including hidden
-          roadmapService.getAllRoadmaps(),
-          orderService.getOrders()
+        const [courses, roadmaps] = await Promise.all([
+          courseService.getAllCourses(false),
+          roadmapService.getAllRoadmaps()
         ]);
-        setStats({
+        setContentStats({
           courses: courses.length,
-          roadmaps: roadmaps.length,
-          orders: orders.length
+          roadmaps: roadmaps.length
         });
       } catch (error) {
-        logger.error('Error fetching stats:', error);
+        logger.error('Error fetching content stats:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchStats();
+
+    // Fetch user metrics (efficient aggregation)
+    const fetchUserMetrics = async () => {
+      try {
+        const stats = await adminStatsService.getAdminDashboardStats();
+        setUserMetrics(stats);
+      } catch (error) {
+        logger.error('Error fetching user metrics:', error);
+      } finally {
+        setMetricsLoading(false);
+      }
+    };
+
+    fetchContentStats();
+    fetchUserMetrics();
   }, []);
 
   const handleReset = () => {
@@ -126,24 +159,53 @@ const DashboardPage = () => {
     }
   };
 
-  const dashboardStats = [
+  // User Metrics Cards (NEW)
+  const metricsCards = [
+    {
+      title: 'إجمالي المستخدمين',
+      value: userMetrics.totalUsers,
+      icon: MdPeople,
+      color: 'bg-blue-500',
+      loading: metricsLoading
+    },
+    {
+      title: 'الدورات المكتملة',
+      value: userMetrics.totalCompleted,
+      icon: MdWorkspacePremium,
+      color: 'bg-emerald-500',
+      loading: metricsLoading
+    },
+    {
+      title: 'طلبات قيد الانتظار',
+      value: userMetrics.pendingOrders,
+      icon: MdPendingActions,
+      color: 'bg-amber-500',
+      loading: metricsLoading
+    },
+    {
+      title: 'إجمالي الطلبات',
+      value: userMetrics.totalOrders,
+      icon: MdShoppingCart,
+      color: 'bg-purple-500',
+      loading: metricsLoading
+    },
+  ];
+
+  // Content Stats Cards (existing)
+  const contentCards = [
     {
       title: 'إجمالي الدورات',
-      value: loading ? '...' : stats.courses,
+      value: contentStats.courses,
       icon: MdClass,
-      color: 'bg-blue-500'
+      color: 'bg-indigo-500',
+      loading
     },
     {
       title: 'المسارات التعليمية',
-      value: loading ? '...' : stats.roadmaps,
+      value: contentStats.roadmaps,
       icon: MdMap,
-      color: 'bg-green-500'
-    },
-    {
-      title: 'الطلبات',
-      value: loading ? '...' : stats.orders,
-      icon: MdPeople,
-      color: 'bg-purple-500'
+      color: 'bg-teal-500',
+      loading
     },
   ];
 
@@ -151,10 +213,24 @@ const DashboardPage = () => {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-heading-dark">لوحة المعلومات</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {dashboardStats.map((stat, idx) => (
-          <StatCard key={idx} {...stat} />
-        ))}
+      {/* User Metrics Row */}
+      <div>
+        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">إحصائيات المستخدمين</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {metricsCards.map((stat, idx) => (
+            <StatCard key={idx} {...stat} />
+          ))}
+        </div>
+      </div>
+
+      {/* Content Stats Row */}
+      <div>
+        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">إحصائيات المحتوى</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {contentCards.map((stat, idx) => (
+            <StatCard key={idx} {...stat} />
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -173,7 +249,7 @@ const DashboardPage = () => {
             <button
               onClick={handleSeedDatabase}
               disabled={seedLoading}
-              className="flex-1 bg-primary hover:bg-accent text-white font-bold py-3 px-4 rounded-xl transition-colors border shadow-md flex justify-center items-center gap-2"
+              className="flex-1 bg-primary hover:bg-accent text-heading-dark font-bold py-3 px-4 rounded-xl transition-colors border shadow-md flex justify-center items-center gap-2"
             >
               <MdCloudUpload size={20} />
               {seedLoading ? 'جاري الحقن...' : 'حقن محتوى أكاديمية نماء نصوص (Seed DB)'}
@@ -199,7 +275,7 @@ const DashboardPage = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">نسخة التطبيق</span>
-              <span className="text-gray-900 font-bold">1.2.0 (Firestore)</span>
+              <span className="text-gray-900 font-bold">1.3.0 (Firestore)</span>
             </div>
           </div>
         </div>

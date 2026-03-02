@@ -32,6 +32,7 @@ const UserPracticalTrainingPage = lazy(() => import('../pages/dashboard/UserPrac
 const CoursePlayer = lazy(() => import('../pages/CoursePlayer'));
 const PathPlayer = lazy(() => import('../pages/PathPlayer'));
 const CertificateVerification = lazy(() => import('../pages/CertificateVerification'));
+const CertificateViewPage = lazy(() => import('../modules/certificates/pages/CertificateViewPage.jsx'));
 
 import RequireAuth from '../admin/components/RequireAuth';
 
@@ -106,7 +107,8 @@ const PublicRoutes = () => {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/help-center" element={<HelpCenterPage />} />
             <Route path="/request-course" element={<RequestCoursePage />} />
-            <Route path="/verify/:code" element={<CertificateVerification />} />
+            <Route path="/verify/:certificateId" element={<CertificateVerification />} />
+            <Route path="/certificate/:certificateId" element={<CertificateViewPage />} />
             <Route path="/ai/diagnose" element={<AIDiagnosisPage />} />
             <Route path="/practical-training" element={<PracticalTrainingPage />} />
 

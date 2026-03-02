@@ -257,7 +257,7 @@ const OrdersListPage = () => {
       {/* Dynamic Local Confirm Modal */}
       {confirmModal.isOpen && confirmModal.order && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" dir="rtl">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-scale-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full p-6 animate-scale-in">
             <div className="flex flex-col items-center text-center">
               <div className={`p-3 rounded-full mb-4 ${confirmModal.newStatus === 'rejected' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
                 <MdWarning size={32} />

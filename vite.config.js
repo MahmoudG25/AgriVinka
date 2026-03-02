@@ -5,83 +5,93 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), tailwindcss()],
-	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "./src"),
-		},
-	},
-	build: {
-		// Target modern browsers
-		target: "ES2020",
-		
-		// Improve build output
-		minify: "esbuild", // Use esbuild instead of terser (already bundled with Vite)
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    // Target modern browsers
+    target: "ES2020",
 
-		// Code splitting strategy
-		rollupOptions: {
-			output: {
-				manualChunks: {
-					// Vendor chunks
-					"vendor-react": ["react", "react-dom"],
-					"vendor-firebase": ["firebase"],
-					"vendor-router": ["react-router-dom"],
-					"vendor-redux": ["@reduxjs/toolkit", "react-redux"],
-					"vendor-ui": ["react-icons", "framer-motion", "swiper"],
-					"vendor-utils": ["axios", "uuid", "clsx", "idb-keyval", "tailwind-merge"],
+    // Improve build output
+    minify: "esbuild", // Use esbuild instead of terser (already bundled with Vite)
 
-					// Feature chunks (let Vite handle imports to avoid circular deps)
-					"admin-dashboard": ["src/admin/pages/DashboardPage.jsx"],
-					"admin-courses": [
-						"src/admin/pages/CoursesListPage.jsx",
-						"src/admin/pages/CourseEditPage.jsx",
-						"src/admin/importer/ImportCoursesPage.jsx",
-					],
-					"admin-roadmaps": [
-						"src/admin/pages/RoadmapsListPage.jsx",
-						"src/admin/pages/RoadmapEditPage.jsx",
-					],
-					"admin-content": [
-						"src/admin/pages/HomeEditPage.jsx",
-						"src/admin/pages/AboutEditPage.jsx",
-					],
-					"admin-orders": [
-						"src/admin/pages/OrdersListPage.jsx",
-						"src/admin/pages/CourseRequestsPage.jsx",
-					],
-				},
-			},
-		},
+    // Code splitting strategy
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunks
+          "vendor-react": ["react", "react-dom"],
+          "vendor-firebase": ["firebase"],
+          "vendor-router": ["react-router-dom"],
+          "vendor-redux": ["@reduxjs/toolkit", "react-redux"],
+          "vendor-ui": ["react-icons", "framer-motion", "swiper"],
+          "vendor-utils": [
+            "axios",
+            "uuid",
+            "clsx",
+            "idb-keyval",
+            "tailwind-merge",
+          ],
 
-		// Increase chunk size warning limit
-		chunkSizeWarningLimit: 600,
+          // Feature chunks (let Vite handle imports to avoid circular deps)
+          "admin-dashboard": ["src/admin/pages/DashboardPage.jsx"],
+          "admin-courses": [
+            "src/admin/pages/CoursesListPage.jsx",
+            "src/admin/pages/CourseEditPage.jsx",
+            "src/admin/importer/ImportCoursesPage.jsx",
+          ],
+          "admin-roadmaps": [
+            "src/admin/pages/RoadmapsListPage.jsx",
+            "src/admin/pages/RoadmapEditPage.jsx",
+          ],
+          "admin-content": [
+            "src/admin/pages/HomeEditPage.jsx",
+            "src/admin/pages/AboutEditPage.jsx",
+          ],
+          "admin-orders": [
+            "src/admin/pages/OrdersListPage.jsx",
+            "src/admin/pages/CourseRequestsPage.jsx",
+          ],
+        },
+      },
+    },
 
-		// CSS code splitting
-		cssCodeSplit: true,
+    // Increase chunk size warning limit
+    chunkSizeWarningLimit: 600,
 
-		// Source maps for production debugging (optional, disable for smaller builds)
-		sourcemap: false,
+    // CSS code splitting
+    cssCodeSplit: true,
 
-		// Common options
-		outDir: "dist",
-		emptyOutDir: true,
-	},
+    // Source maps for production debugging (optional, disable for smaller builds)
+    sourcemap: false,
 
-	// Optimization for dev
-	optimizeDeps: {
-		include: [
-			"react",
-			"react-dom",
-			"react-router-dom",
-			"@reduxjs/toolkit",
-			"react-redux",
-			"firebase",
-		],
-	},
+    // Common options
+    outDir: "dist",
+    emptyOutDir: true,
+  },
 
-	server: {
-		open: true,
-		port: 5173,
-	},
+  // Optimization for dev
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "@reduxjs/toolkit",
+      "react-redux",
+      "@react-pdf/renderer",
+      "firebase",
+      "firebase-auth",
+      "firebase-firestore",
+    ],
+  },
+
+  server: {
+    open: true,
+    host: "localhost",
+    port: 5173,
+    strictPort: true,
+  },
 });
-
