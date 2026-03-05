@@ -44,7 +44,7 @@ const MyCoursesGrid = ({ courses, loading }) => {
         <div className="py-14 text-center border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
           <span className="material-symbols-outlined text-5xl text-gray-300 mb-3 block">school</span>
           <p className="text-gray-500 font-medium mb-1">لم تسجل في أي دورة أو مسار بعد</p>
-          <p className="text-xs text-gray-400 mb-4">ابدأ رحلتك التعليمية مع أكاديمية نماء</p>
+          <p className="text-xs text-gray-400 mb-4">ابدأ رحلتك التعليمية مع AgriVinka</p>
           <button
             onClick={() => navigate('/courses')}
             className="px-6 py-2.5 bg-primary text-white font-bold rounded-xl text-sm hover:bg-heading-dark transition-colors"
@@ -81,9 +81,9 @@ const MyCoursesGrid = ({ courses, loading }) => {
               const cert = await getOrCreateCertificate({
                 userId: currentUser.uid,
                 courseId,
-                studentName: currentUser.displayName || 'متدرب نماء',
+                studentName: currentUser.displayName || 'AgriVinka Trainee',
                 courseName: courseTitle,
-                instructorName: instructorName || 'أكاديمية نماء',
+                instructorName: instructorName || 'AgriVinka',
               });
 
               await enrollmentService.updateEnrollmentCertificate(currentUser.uid, courseId, cert.id);

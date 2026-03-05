@@ -70,8 +70,8 @@ export const certificateTemplateConfig = {
     badgeText: '#ffffff',
   },
   branding: {
-    academyEn: 'Namaa Academy',
-    academyAr: 'نماء أكاديمي',
+    academyEn: 'AgriVinka',
+    academyAr: 'AgriVinka',
     logoUrl: '',
   },
 };

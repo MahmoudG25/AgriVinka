@@ -270,7 +270,7 @@ const CertificateDocument = ({ certificate, templateSettings }) => {
   const serialLine = `Serial: ${certificate.serialNumber}`;
 
   // Resolve seal text — split into two lines if contains "by" or fallback
-  const sealTextLines = (ts.sealTextEn || 'Certified\nNamaa Academy').split(/\n|(?= by )/);
+  const sealTextLines = (ts.sealTextEn || 'Certified\nAgriVinka').split(/\n|(?= by )/);
 
   // Resolve instructor name: from settings if signature enabled, else from certificate
   const instructorName =

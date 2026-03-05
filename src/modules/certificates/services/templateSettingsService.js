@@ -5,8 +5,8 @@ const SETTINGS_DOC_REF = doc(db, 'settings', 'certificateTemplate');
 
 /** Default, safe template settings (used when Firestore doc missing/partial). */
 export const DEFAULT_CERTIFICATE_TEMPLATE_SETTINGS = {
-  academyNameEn: 'Namaa Academy',
-  academyNameAr: 'نماء أكاديمي',
+  academyNameEn: 'AgriVinka',
+  academyNameAr: 'AgriVinka',
   logoUrl: '',
   siteLogoUrl: '',
   primaryColor: '#0f3b1c',
@@ -14,11 +14,11 @@ export const DEFAULT_CERTIFICATE_TEMPLATE_SETTINGS = {
   borderEnabled: true,
   titleEn: 'Certificate of Completion',
   subtitleEn: 'This certifies the successful completion of a course',
-  sealTextEn: 'Accredited by Namaa Academy',
-  footerTextEn: 'Verify at: namaaacademy.com/verify',
+  sealTextEn: 'Accredited by AgriVinka',
+  footerTextEn: 'Verify at: agrivinka.com/verify',
   signature: {
     enabled: true,
-    instructorName: 'Namaa Academy',
+    instructorName: 'AgriVinka',
     signatureImageUrl: '',
   },
   watermark: {

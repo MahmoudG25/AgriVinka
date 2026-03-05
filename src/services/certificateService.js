@@ -119,7 +119,7 @@ export const certificateService = {
    * @param {string} instructorName Instructor display name
    * @returns {Promise<Object>} Certificate record with id, pdfUrl, etc.
    */
-  issueCertificate: async (userId, studentName, courseId, courseTitle, instructorName = "أكاديمية نماء") => {
+  issueCertificate: async (userId, studentName, courseId, courseTitle, instructorName = "AgriVinka") => {
     try {
       // ── 0. Idempotency Check ──
       const existing = await certificateService.getExistingCertificate(userId, courseId);
@@ -163,7 +163,7 @@ export const certificateService = {
         courseTitle,
         studentName,
         instructorName,
-        platformName: "Namaa Academy / أكاديمية نماء",
+        platformName: "AgriVinka / AgriVinka",
         issuedAt: serverTimestamp(),
         completionDate: serverTimestamp(),
         certificateCode,

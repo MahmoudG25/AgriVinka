@@ -5,7 +5,7 @@ import { authService } from '../../services/authService';
 import { useAuth } from '../../contexts/AuthContext';
 import SEOHead from '../../components/common/SEOHead';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
-import logo from '../../assets/000.svg';
+// Logo removed
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -52,7 +52,7 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen flex" dir="rtl">
-      <SEOHead title="إنشاء حساب جديد | أكاديمية نماء" />
+      <SEOHead title="إنشاء حساب جديد | AgriVinka" />
 
       {/* === Left Panel: Decorative (hidden on mobile) === */}
       <div className="hidden lg:flex flex-1 relative bg-gradient-to-br from-heading-dark via-gray-900 to-black items-center justify-center overflow-hidden">
@@ -105,8 +105,11 @@ const RegisterPage = () => {
         >
           {/* Logo (Mobile only) */}
           <div className="flex lg:hidden justify-center mb-8">
-            <Link to="/">
-              <img src={logo} alt="أكاديمية نماء" className="h-14 w-auto" />
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-xl">eco</span>
+              </div>
+              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wide">AgriVinka</span>
             </Link>
           </div>
 

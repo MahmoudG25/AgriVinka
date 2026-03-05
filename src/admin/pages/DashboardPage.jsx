@@ -139,7 +139,7 @@ const DashboardPage = () => {
         ],
         about: {
           title: "من المزرعة إلى الأكاديمية",
-          content: "تأسست أكاديمية نماء لسد الفجوة العميقة بين التعليم الجامعي النظري، وبين المهارات العملية المطلوبة. يجمع فريقنا من الخبراء سنوات من العمل الميداني والبحث العلمي لدمج الخبرة التطبيقية في مسارات ميسرة.",
+          content: "تأسست AgriVinka لسد الفجوة العميقة بين التعليم الجامعي النظري، وبين المهارات العملية المطلوبة. يجمع فريقنا من الخبراء سنوات من العمل الميداني والبحث العلمي لدمج الخبرة التطبيقية في مسارات ميسرة.",
           image1: 'https://images.unsplash.com/photo-1592982537447-6f29fb25ff71?q=80&w=2070&auto=format&fit=crop',
           image2: 'https://images.unsplash.com/photo-1628183204732-34fecad14828?q=80&w=1964&auto=format&fit=crop'
         },
@@ -150,7 +150,7 @@ const DashboardPage = () => {
       };
 
       await pageService.updatePageData('home', agritechHomeData);
-      dispatch(addToast({ type: 'success', message: 'تم حقن بيانات نماء الزراعية في القاعدة بنجاح!' }));
+      dispatch(addToast({ type: 'success', message: 'تم حقن بيانات AgriVinka الزراعية في القاعدة بنجاح!' }));
     } catch (err) {
       logger.error('Failed to seed DB', err);
       dispatch(addToast({ type: 'error', message: 'حدث خطأ أثناء حفظ البيانات' }));
@@ -252,7 +252,7 @@ const DashboardPage = () => {
               className="flex-1 bg-primary hover:bg-accent text-heading-dark font-bold py-3 px-4 rounded-xl transition-colors border shadow-md flex justify-center items-center gap-2"
             >
               <MdCloudUpload size={20} />
-              {seedLoading ? 'جاري الحقن...' : 'حقن محتوى أكاديمية نماء نصوص (Seed DB)'}
+              {seedLoading ? 'جاري الحقن...' : 'حقن محتوى AgriVinka نصوص (Seed DB)'}
             </button>
           </div>
         </div>

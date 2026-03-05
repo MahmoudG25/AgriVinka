@@ -46,7 +46,7 @@ export const themeService = {
           scale: 1, // 1 = 100%
         },
         seo: {
-          defaultMetaTitle: 'أكاديمية نماء للتعليم التقني',
+          defaultMetaTitle: 'AgriVinka للتعليم التقني',
           defaultMetaDescription: 'تعلم البرمجة بالعربية مع كورسات مترجمة ومسارات برمجة متكاملة',
         }
       };

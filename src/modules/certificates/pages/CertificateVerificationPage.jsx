@@ -28,15 +28,18 @@ const CertificateVerificationPage = () => {
 
   return (
     <div className="min-h-[80vh] bg-background-alt py-20 flex flex-col items-center justify-center relative overflow-hidden">
-      <SEOHead title="التحقق من الشهادة | أكاديمية نماء" />
+      <SEOHead title="التحقق من الشهادة | AgriVinka" />
 
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container-narrow relative z-10 w-full px-4">
         <div className="text-center mb-8">
-          <Link to="/" className="inline-block mb-6">
-            <img src="/logo.png" alt="أكاديمية نماء" className="h-16 mx-auto drop-shadow-md" />
+          <Link to="/" className="inline-flex items-center gap-3 mb-6 group justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-2xl">eco</span>
+            </div>
+            <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wide">AgriVinka</span>
           </Link>
           <h1 className="text-3xl font-black text-heading-dark mb-2">التحقق من الشهادات</h1>
           <p className="text-gray-500 font-medium">
@@ -91,7 +94,7 @@ const CertificateVerificationPage = () => {
                   <div className="mb-4">
                     <span className="block text-xs font-bold text-gray-400 mb-1 uppercase">المحاضر</span>
                     <p className="text-base font-semibold text-heading-dark">
-                      {certificate.instructorName || 'أكاديمية نماء'}
+                      {certificate.instructorName || 'AgriVinka'}
                     </p>
                   </div>
 
@@ -109,11 +112,10 @@ const CertificateVerificationPage = () => {
                     <div>
                       <span className="block text-xs font-bold text-gray-400 mb-1 uppercase">حالة الشهادة</span>
                       <span
-                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                          certificate.status === 'valid'
+                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${certificate.status === 'valid'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                        }`}
+                          }`}
                       >
                         <span className="material-symbols-outlined text-xs">
                           {certificate.status === 'valid' ? 'verified' : 'cancel'}

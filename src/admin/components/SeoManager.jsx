@@ -22,7 +22,7 @@ const SeoManager = ({ seoData, onChange }) => {
             value={seoData?.metaTitle || ''}
             onChange={(e) => handleChange('metaTitle', e.target.value)}
             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-            placeholder="مثال: الرئيسية | أكاديمية نماء"
+            placeholder="مثال: الرئيسية | AgriVinka"
           />
         </div>
 

@@ -184,7 +184,7 @@ const AdminTrainingEdit = () => {
 
   return (
     <div className="p-6 w-full lg:w-10/12 mx-auto pb-24">
-      <SEOHead title={isEditMode ? "تعديل تدريب | أكاديمية نماء" : "إضافة تدريب جديد | أكاديمية نماء"} />
+      <SEOHead title={isEditMode ? "تعديل تدريب | AgriVinka" : "إضافة تدريب جديد | AgriVinka"} />
 
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">

@@ -24,7 +24,7 @@ export const SectionRegistry = {
       { key: 'ctaLink', label: 'رابط زر الإجراء', type: 'text', placeholder: 'مثال: /courses' }
     ],
     defaultData: {
-      title: 'أكاديمية نماء للتعليم التقني',
+      title: 'AgriVinka للتعليم التقني',
       subtitle: 'طور مهاراتك مع أفضل الخبراء في الوطن العربي.',
       videoUrl: '',
       ctaText: 'استكشف الدورات',

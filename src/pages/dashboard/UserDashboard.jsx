@@ -28,7 +28,7 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background-alt pt-24 pb-12">
-      <SEOHead title="لوحة التحكم | أكاديمية نماء" />
+      <SEOHead title="لوحة التحكم | AgriVinka" />
 
       <div className="w-full px-4 md:px-8 lg:px-[5%]">
         {/* Compact Header */}

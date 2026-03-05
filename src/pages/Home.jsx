@@ -51,7 +51,7 @@ const Home = () => {
   return (
     <>
       <SEOHead
-        title={homeData.seo?.metaTitle || "Namaa Academy |تعلم الزراعة باسلوب بسيط "}
+        title={homeData.seo?.metaTitle || "AgriVinka |تعلم الزراعة باسلوب بسيط "}
         description={homeData.seo?.metaDescription || "اكتشف أفضل كورسات الزراعه . مسارات الزراعة شاملة من المبتدئ للمتقدم."}
         keywords={homeData.seo?.keywords || "كورسات زراعة, تعلم الزراعة, مسارات زراعية, دورات زراعية"}
       />

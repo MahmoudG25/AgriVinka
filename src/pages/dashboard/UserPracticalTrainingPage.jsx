@@ -52,7 +52,7 @@ const UserPracticalTrainingPage = () => {
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark pt-28 pb-20 px-4 md:px-8">
-      <SEOHead title="طلبات التدريب العملي | أكاديمية نماء" />
+      <SEOHead title="طلبات التدريب العملي | AgriVinka" />
 
       <div className="w-full lg:w-11/12 mx-auto">
         <div className="flex items-center gap-4 mb-8">

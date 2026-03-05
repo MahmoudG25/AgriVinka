@@ -131,7 +131,7 @@ export async function getPublicCertificateById(id) {
   const mapped = {
     studentName: raw.studentName || raw.userName || '',
     courseName: raw.courseName || raw.courseTitle || '',
-    instructorName: raw.instructorName || 'أكاديمية نماء',
+    instructorName: raw.instructorName || 'AgriVinka',
     issuedAt: raw.issuedAt || raw.completionDate || raw.completedAt || serverTimestamp(),
     serialNumber: raw.serialNumber || raw.certificateCode || id,
     status: raw.status || 'valid',

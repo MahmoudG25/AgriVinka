@@ -66,7 +66,7 @@ const PracticalTrainingPage = () => {
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark pt-28 pb-20">
       <SEOHead
-        title="التدريب العملي | أكاديمية نماء"
+        title="التدريب العملي | AgriVinka"
         description="فرص التدريب العملي المتاحة لطلاب وخريجي كليات الزراعة."
       />
 

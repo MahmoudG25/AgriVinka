@@ -207,7 +207,7 @@ const PathDetailsPage = () => {
   return (
     <>
       <SEOHead
-        title={roadmapConfig?.seo?.metaTitle || `${roadmapConfig?.title || 'مسار برمجة'} | أكاديمية نماء`}
+        title={roadmapConfig?.seo?.metaTitle || `${roadmapConfig?.title || 'مسار برمجة'} | AgriVinka`}
         description={roadmapConfig?.seo?.metaDescription || roadmapConfig?.description || 'تعلم من خلال مسار برمجة منظم ومتكامل'}
         canonical={window.location.href}
         keywords={roadmapConfig?.seo?.keywords || `${roadmapConfig?.title}, مسار, برمجة, تعلم`}

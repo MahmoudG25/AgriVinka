@@ -193,9 +193,9 @@ const CoursePlayer = () => {
                         const cert = await getOrCreateCertificate({
                           userId: currentUser.uid,
                           courseId: course.id,
-                          studentName: currentUser.displayName || 'متدرب نماء',
+                          studentName: currentUser.displayName || 'AgriVinka Trainee',
                           courseName: course.title,
-                          instructorName: course.instructorName || 'أكاديمية نماء',
+                          instructorName: course.instructorName || 'AgriVinka',
                         });
 
                         await enrollmentService.updateEnrollmentCertificate(currentUser.uid, course.id, cert.id);

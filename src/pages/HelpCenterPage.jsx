@@ -46,8 +46,8 @@ const HelpCenterPage = () => {
   return (
     <>
       <SEOHead
-        title="مركز المساعدة | أكاديمية نماء"
-        description="جد إجابات لأسئلتك الشائعة والدعم الفني في مركز مساعدة أكاديمية نماء."
+        title="مركز المساعدة | AgriVinka"
+        description="جد إجابات لأسئلتك الشائعة والدعم الفني في مركز مساعدة AgriVinka."
         canonical={window.location.href}
         keywords="مساعدة, أسئلة شائعة, دعم, FAQ"
       />

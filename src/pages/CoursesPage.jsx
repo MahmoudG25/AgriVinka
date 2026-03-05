@@ -78,7 +78,7 @@ const CoursesPage = () => {
   return (
     <div className="min-h-screen bg-background-alt pb-20">
       <SEOHead
-        title="كورسات برمجة متقدمة | أكاديمية نماء"
+        title="كورسات برمجة متقدمة | AgriVinka"
         description="اكتشف أفضل كورسات البرمجة والتصميم. دورات تدريبية متقدمة من المبتدئ للمتقدم في ويب، تطبيقات، ذكاء اصطناعي وأكثر."
         keywords="كورسات برمجة, دورات تدريبية, تعلم البرمجة, JavaScript, React, Python, ويب"
         canonical={window.location.href}

@@ -191,13 +191,13 @@ const CourseDetails = () => {
     try {
       toast.loading('جاري إصدار الشهادة وتحميلها...', { id: 'cert' });
 
-      const studentName = currentUser.displayName || 'متدرب نماء';
+      const studentName = currentUser.displayName || 'AgriVinka Trainee';
       const newCert = await issueAndDownload({
         userId: currentUser.uid,
         courseId: course.id,
         studentName,
         courseName: course.title,
-        instructorName: course.instructor?.name || 'Namaa Academy',
+        instructorName: course.instructor?.name || 'AgriVinka',
       });
 
       if (newCert) {
@@ -281,7 +281,7 @@ const CourseDetails = () => {
     "description": course.seo?.metaDescription || course.description?.substring(0, 160),
     "provider": {
       "@type": "Organization",
-      "name": "أكاديمية نماء",
+      "name": "AgriVinka",
       "sameAs": window.location.origin
     },
     "hasCourseInstance": {
@@ -299,10 +299,10 @@ const CourseDetails = () => {
   return (
     <>
       <SEOHead
-        title={course.seo?.metaTitle || `${course.title} | أكاديمية نماء`}
+        title={course.seo?.metaTitle || `${course.title} | AgriVinka`}
         description={course.seo?.metaDescription || course.description?.substring(0, 160) || `تعرف على ${course.title}`}
         canonical={window.location.href}
-        keywords={course.seo?.keywords || `${course.title}, دورة تعليمية, أكاديمية نماء`}
+        keywords={course.seo?.keywords || `${course.title}, دورة تعليمية, AgriVinka`}
         structuredData={courseSchema}
       />
       <div className="bg-background-alt text-heading-dark transition-colors duration-300 min-h-screen">

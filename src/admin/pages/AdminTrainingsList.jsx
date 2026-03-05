@@ -125,7 +125,7 @@ const AdminTrainingsList = ({ isTab = false }) => {
 
   return (
     <div className={isTab ? "w-full" : "p-6 w-full lg:w-11/12 mx-auto"}>
-      {!isTab && <SEOHead title="إدارة التدريبات | أكاديمية نماء" />}
+      {!isTab && <SEOHead title="إدارة التدريبات | AgriVinka" />}
 
       {!isTab && (
         <div className="mb-6">

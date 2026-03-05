@@ -43,7 +43,7 @@ const defaultFooterData = {
     title: 'النشرة البريدية',
     placeholder: 'البريد الإلكتروني'
   },
-  copyright: 'جميع الحقوق محفوظة © أكاديمية نماء',
+  copyright: 'جميع الحقوق محفوظة © AgriVinka',
   legal: ['الشروط والأحكام', 'سياسة الخصوصية']
 };
 
@@ -91,7 +91,7 @@ const Footer = ({ data = defaultFooterData }) => {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-xl">eco</span>
               </div>
-              <span className="text-2xl font-bold text-white tracking-wide">أكاديمية نماء</span>
+              <span className="text-2xl font-bold text-white tracking-wide">AgriVinka</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed ">
               {data?.description || defaultFooterData.description}

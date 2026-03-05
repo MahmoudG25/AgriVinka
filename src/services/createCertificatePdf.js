@@ -320,7 +320,7 @@ export async function createCertificatePdf(data, templateSettings) {
   // Use instructor name from settings if signature is enabled
   const instName = (ts.signature?.enabled && ts.signature?.instructorName)
     ? ts.signature.instructorName
-    : (instructorName || 'أكاديمية نماء');
+    : (instructorName || 'AgriVinka');
   if (hasArabic(instName)) {
     drawRight(prepareArabicText(instName), width - 90, instY - 12, fontArBold, 13, green);
   } else {
@@ -363,11 +363,11 @@ export async function createCertificatePdf(data, templateSettings) {
   }
 
   // ── 11. Bottom Accreditation Line ──
-  drawCentered(prepareArabicText('شهادة معتمدة من أكاديمية نماء'), 48, fontAr, 10, gold);
-  drawCentered(ts.sealTextEn || 'Accredited by Namaa Academy', 35, fontEn, 7, gray);
+  drawCentered(prepareArabicText('شهادة معتمدة من AgriVinka'), 48, fontAr, 10, gold);
+  drawCentered(ts.sealTextEn || 'Accredited by AgriVinka', 35, fontEn, 7, gray);
 
   // ── Top bar text ──
-  drawCentered((ts.academyNameEn || 'NAMAA ACADEMY').toUpperCase(), height - 44, fontEn, 9, white);
+  drawCentered((ts.academyNameEn || 'AGRIVINKA').toUpperCase(), height - 44, fontEn, 9, white);
 
   // ── Return PDF ──
   return await pdfDoc.save();

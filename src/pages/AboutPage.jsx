@@ -44,8 +44,8 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-gray-800 font-tajawal overflow-hidden" dir="rtl">
       <SEOHead
-        title="عن أكاديمية نماء | مبادراتنا وقصتنا"
-        description="تعرف على مبادرات أكاديمية نماء الثقافية وقصتنا في دعم المحتوى العربي."
+        title="عن AgriVinka | مبادراتنا وقصتنا"
+        description="تعرف على مبادرات AgriVinka الثقافية وقصتنا في دعم المحتوى العربي."
         canonical={window.location.href}
       />
 
@@ -96,7 +96,7 @@ const AboutPage = () => {
               variants={fadeUp}
               className="text-gray-300 text-base lg:text-lg mb-8 leading-relaxed "
             >
-              {hero?.description || 'نحن لا نكتفي بنقل الخبر، بل نصنع الحدث. تهدف مبادرات "أكاديمية نماء" إلى دعم المبدعين، توثيق التراث، وتعزيز الحوار الثقافي.'}
+              {hero?.description || 'نحن لا نكتفي بنقل الخبر، بل نصنع الحدث. تهدف مبادرات "AgriVinka" إلى دعم المبدعين، توثيق التراث، وتعزيز الحوار الثقافي.'}
             </motion.p>
 
             <div className="space-y-6">
@@ -175,7 +175,7 @@ const AboutPage = () => {
                 variants={fadeUp}
                 className="text-4xl lg:text-5xl font-extrabold text-heading-dark mb-8 leading-tight"
               >
-                {story?.title || 'قصة أكاديمية نماء'}
+                {story?.title || 'قصة AgriVinka'}
               </motion.h2>
 
               <motion.div
@@ -185,7 +185,7 @@ const AboutPage = () => {
                 {story?.content || (
                   <>
                     <p>
-                      تأسست منصة أكاديمية نماء لتكون منارة إعلامية وثقافية تجمع شتات المبدعين العرب. انطلقنا من فكرة بسيطة: أن المحتوى العربي يستحق أن يقدم بأعلى معايير الجودة والاحترافية.
+                      تأسست منصة AgriVinka لتكون منارة إعلامية وثقافية تجمع شتات المبدعين العرب. انطلقنا من فكرة بسيطة: أن المحتوى العربي يستحق أن يقدم بأعلى معايير الجودة والاحترافية.
                     </p>
                     <p>
                       فريقنا يتكون من نخبة من الكتاب، الفنانين، والمطورين الشغوفين بإبراز الوجه المشرق لحضارتنا. نسعى لبناء مجتمع تفاعلي يثري المحتوى العربي على الإنترنت.

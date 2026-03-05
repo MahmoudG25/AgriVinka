@@ -32,7 +32,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="min-h-screen bg-background-alt flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <SEOHead title="استعادة كلمة المرور | أكاديمية نماء" />
+      <SEOHead title="استعادة كلمة المرور | AgriVinka" />
 
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2"></div>

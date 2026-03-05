@@ -70,7 +70,7 @@ const CertificateViewPage = () => {
 
   return (
     <div className=" bg-background-alt py-16">
-      <SEOHead title="عرض الشهادة | أكاديمية نماء" />
+      <SEOHead title="عرض الشهادة | AgriVinka" />
       <div className="container-layout px-4">
         <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
@@ -127,7 +127,7 @@ const CertificateViewPage = () => {
                   </p>
                   <p className="text-xs text-gray-500 mb-1">المحاضر</p>
                   <p className="text-sm font-medium text-heading-dark">
-                    {certificate.instructorName || "أكاديمية نماء"}
+                    {certificate.instructorName || "AgriVinka"}
                   </p>
                 </div>
 
@@ -188,7 +188,7 @@ const CertificateViewPage = () => {
                       This is to certify that{" "}
                       <strong>{certificate.studentName}</strong> has
                       successfully completed the course{" "}
-                      <strong>{certificate.courseName}</strong> with Namaa
+                      <strong>{certificate.courseName}</strong> with AgriVinka
                       Academy.
                     </p>
                     <p className="mt-3">

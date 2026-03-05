@@ -136,7 +136,7 @@ const AdminTrainingApplications = ({ isTab = false }) => {
 
   return (
     <div className={isTab ? "w-full" : "p-6 w-full lg:w-11/12 mx-auto min-h-[80vh]"}>
-      {!isTab && <SEOHead title="إدارة طلبات التدريب العملي | أكاديمية نماء" />}
+      {!isTab && <SEOHead title="إدارة طلبات التدريب العملي | AgriVinka" />}
 
       <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 mb-8 ${isTab ? 'justify-end' : 'justify-between'}`}>
         {!isTab && (

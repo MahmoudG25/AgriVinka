@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { logger } from '../../utils/logger';
-import logo from '../../assets/000.png';
+// Logo removed
 import { Link, useNavigate } from 'react-router-dom';
 import { orderService } from '../../services/orderService';
 import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaTachometerAlt, FaBoxOpen } from 'react-icons/fa';
@@ -29,7 +29,7 @@ const resolveHref = (link) => NAVBAR_LINK_ROUTES[link.text] || link.href || '/';
 const isPhoneLike = (str) => /^\d{7,}$/.test(str.replace(/[\s\-\+]/g, ''));
 
 const defaultNavbarData = {
-  logo: 'أكاديمية نماء',
+  logo: 'AgriVinka',
   links: [
     { text: 'الرئيسية', href: '/' },
     { text: 'المسارات', href: '/learning-paths' },
@@ -141,7 +141,11 @@ const Navbar = ({ data = defaultNavbarData }) => {
       <div className="container-layout h-full flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <Link to="/">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-xl">eco</span>
+            </div>
+            <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wide">AgriVinka</span>
           </Link>
         </div>
 

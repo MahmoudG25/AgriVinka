@@ -70,7 +70,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         )}
       >
         <div className="h-16 flex items-center justify-center border-b border-border-light">
-          <h1 className="text-xl font-bold text-heading-dark">أكاديمية نماء <span className="text-primary text-xs">Admin</span></h1>
+          <h1 className="text-xl font-bold text-heading-dark">AgriVinka <span className="text-primary text-xs">Admin</span></h1>
         </div>
 
         <nav className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-140px)] scrollbar-thin scrollbar-thumb-gray-200">

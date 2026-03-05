@@ -13,7 +13,7 @@ const AboutSectionAdmin = ({ data = {}, onChange }) => {
             value={data.title || ''}
             onChange={e => onChange('about', 'title', e.target.value)}
             className="w-full p-3 rounded-lg border border-gray-200"
-            placeholder="قصة أكاديمية نماء"
+            placeholder="قصة AgriVinka"
           />
         </div>
         <div className="md:col-span-2">

@@ -227,7 +227,7 @@ const CertificateSettingsPage = () => {
               value={form.academyNameEn}
               onChange={(e) => set('academyNameEn', e.target.value)}
               dir="ltr"
-              placeholder="Namaa Academy"
+              placeholder="AgriVinka"
             />
           </div>
           <div>
@@ -235,7 +235,7 @@ const CertificateSettingsPage = () => {
             <TextInput
               value={form.academyNameAr}
               onChange={(e) => set('academyNameAr', e.target.value)}
-              placeholder="نماء أكاديمي"
+              placeholder="AgriVinka"
             />
           </div>
           <div>
@@ -305,7 +305,7 @@ const CertificateSettingsPage = () => {
               value={form.footerTextEn}
               onChange={(e) => set('footerTextEn', e.target.value)}
               dir="ltr"
-              placeholder="Verify at: namaaacademy.com/verify"
+              placeholder="Verify at: agrivinka.com/verify"
             />
           </div>
         </SectionCard>
@@ -318,7 +318,7 @@ const CertificateSettingsPage = () => {
               value={form.sealTextEn}
               onChange={(e) => set('sealTextEn', e.target.value)}
               dir="ltr"
-              placeholder="Accredited by Namaa Academy"
+              placeholder="Accredited by AgriVinka"
             />
           </div>
         </SectionCard>
@@ -389,7 +389,7 @@ const CertificateSettingsPage = () => {
                     value={form.watermark?.text ?? ''}
                     onChange={(e) => setNested('watermark', 'text', e.target.value)}
                     dir="ltr"
-                    placeholder="NAMAA ACADEMY"
+                    placeholder="AGRIVINKA"
                   />
                 </div>
               )}
