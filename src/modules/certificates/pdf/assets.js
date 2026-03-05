@@ -1,20 +1,20 @@
-import { Font } from '@react-pdf/renderer';
-import QRCode from 'qrcode';
+import { Font } from "@react-pdf/renderer";
+import QRCode from "qrcode";
 
 // Paths are relative to the web root when bundled with Vite.
 // Place the font files under public/fonts as described in the summary.
 const FONTS = {
   serif: {
-    regular: '/fonts/PlayfairDisplay-Regular.ttf',
-    bold: '/fonts/PlayfairDisplay-Bold.ttf',
+    regular: "/fonts/PlayfairDisplay-Regular.ttf",
+    bold: "/fonts/PlayfairDisplay-Bold.ttf",
   },
   sans: {
-    regular: '/fonts/Montserrat-Regular.ttf',
-    semiBold: '/fonts/Montserrat-SemiBold.ttf',
+    regular: "/fonts/Montserrat-Regular.ttf",
+    semiBold: "/fonts/Montserrat-SemiBold.ttf",
   },
   arabic: {
-    regular: '/fonts/Amiri-Regular.ttf',
-    bold: '/fonts/Amiri-Bold.ttf',
+    regular: "/fonts/Amiri-Regular.ttf",
+    bold: "/fonts/Amiri-Bold.ttf",
   },
 };
 
@@ -25,38 +25,39 @@ export function registerCertificateFonts() {
   fontsRegistered = true;
 
   Font.register({
-    family: 'NamaaSerif',
+    family: "NamaaSerif",
     fonts: [
-      { src: FONTS.serif.regular, fontWeight: 'normal' },
-      { src: FONTS.serif.bold, fontWeight: 'bold' },
+      { src: FONTS.serif.regular, fontWeight: "normal" },
+      { src: FONTS.serif.bold, fontWeight: "bold" },
     ],
   });
 
   Font.register({
-    family: 'NamaaSans',
+    family: "NamaaSans",
     fonts: [
-      { src: FONTS.sans.regular, fontWeight: 'normal' },
-      { src: FONTS.sans.semiBold, fontWeight: '600' },
+      { src: FONTS.sans.regular, fontWeight: "normal" },
+      { src: FONTS.sans.semiBold, fontWeight: "600" },
     ],
   });
 
   Font.register({
-    family: 'NamaaArabic',
+    family: "NamaaArabic",
     fonts: [
-      { src: FONTS.arabic.regular, fontWeight: 'normal' },
-      { src: FONTS.arabic.bold, fontWeight: 'bold' },
+      { src: FONTS.arabic.regular, fontWeight: "normal" },
+      { src: FONTS.arabic.bold, fontWeight: "bold" },
     ],
   });
 }
 
 export function hasArabic(text) {
   if (!text) return false;
-  return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
+  return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(
+    text,
+  );
 }
 
+// Static default template configuration used by styles and document.
 export const certificateTemplateConfig = {
-  size: 'A4',
-  orientation: 'landscape',
   colors: {
     background: '#f9f7f2',
     borderOuter: '#0f3b1c',
@@ -71,9 +72,9 @@ export const certificateTemplateConfig = {
   branding: {
     academyEn: 'Namaa Academy',
     academyAr: 'نماء أكاديمي',
+    logoUrl: '',
   },
 };
-
 /**
  * Generate a data URL image for the QR code pointing to verificationUrl.
  * Used inside React-PDF <Image>.
@@ -83,14 +84,13 @@ export async function generateQrDataUrl(verificationUrl) {
   try {
     // Low error correction level is enough for URLs and keeps the graphic simple.
     return await QRCode.toDataURL(verificationUrl, {
-      errorCorrectionLevel: 'M',
+      errorCorrectionLevel: "M",
       margin: 0,
-      color: { dark: '#000000', light: '#ffffff00' },
+      color: { dark: "#000000", light: "#ffffff00" },
     });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.warn('Failed to generate QR code data URL', err);
+    console.warn("Failed to generate QR code data URL", err);
     return null;
   }
 }
-

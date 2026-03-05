@@ -1,6 +1,7 @@
 import React from 'react';
 import { pdf } from '@react-pdf/renderer';
 import CertificateDocument from '../pdf/CertificateDocument.jsx';
+import { getCertificateTemplateSettingsCached } from '../services/templateSettingsService.js';
 
 // Small sanity check only; most valid PDFs will be much larger,
 // but we keep this low to avoid blocking downloads in edge cases.
@@ -15,7 +16,12 @@ const MIN_PDF_SIZE_BYTES = 1024;
  * @returns {Promise<Blob>}
  */
 export async function generateCertificatePdfBlob(certificate) {
-  const instance = pdf(React.createElement(CertificateDocument, { certificate }));
+  // Fetch template settings (cached after first call)
+  const templateSettings = await getCertificateTemplateSettingsCached();
+
+  const instance = pdf(
+    React.createElement(CertificateDocument, { certificate, templateSettings })
+  );
   const blob = await instance.toBlob();
 
   if (!blob || typeof blob.size !== 'number') {

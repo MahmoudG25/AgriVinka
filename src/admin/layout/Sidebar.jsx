@@ -13,7 +13,8 @@ import {
   MdDashboardCustomize,
   MdPalette,
   MdWork,
-  MdAssignment
+  MdAssignment,
+  MdCampaign
 } from 'react-icons/md';
 import clsx from 'clsx';
 import { signOut } from 'firebase/auth';
@@ -33,7 +34,9 @@ const Sidebar = ({ isOpen, onClose }) => {
     { label: 'الطلبات', path: '/admin/orders', icon: MdPeople },
     { label: 'الكورسات المطلوبة', path: '/admin/course-requests', icon: MdLibraryBooks },
     { label: 'التدريب العملي', path: '/admin/trainings', icon: MdAssignment },
+    { label: 'شريط العروض', path: '/admin/top-offer-bar', icon: MdCampaign },
     { label: 'الشهادات', path: '/admin/certificates', icon: MdWork },
+    { label: 'إعدادات الشهادات', path: '/admin/certificate-settings', icon: MdSettings },
     { label: 'المستخدمين', path: '/admin/users', icon: MdPeople },
   ];
 

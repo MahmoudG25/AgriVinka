@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import TopOfferBar from '../components/common/TopOfferBar';
 import Footer from '../components/layout/Footer';
 import { pageService } from '../services/pageService';
 import { logger } from '../utils/logger';
@@ -84,11 +85,14 @@ const PublicRoutes = () => {
   return (
     <div dir="rtl" className="bg-surface-white dark:bg-background-dark font-display text-body-text dark:text-gray-100 antialiased selection:bg-primary/30 min-h-screen transition-colors duration-300">
       {!isPlayerRoute && (
-        <Navbar
-          data={pageData.navbar}
-          isDarkMode={isDarkMode}
-          toggleDarkMode={toggleDarkMode}
-        />
+        <>
+          <TopOfferBar />
+          <Navbar
+            data={pageData.navbar}
+            isDarkMode={isDarkMode}
+            toggleDarkMode={toggleDarkMode}
+          />
+        </>
       )}
 
       <div className={`w-full ${!isPlayerRoute ? 'min-h-[calc(100vh-80px)]' : 'min-h-screen'}`}>

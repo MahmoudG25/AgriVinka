@@ -21,6 +21,8 @@ const ThemeManager = lazy(() => import('../pages/ThemeManager'));
 const AdminTrainingsPage = lazy(() => import('../pages/AdminTrainingsPage'));
 const AdminTrainingEdit = lazy(() => import('../pages/AdminTrainingEdit'));
 const AdminCertificatesPage = lazy(() => import('../pages/AdminCertificatesPage'));
+const CertificateSettingsPage = lazy(() => import('../pages/CertificateSettingsPage'));
+const AdminTopOfferBar = lazy(() => import('../pages/AdminTopOfferBar'));
 
 // Loading skeleton
 const AdminPageLoader = () => (
@@ -147,6 +149,18 @@ const AdminRoutes = () => {
         <Route path="certificates" element={
           <Suspense fallback={<AdminPageLoader />}>
             <AdminCertificatesPage />
+          </Suspense>
+        } />
+
+        <Route path="certificate-settings" element={
+          <Suspense fallback={<AdminPageLoader />}>
+            <CertificateSettingsPage />
+          </Suspense>
+        } />
+
+        <Route path="top-offer-bar" element={
+          <Suspense fallback={<AdminPageLoader />}>
+            <AdminTopOfferBar />
           </Suspense>
         } />
       </Route>

@@ -2,6 +2,7 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { ArabicShaper } from 'arabic-persian-reshaper';
 import { generateQRMatrix } from '../utils/qrcode';
+import { getCertificateTemplateSettingsCached } from '../modules/certificates/services/templateSettingsService.js';
 
 // Template version — increment when layout changes significantly
 export const TEMPLATE_VERSION = '2.0.0';
@@ -25,10 +26,26 @@ function hasArabic(text) {
 }
 
 /**
+ * Convert hex color to pdf-lib rgb().
+ */
+function hexToRgb(hex) {
+  const h = (hex || '#000000').replace('#', '');
+  return rgb(
+    parseInt(h.substring(0, 2), 16) / 255,
+    parseInt(h.substring(2, 4), 16) / 255,
+    parseInt(h.substring(4, 6), 16) / 255
+  );
+}
+
+/**
  * Try to fetch and embed a PNG logo into the PDF.
  */
-async function fetchLogoBytes() {
-  const sources = ['/assets/000.png', '/logo.png'];
+async function fetchLogoBytes(logoUrl) {
+  // If a custom logo URL is set, try it first
+  const sources = logoUrl
+    ? [logoUrl, '/assets/000.png', '/logo.png']
+    : ['/assets/000.png', '/logo.png'];
+
   for (const src of sources) {
     try {
       const res = await fetch(src);
@@ -79,6 +96,7 @@ function drawQRCode(page, qrData, x, y, moduleSize, color) {
 
 /**
  * Generate a professional bilingual certificate PDF.
+ * Colors, texts, and branding are pulled from Firestore template settings.
  * 
  * @param {Object} data Certificate data
  * @param {string} data.studentName Student's full name
@@ -89,9 +107,10 @@ function drawQRCode(page, qrData, x, y, moduleSize, color) {
  * @param {string} data.serialNumber Serial number (NMA-YYYYMMDD-XXXXX)
  * @param {string} data.verificationUrl Full verification URL for QR code
  * @param {string} data.issueDate Issue date
+ * @param {Object} [templateSettings] Optional template settings (auto-fetched if missing)
  * @returns {Promise<Uint8Array>} PDF bytes
  */
-export async function createCertificatePdf(data) {
+export async function createCertificatePdf(data, templateSettings) {
   const {
     studentName,
     courseTitle,
@@ -103,6 +122,9 @@ export async function createCertificatePdf(data) {
     issueDate
   } = data;
 
+  // Fetch template settings from Firestore (cached) if not explicitly passed
+  const ts = templateSettings || await getCertificateTemplateSettingsCached();
+
   // A4 Landscape: 841.89 x 595.28 points
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
@@ -110,37 +132,39 @@ export async function createCertificatePdf(data) {
   const page = pdfDoc.addPage([841.89, 595.28]);
   const { width, height } = page.getSize();
 
-  // ── Color Palette ──
+  // ── Color Palette (driven by template settings) ──
   const cream = rgb(0.97, 0.95, 0.91);
-  const green = rgb(0.09, 0.35, 0.11);
-  const greenLight = rgb(0.09, 0.35, 0.11);
-  const gold = rgb(0.85, 0.65, 0.13);
+  const green = hexToRgb(ts.primaryColor);
+  const greenLight = green;
+  const gold = hexToRgb(ts.accentColor);
   const goldLight = rgb(0.92, 0.78, 0.35);
   const dark = rgb(0.15, 0.15, 0.15);
   const gray = rgb(0.5, 0.5, 0.5);
   const white = rgb(1, 1, 1);
-  const greenBg = rgb(0.94, 0.97, 0.94);
 
   // ── Background ──
   page.drawRectangle({ x: 0, y: 0, width, height, color: cream });
 
-  // Outer decorative border (dark green)
-  page.drawRectangle({
-    x: 12, y: 12, width: width - 24, height: height - 24,
-    borderColor: green, borderWidth: 3,
-  });
+  // ── Borders (conditional on settings) ──
+  if (ts.borderEnabled !== false) {
+    // Outer decorative border (dark green)
+    page.drawRectangle({
+      x: 12, y: 12, width: width - 24, height: height - 24,
+      borderColor: green, borderWidth: 3,
+    });
 
-  // Inner decorative border (gold)
-  page.drawRectangle({
-    x: 22, y: 22, width: width - 44, height: height - 44,
-    borderColor: gold, borderWidth: 1.5,
-  });
+    // Inner decorative border (gold)
+    page.drawRectangle({
+      x: 22, y: 22, width: width - 44, height: height - 44,
+      borderColor: gold, borderWidth: 1.5,
+    });
 
-  // Inner-inner thin border
-  page.drawRectangle({
-    x: 28, y: 28, width: width - 56, height: height - 56,
-    borderColor: rgb(0.88, 0.85, 0.78), borderWidth: 0.5,
-  });
+    // Inner-inner thin border
+    page.drawRectangle({
+      x: 28, y: 28, width: width - 56, height: height - 56,
+      borderColor: rgb(0.88, 0.85, 0.78), borderWidth: 0.5,
+    });
+  }
 
   // Top green accent bar
   page.drawRectangle({
@@ -195,7 +219,7 @@ export async function createCertificatePdf(data) {
 
   // ── 1. Logo ──
   try {
-    const logoBytes = await fetchLogoBytes();
+    const logoBytes = await fetchLogoBytes(ts.logoUrl);
     if (logoBytes) {
       const logoPng = await pdfDoc.embedPng(logoBytes);
       const logoScale = logoPng.scale(0.12);
@@ -214,7 +238,7 @@ export async function createCertificatePdf(data) {
   // ── 2. Main Title ──
   drawCentered(prepareArabicText('شهادة إتمام'), Y, fontArBold, 38, green);
   Y -= 26;
-  drawCentered('Certificate of Completion', Y, fontEn, 14, gold);
+  drawCentered(ts.titleEn || 'Certificate of Completion', Y, fontEn, 14, gold);
 
   // Decorative gold line under title
   Y -= 14;
@@ -293,7 +317,10 @@ export async function createCertificatePdf(data) {
     end: { x: width - 80, y: instY + 8 },
     thickness: 0.75, color: dark
   });
-  const instName = instructorName || 'أكاديمية نماء';
+  // Use instructor name from settings if signature is enabled
+  const instName = (ts.signature?.enabled && ts.signature?.instructorName)
+    ? ts.signature.instructorName
+    : (instructorName || 'أكاديمية نماء');
   if (hasArabic(instName)) {
     drawRight(prepareArabicText(instName), width - 90, instY - 12, fontArBold, 13, green);
   } else {
@@ -337,10 +364,10 @@ export async function createCertificatePdf(data) {
 
   // ── 11. Bottom Accreditation Line ──
   drawCentered(prepareArabicText('شهادة معتمدة من أكاديمية نماء'), 48, fontAr, 10, gold);
-  drawCentered('Accredited by Namaa Academy', 35, fontEn, 7, gray);
+  drawCentered(ts.sealTextEn || 'Accredited by Namaa Academy', 35, fontEn, 7, gray);
 
   // ── Top bar text ──
-  drawCentered('NAMAA ACADEMY', height - 44, fontEn, 9, white);
+  drawCentered((ts.academyNameEn || 'NAMAA ACADEMY').toUpperCase(), height - 44, fontEn, 9, white);
 
   // ── Return PDF ──
   return await pdfDoc.save();

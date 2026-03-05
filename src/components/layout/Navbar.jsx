@@ -7,6 +7,7 @@ import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaTachometerAlt, FaBox
 import { useAuth } from '../../contexts/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/config';
+import { useTopOfferBar } from '../../hooks/useTopOfferBar';
 
 // Map known Arabic link labels to real routes
 const NAVBAR_LINK_ROUTES = {
@@ -48,7 +49,26 @@ const Navbar = ({ data = defaultNavbarData }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
+  const { offerData, loading: offerLoading } = useTopOfferBar();
+  const [isOfferVisible, setIsOfferVisible] = useState(false);
+
   const dropdownRef = useRef(null);
+
+  // Check offer bar visibility state
+  useEffect(() => {
+    if (offerLoading || !offerData || !offerData.enabled) {
+      setIsOfferVisible(false);
+      return;
+    }
+
+    const dismissedOfferId = localStorage.getItem('dismissedOfferId');
+    if (dismissedOfferId === offerData.offerId) {
+      setIsOfferVisible(false);
+      return;
+    }
+
+    setIsOfferVisible(true);
+  }, [offerData, offerLoading]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -112,13 +132,16 @@ const Navbar = ({ data = defaultNavbarData }) => {
   const displayName = userData?.displayName || currentUser?.displayName || currentUser?.email || 'مستخدم';
   const avatarLetter = displayName.charAt(0).toUpperCase();
 
+  const offerBarHeight = document.getElementById('top-offer-bar')?.offsetHeight || 0;
+
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b border-border-light shadow-sm h-16 md:h-20 ${mobileMenuOpen ? 'bg-surface-white' : 'bg-surface-white/90 backdrop-blur-md'}`}>
+    <nav className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-border-light shadow-sm h-16 md:h-20 ${mobileMenuOpen ? 'bg-surface-white' : 'bg-surface-white/90 backdrop-blur-md'}`}
+      style={{ top: isOfferVisible ? `${offerBarHeight}px` : '0px' }}
+    >
       <div className="container-layout h-full flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <Link to="/">
-            <img src={logo} alt={data.logo} className="h-15 sm:h-15 w-auto object-contain" />
           </Link>
         </div>
 
