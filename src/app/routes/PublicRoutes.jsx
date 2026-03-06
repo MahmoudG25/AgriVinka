@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import TopOfferBar from '../../components/common/TopOfferBar';
 import Footer from '../../components/layout/Footer';
+import AuthShell from '../../components/auth/AuthShell';
 import { pageService } from '../../services/firestore/pageService';
 import { logger } from '../../utils/logger';
 
@@ -53,6 +54,7 @@ const PublicRoutes = () => {
 
   const location = useLocation();
   const isPlayerRoute = location.pathname.includes('/play');
+  const isAuthRoute = ['/login', '/register', '/reset-password'].includes(location.pathname);
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -84,7 +86,7 @@ const PublicRoutes = () => {
 
   return (
     <div dir="rtl" className="bg-surface-white dark:bg-background-dark font-display text-body-text dark:text-gray-100 antialiased selection:bg-primary/30 min-h-screen transition-colors duration-300">
-      {!isPlayerRoute && (
+      {!isPlayerRoute && !isAuthRoute && (
         <>
           <TopOfferBar />
           <Navbar
@@ -95,7 +97,7 @@ const PublicRoutes = () => {
         </>
       )}
 
-      <div className={`w-full ${!isPlayerRoute ? 'min-h-[calc(100vh-80px)]' : 'min-h-screen'}`}>
+      <div className={`w-full ${!isPlayerRoute && !isAuthRoute ? 'min-h-[calc(100vh-80px)]' : 'min-h-screen'}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -116,9 +118,11 @@ const PublicRoutes = () => {
             <Route path="/ai/diagnose" element={<AIDiagnosisPage />} />
             <Route path="/practical-training" element={<PracticalTrainingPage />} />
 
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route element={<AuthShell />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+            </Route>
 
             <Route path="/dashboard" element={
               <RequireAuth requireAdmin={false}>
@@ -149,7 +153,7 @@ const PublicRoutes = () => {
         </Suspense>
       </div>
 
-      {!isPlayerRoute && <Footer data={pageData.footer} />}
+      {!isPlayerRoute && !isAuthRoute && <Footer data={pageData.footer} />}
     </div>
   );
 };

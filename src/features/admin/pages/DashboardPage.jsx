@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { logger } from '../../../utils/logger';
 import {
   MdClass,
   MdMap,
   MdPeople,
   MdCloudUpload,
-  MdSchool,
+  MdWorkspacePremium,
   MdPendingActions,
   MdShoppingCart,
-  MdWorkspacePremium
+  MdTrendingUp,
+  MdAdd,
+  MdCheckCircle,
+  MdWarning
 } from 'react-icons/md';
 import { addToast, openModal } from '../../../app/store/slices/uiSlice';
 import { courseService } from '../../../services/firestore/courseService';
@@ -17,22 +21,50 @@ import { roadmapService } from '../../../services/firestore/roadmapService';
 import { adminStatsService } from '../../../services/firestore/adminStatsService';
 import { pageService } from '../../../services/firestore/pageService';
 
-const StatCard = ({ title, value, icon: Icon, color, loading }) => (
-  <div className="bg-white p-5 rounded-2xl shadow-sm border border-border-light flex items-center justify-between hover:shadow-md transition-shadow">
-    <div>
-      <p className="text-gray-500 text-sm mb-1">{title}</p>
-      {loading ? (
-        <div className="h-8 w-16 bg-gray-100 rounded animate-pulse" />
-      ) : (
-        <h3 className="text-2xl font-bold text-heading-dark">{value}</h3>
-      )}
-    </div>
-    <div className={`p-3 rounded-full ${color}`}>
-      <Icon size={24} className="text-white" />
+/* ═══════════════════════════════════════════════
+   KPI Card — accent-stripe left border
+   ═══════════════════════════════════════════════ */
+const KPICard = ({ title, value, icon: Icon, accent, loading }) => (
+  <div className="bg-white rounded-xl border border-border-light hover:shadow-sm transition-shadow overflow-hidden flex">
+    {/* Accent stripe */}
+    <div className={`w-1 shrink-0 ${accent}`} />
+    <div className="flex items-center justify-between flex-1 p-4">
+      <div>
+        <p className="text-xs text-gray-400 font-medium mb-1">{title}</p>
+        {loading ? (
+          <div className="h-7 w-14 bg-gray-100 rounded animate-pulse" />
+        ) : (
+          <p className="text-2xl font-bold text-heading-dark tabular-nums">{value}</p>
+        )}
+      </div>
+      <div className={`p-2.5 rounded-lg ${accent} bg-opacity-10`}>
+        <Icon size={22} className="opacity-70" />
+      </div>
     </div>
   </div>
 );
 
+/* ═══════════════════════════════════════════════
+   Quick-Link Card
+   ═══════════════════════════════════════════════ */
+const QuickLink = ({ to, icon: Icon, label, desc }) => (
+  <Link
+    to={to}
+    className="group bg-white rounded-xl border border-border-light p-4 hover:shadow-sm hover:border-primary/20 transition-all flex items-start gap-3"
+  >
+    <div className="p-2 bg-primary/5 rounded-lg text-primary group-hover:bg-primary/10 transition-colors shrink-0">
+      <Icon size={20} />
+    </div>
+    <div className="min-w-0">
+      <p className="text-sm font-bold text-heading-dark group-hover:text-primary transition-colors">{label}</p>
+      <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
+    </div>
+  </Link>
+);
+
+/* ═══════════════════════════════════════════════
+   Dashboard Page
+   ═══════════════════════════════════════════════ */
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const [contentStats, setContentStats] = useState({ courses: 0, roadmaps: 0 });
@@ -47,7 +79,6 @@ const DashboardPage = () => {
   const [seedLoading, setSeedLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch content stats (courses, roadmaps)
     const fetchContentStats = async () => {
       try {
         const [courses, roadmaps] = await Promise.all([
@@ -65,7 +96,6 @@ const DashboardPage = () => {
       }
     };
 
-    // Fetch user metrics (efficient aggregation)
     const fetchUserMetrics = async () => {
       try {
         const stats = await adminStatsService.getAdminDashboardStats();
@@ -159,123 +189,89 @@ const DashboardPage = () => {
     }
   };
 
-  // User Metrics Cards (NEW)
-  const metricsCards = [
-    {
-      title: 'إجمالي المستخدمين',
-      value: userMetrics.totalUsers,
-      icon: MdPeople,
-      color: 'bg-blue-500',
-      loading: metricsLoading
-    },
-    {
-      title: 'الدورات المكتملة',
-      value: userMetrics.totalCompleted,
-      icon: MdWorkspacePremium,
-      color: 'bg-emerald-500',
-      loading: metricsLoading
-    },
-    {
-      title: 'طلبات قيد الانتظار',
-      value: userMetrics.pendingOrders,
-      icon: MdPendingActions,
-      color: 'bg-amber-500',
-      loading: metricsLoading
-    },
-    {
-      title: 'إجمالي الطلبات',
-      value: userMetrics.totalOrders,
-      icon: MdShoppingCart,
-      color: 'bg-purple-500',
-      loading: metricsLoading
-    },
-  ];
-
-  // Content Stats Cards (existing)
-  const contentCards = [
-    {
-      title: 'إجمالي الدورات',
-      value: contentStats.courses,
-      icon: MdClass,
-      color: 'bg-indigo-500',
-      loading
-    },
-    {
-      title: 'المسارات التعليمية',
-      value: contentStats.roadmaps,
-      icon: MdMap,
-      color: 'bg-teal-500',
-      loading
-    },
+  const kpiCards = [
+    { title: 'إجمالي المستخدمين', value: userMetrics.totalUsers, icon: MdPeople, accent: 'bg-blue-500', loading: metricsLoading },
+    { title: 'الدورات المكتملة', value: userMetrics.totalCompleted, icon: MdWorkspacePremium, accent: 'bg-emerald-500', loading: metricsLoading },
+    { title: 'طلبات قيد الانتظار', value: userMetrics.pendingOrders, icon: MdPendingActions, accent: 'bg-amber-500', loading: metricsLoading },
+    { title: 'إجمالي الطلبات', value: userMetrics.totalOrders, icon: MdShoppingCart, accent: 'bg-purple-500', loading: metricsLoading },
+    { title: 'إجمالي الدورات', value: contentStats.courses, icon: MdClass, accent: 'bg-indigo-500', loading },
+    { title: 'المسارات التعليمية', value: contentStats.roadmaps, icon: MdMap, accent: 'bg-teal-500', loading },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-heading-dark">لوحة المعلومات</h1>
-
-      {/* User Metrics Row */}
+      {/* Page Title */}
       <div>
-        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">إحصائيات المستخدمين</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {metricsCards.map((stat, idx) => (
-            <StatCard key={idx} {...stat} />
-          ))}
+        <h1 className="text-xl font-bold text-heading-dark">لوحة المعلومات</h1>
+        <p className="text-sm text-gray-400 mt-0.5">نظرة شاملة على منصة AgriVinka</p>
+      </div>
+
+      {/* KPI Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {kpiCards.map((kpi, idx) => (
+          <KPICard key={idx} {...kpi} />
+        ))}
+      </div>
+
+      {/* Quick Links */}
+      <div>
+        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">وصول سريع</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <QuickLink to="/features/admin/courses/new" icon={MdAdd} label="إضافة دورة" desc="إنشاء دورة تعليمية جديدة" />
+          <QuickLink to="/features/admin/orders" icon={MdShoppingCart} label="إدارة الطلبات" desc="مراجعة الطلبات المعلقة" />
+          <QuickLink to="/features/admin/users" icon={MdPeople} label="المستخدمين" desc="عرض وإدارة الأعضاء" />
+          <QuickLink to="/features/admin/certificates" icon={MdWorkspacePremium} label="الشهادات" desc="عرض الشهادات الصادرة" />
         </div>
       </div>
 
-      {/* Content Stats Row */}
-      <div>
-        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">إحصائيات المحتوى</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {contentCards.map((stat, idx) => (
-            <StatCard key={idx} {...stat} />
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-border-light">
-          <h2 className="text-lg font-bold mb-4">أدوات النظام</h2>
-          <p className="text-sm text-gray-500 mb-4">
-            أدوات مفيدة لإدارة البيانات ونقلها.
-          </p>
-          <div className="flex flex-col gap-4">
+      {/* System Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* System Tools */}
+        <div className="bg-white rounded-xl border border-border-light p-5">
+          <h2 className="text-sm font-bold text-heading-dark mb-1">أدوات النظام</h2>
+          <p className="text-xs text-gray-400 mb-4">أدوات مفيدة لإدارة البيانات ونقلها.</p>
+          <div className="flex flex-col gap-3">
             <button
               onClick={handleReset}
-              className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 px-4 rounded-xl transition-colors border border-red-100"
+              className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm py-2.5 px-4 rounded-lg transition-colors border border-red-100"
             >
               تنظيف المحلي (Reset Storage)
             </button>
             <button
               onClick={handleSeedDatabase}
               disabled={seedLoading}
-              className="flex-1 bg-primary hover:bg-accent text-heading-dark font-bold py-3 px-4 rounded-xl transition-colors border shadow-md flex justify-center items-center gap-2"
+              className="bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm py-2.5 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50"
             >
-              <MdCloudUpload size={20} />
-              {seedLoading ? 'جاري الحقن...' : 'حقن محتوى AgriVinka نصوص (Seed DB)'}
+              <MdCloudUpload size={18} />
+              {seedLoading ? 'جاري الحقن...' : 'حقن محتوى AgriVinka (Seed DB)'}
             </button>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-border-light">
-          <h2 className="text-lg font-bold mb-4">حالة النظام</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center border-b border-border-light pb-2">
-              <span className="text-gray-600">قاعدة البيانات</span>
-              <span className="text-green-600 font-bold flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                Firestore Connected
+        {/* System Status */}
+        <div className="bg-white rounded-xl border border-border-light p-5">
+          <h2 className="text-sm font-bold text-heading-dark mb-4">حالة النظام</h2>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center pb-3 border-b border-border-light">
+              <span className="text-sm text-gray-500">قاعدة البيانات</span>
+              <span className="text-sm text-green-600 font-medium flex items-center gap-1.5">
+                <MdCheckCircle size={16} />
+                Firestore متصل
               </span>
             </div>
-            <div className="flex justify-between items-center border-b border-border-light pb-2">
-              <span className="text-gray-600">Cloudinary</span>
-              <span className={import.meta.env.VITE_CLOUDINARY_CLOUD_NAME ? "text-green-600 font-bold" : "text-red-500 font-bold"}>
-                {import.meta.env.VITE_CLOUDINARY_CLOUD_NAME ? 'متصل' : 'غير متصل (اضبط .env)'}
+            <div className="flex justify-between items-center pb-3 border-b border-border-light">
+              <span className="text-sm text-gray-500">Cloudinary</span>
+              <span className={`text-sm font-medium flex items-center gap-1.5 ${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME ? 'text-green-600' : 'text-red-500'}`}>
+                {import.meta.env.VITE_CLOUDINARY_CLOUD_NAME ? (
+                  <><MdCheckCircle size={16} /> متصل</>
+                ) : (
+                  <><MdWarning size={16} /> غير متصل</>
+                )}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">نسخة التطبيق</span>
-              <span className="text-gray-900 font-bold">1.3.0 (Firestore)</span>
+              <span className="text-sm text-gray-500">نسخة التطبيق</span>
+              <span className="text-sm text-heading-dark font-medium">1.3.0</span>
             </div>
           </div>
         </div>

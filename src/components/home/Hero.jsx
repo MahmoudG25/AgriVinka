@@ -12,6 +12,18 @@ const DEFAULT_IMAGES = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBlDweBEFcznHGl9FeLXf-2SaPaVumFOFddD7v4iGFtecOlgNyr-mLKubI47pirjpv7Vj9i-Y1GVDYz6R7LV4HpfLQHtil_DD3QE8eZQB8IUKof3jlfxd-ELHH3jqZb_KhATfogr27TbXP6zj0zxkf5_PFKMpOjpSbLmgnrqntjBI-OWKBoDb7p7BbOyGx-j2I6khzy1DY6DpQb5xNk4jAulM5lAbUwW1KNO6BZGsXXkb9VC6WXJbM9wCRJh281zN1nGTMeOqcdYNU",
 ];
 
+/* ─── Stagger helpers ─── */
+const stagger = {
+  parent: {
+    animate: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+  },
+  child: {
+    initial: { opacity: 0, y: 24, filter: 'blur(4px)' },
+    animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 const Hero = ({ data }) => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
@@ -21,7 +33,6 @@ const Hero = ({ data }) => {
   const ctaText = data?.ctaText || 'تصفح الدورات';
   const videoUrl = data?.videoUrl || '';
 
-  // Use images from database, fallback to defaults
   const allImages = (data?.images?.length > 0) ? data.images : DEFAULT_IMAGES;
   const sliderImages = useMemo(() => {
     const mid = Math.ceil(allImages.length / 2);
@@ -29,146 +40,175 @@ const Hero = ({ data }) => {
   }, [allImages]);
 
   return (
-    <header className="relative pt-10 pb-12 lg:pt-30 lg:pb-30 overflow-hidden bg-warm-light min-h-[75vh] lg:min-h-[90vh] flex items-center">
+    <header className="relative pt-6 pb-14 lg:pt-16 lg:pb-24 overflow-hidden bg-warm-light min-h-[75vh] lg:min-h-[90vh] flex items-center">
 
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+      {/* ─── Background Decor ─── */}
+      <div className="absolute top-0 right-0 w-[900px] h-[900px] bg-gradient-to-br from-primary/8 to-secondary/4 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-accent/8 to-primary/3 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+      {/* Subtle grid pattern for texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #1B5E20 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
 
-        {/* --- Right: Text Content --- */}
-        <div className="order-2 lg:order-1 text-start space-y-8 min-w-0">
+        {/* ─── Right: Text Content ─── */}
+        <motion.div
+          className="order-2 lg:order-1 text-start space-y-7 min-w-0"
+          variants={stagger.parent}
+          initial="initial"
+          animate="animate"
+        >
 
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-primary/20 text-heading-dark font-bold text-sm shadow-sm"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
-            {badgeText}
+          <motion.div variants={stagger.child} transition={stagger.child.transition}>
+            <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-primary/15 text-heading-dark font-bold text-sm shadow-xs hover:shadow-sm transition-shadow">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/60" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+              </span>
+              {badgeText}
+            </span>
           </motion.div>
 
           {/* Headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="space-y-3 lg:space-y-4"
-          >
-            <h1 className="text-3xl md:text-5xl lg:text-[72px] font-black leading-[1.2] lg:leading-[1.15] text-heading-dark tracking-normal">
-              من التشتت <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-heading-dark">
-                إلى الوضوح
-              </span>
-            </h1>
-            <p className="text-lg lg:text-xl text-body-text/80 leading-relaxed font-medium">
+          <motion.div variants={stagger.child} transition={stagger.child.transition} className="space-y-4 lg:space-y-5">
+            {data?.title ? (
+              <h1 className="text-[2rem] sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[4.75rem] font-black leading-[1.15] text-heading-dark tracking-tight whitespace-pre-line">
+                {title}
+              </h1>
+            ) : (
+              <h1 className="text-[2rem] sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[4.75rem] font-black leading-[1.15] text-heading-dark tracking-tight">
+                من التشتت <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-l from-primary via-secondary to-primary bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]">
+                  إلى الوضوح
+                </span>
+              </h1>
+            )}
+            <p className="text-base sm:text-lg lg:text-xl text-body-text/75 leading-relaxed font-medium max-w-[540px]">
               {subtitle}
             </p>
           </motion.div>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 pt-4"
-          >
-            <Link to="/learning-paths" className="w-full sm:w-auto block">
-              <button className="btn-cta w-full sm:w-auto flex justify-center items-center group">
-                <span>{ctaText}</span>
-                <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform rtl:rotate-180">arrow_right_alt</span>
+          <motion.div variants={stagger.child} transition={stagger.child.transition} className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
+            <Link to={data?.ctaLink || "/learning-paths"} className="w-full sm:w-auto block">
+              <button className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-primary text-white font-bold text-base sm:text-lg shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 overflow-hidden cursor-pointer">
+                {/* Shine effect */}
+                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                <span className="relative z-10">{ctaText}</span>
+                <span className="relative z-10 material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform rtl:rotate-180">
+                  arrow_right_alt
+                </span>
               </button>
             </Link>
 
-            <button
-              onClick={() => setIsVideoOpen(true)}
-              className="btn-ghost px-8 py-4 w-full sm:w-auto rounded-full font-bold text-lg flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span className="material-symbols-outlined">play_circle</span>
-              شاهد كيف نعمل
-            </button>
+            {videoUrl && (
+              <button
+                onClick={() => setIsVideoOpen(true)}
+                className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl border-2 border-heading-dark/10 bg-white/60 backdrop-blur-sm text-heading-dark font-bold text-base sm:text-lg hover:border-primary/30 hover:bg-white hover:shadow-md active:scale-[0.98] transition-all duration-300 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">play_circle</span>
+                شاهد كيف نعمل
+              </button>
+            )}
           </motion.div>
 
           {/* Trust Strip */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="pt-8 border-t border-heading-dark/5 flex flex-wrap gap-y-4 gap-x-8 items-center text-sm font-bold text-body-text/70"
+            variants={stagger.child}
+            transition={stagger.child.transition}
+            className="pt-7 border-t border-heading-dark/6 flex flex-wrap gap-y-3 gap-x-6 lg:gap-x-8 items-center"
           >
-            <span className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-green-600 text-lg">verified_user</span>
-              ضمان استرداد 30 يوم
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">all_inclusive</span>
-              وصول مدى الحياة
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-heading-dark text-lg">workspace_premium</span>
-              شهادات معتمدة
-            </span>
+            {[
+              { icon: 'verified_user', color: 'text-success', text: 'ضمان استرداد 30 يوم' },
+              { icon: 'all_inclusive', color: 'text-primary', text: 'وصول مدى الحياة' },
+              { icon: 'workspace_premium', color: 'text-accent', text: 'شهادات معتمدة' },
+            ].map((item, i) => (
+              <span key={i} className="flex items-center gap-2 text-sm font-bold text-body-text/65 hover:text-heading-dark transition-colors">
+                <span className={`material-symbols-outlined text-lg ${item.color}`}>{item.icon}</span>
+                {item.text}
+              </span>
+            ))}
           </motion.div>
 
           {/* Stats */}
-          <div className="flex gap-10 pt-4 border-t border-heading-dark/5 lg:border-none">
-            <div>
-              <p className="text-3xl font-black text-heading-dark">+10k</p>
-              <p className="text-sm text-gray-500 font-bold">طالب</p>
-            </div>
-            <div>
-              <p className="text-3xl font-black text-heading-dark">+50</p>
-              <p className="text-sm text-gray-500 font-bold">دورة</p>
-            </div>
-            <div>
-              <p className="text-3xl font-black text-heading-dark">4.9</p>
-              <p className="flex text-accent text-sm">★★★★★</p>
-            </div>
-          </div>
+          <motion.div
+            variants={stagger.child}
+            transition={stagger.child.transition}
+            className="flex gap-8 sm:gap-10 pt-3"
+          >
+            {(data?.stats?.length > 0 ? data.stats : [
+              { value: '+10k', label: 'طالب' },
+              { value: '+50', label: 'دورة' },
+              { value: '4.9', label: '★★★★★', isStars: true },
+            ]).map((stat, i) => (
+              <div key={i} className="group">
+                <p className="text-2xl sm:text-3xl font-black text-heading-dark group-hover:text-primary transition-colors">
+                  {stat.value}
+                </p>
+                {stat.isStars || stat.label === '★★★★★' ? (
+                  <p className="flex text-accent text-sm mt-0.5">{stat.label}</p>
+                ) : (
+                  <p className="text-xs sm:text-sm text-muted font-bold mt-0.5">{stat.label}</p>
+                )}
+              </div>
+            ))}
+          </motion.div>
 
-        </div>
+        </motion.div>
 
-        {/* --- Left: Animated Slider / Mobile Image --- */}
-        <div className="relative order-1 lg:order-2 w-full lg:h-[700px] flex justify-center lg:block">
+        {/* ─── Left: Animated Slider / Mobile Image ─── */}
+        <motion.div
+          className="relative order-1 lg:order-2 w-full lg:h-[700px] flex justify-center lg:block"
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
 
           {/* Mobile Static Image */}
-          <div className="block lg:hidden w-[85%] mx-auto rounded-2xl overflow-hidden shadow-lg border border-white/20 relative">
+          <div className="block lg:hidden w-[88%] sm:w-[75%] mx-auto rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/5 relative">
             <img src={allImages[0]} alt="Hero" className="w-full h-auto" loading="eager" fetchPriority="high" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-heading-dark/50 via-transparent to-transparent" />
+            {/* Floating badge on mobile image */}
+            <div className="absolute bottom-4 right-4 left-4 flex justify-end">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-heading-dark shadow-lg">
+                <span className="material-symbols-outlined text-sm text-primary">verified</span>
+                محتوى متخصص
+              </span>
+            </div>
           </div>
 
           {/* Desktop Slider */}
           <div className="hidden lg:block relative h-full w-full overflow-hidden mask-gradient-b">
-            {/* Inner Grid */}
-            <div className="grid grid-cols-2 gap-4 h-full w-full rotate-[-2deg] scale-110 origin-center">
+            <div className="grid grid-cols-2 gap-5 h-full w-full rotate-[-3deg] scale-110 origin-center">
 
               {/* Col 1: Up */}
-              <div className="animate-scroll-up flex flex-col gap-4">
+              <div className="animate-scroll-up flex flex-col gap-5">
                 {[...sliderImages[0], ...sliderImages[0], ...sliderImages[0]].map((src, i) => (
-                  <div key={`c1-${i}`} className="w-full relative rounded-2xl overflow-hidden shadow-md">
-                    <img src={src} className="w-full h-auto hover:scale-105 transition-transform duration-700" alt="Student" loading="lazy" decoding="async" />
+                  <div key={`c1-${i}`} className="group w-full relative rounded-2xl overflow-hidden shadow-md ring-1 ring-black/5 hover:shadow-xl transition-shadow duration-500">
+                    <img src={src} className="w-full h-auto group-hover:scale-[1.03] transition-transform duration-700 ease-out" alt="Student" loading="eager" decoding="async" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 ))}
               </div>
 
               {/* Col 2: Down */}
-              <div className="animate-scroll-down flex flex-col gap-4 -mt-32">
+              <div className="animate-scroll-down flex flex-col gap-5 -mt-32">
                 {[...sliderImages[1], ...sliderImages[1], ...sliderImages[1]].map((src, i) => (
-                  <div key={`c2-${i}`} className="w-full relative rounded-2xl overflow-hidden shadow-md">
-                    <img src={src} className="w-full h-auto hover:scale-105 transition-transform duration-700" alt="Student" loading="lazy" decoding="async" />
+                  <div key={`c2-${i}`} className="group w-full relative rounded-2xl overflow-hidden shadow-md ring-1 ring-black/5 hover:shadow-xl transition-shadow duration-500">
+                    <img src={src} className="w-full h-auto group-hover:scale-[1.03] transition-transform duration-700 ease-out" alt="Student" loading="eager" decoding="async" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 ))}
               </div>
 
             </div>
 
-            {/* Overlay Gradient */}
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-warm-light via-warm-light/80 to-transparent z-20"></div>
+            {/* Bottom fade */}
+            <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-warm-light via-warm-light/80 to-transparent z-20 pointer-events-none" />
+            {/* Top subtle fade */}
+            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-warm-light/60 to-transparent z-20 pointer-events-none" />
           </div>
-        </div>
+        </motion.div>
 
       </div>
 

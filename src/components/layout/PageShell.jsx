@@ -1,9 +1,11 @@
 import React from 'react';
+import { PageTransition } from '../../utils/motion';
 
 /**
  * PageShell - Single source of truth for top-level page layout.
  * Enforces maximum width, horizontal padding, and mobile safe areas
  * without collapsing descendant grids/flexboxes.
+ * Includes a subtle page-enter fade animation.
  */
 const PageShell = ({ children, className = '', narrow = false }) => {
   return (
@@ -14,7 +16,7 @@ const PageShell = ({ children, className = '', narrow = false }) => {
         ${className}
       `}
     >
-      {children}
+      <PageTransition>{children}</PageTransition>
     </main>
   );
 };

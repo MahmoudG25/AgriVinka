@@ -81,7 +81,7 @@ const CtaSectionAdmin = ({ data = {}, onChange }) => {
                   onUploadComplete={(res) => {
                     if (res) {
                       const newImages = [...data.images];
-                      newImages[index] = res.secure_url;
+                      newImages[index] = res.url;
                       onChange('ctaFinal', 'images', newImages);
                     }
                   }}

@@ -69,7 +69,7 @@ const TestimonialsSectionAdmin = ({ data = [], onAddItem, onUpdateItem, onRemove
                   label="صورة العميل (اختياري)"
                   currentUrl={item.image}
                   folder="Namaa-Academy/home"
-                  onUploadComplete={(res) => onUpdateItem('testimonials', item.id, 'image', res ? res.secure_url : '')}
+                  onUploadComplete={(res) => onUpdateItem('testimonials', item.id, 'image', res ? res.url : '')}
                 />
               </div>
             </div>

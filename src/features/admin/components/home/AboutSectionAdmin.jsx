@@ -33,7 +33,7 @@ const AboutSectionAdmin = ({ data = {}, onChange }) => {
               label="صورة الفريق (Image 1)"
               currentUrl={data.image1}
               folder="Namaa-Academy/home"
-              onUploadComplete={(res) => onChange('about', 'image1', res ? res.secure_url : '')}
+              onUploadComplete={(res) => onChange('about', 'image1', res ? res.url : '')}
             />
           </div>
           <div>
@@ -42,7 +42,7 @@ const AboutSectionAdmin = ({ data = {}, onChange }) => {
               label="صورة الثقافة (Image 2)"
               currentUrl={data.image2}
               folder="Namaa-Academy/home"
-              onUploadComplete={(res) => onChange('about', 'image2', res ? res.secure_url : '')}
+              onUploadComplete={(res) => onChange('about', 'image2', res ? res.url : '')}
             />
           </div>
         </div>

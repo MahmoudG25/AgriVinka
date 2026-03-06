@@ -34,7 +34,7 @@ const CTA = ({ data }) => {
           </h2>
 
           <p className="text-xl text-gray-200 mb-10 mx-auto font-medium drop-shadow-md leading-relaxed">
-            {data?.description || "لا תضيع المزيد من الوقت في البحث العشوائي. انضم الآن وابدأ رحلة الاحتراف في الهندسة الزراعية مع خطة مدروسة."}
+            {data?.subtitle || data?.description || "لا تضيع المزيد من الوقت في البحث العشوائي. انضم الآن وابدأ رحلة الاحتراف في الهندسة الزراعية مع خطة مدروسة."}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-4 sm:px-0">

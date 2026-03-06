@@ -55,16 +55,26 @@
   --font-body: "Tajawal", sans-serif;
 
   /* Type Scale (used as --text-* utilities) */
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
-  --text-4xl: 2.25rem;   /* 36px */
-  --text-5xl: 3rem;      /* 48px */
-  --text-6xl: 3.75rem;   /* 60px */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.25rem;
+  /* 20px */
+  --text-2xl: 1.5rem;
+  /* 24px */
+  --text-3xl: 1.875rem;
+  /* 30px */
+  --text-4xl: 2.25rem;
+  /* 36px */
+  --text-5xl: 3rem;
+  /* 48px */
+  --text-6xl: 3.75rem;
+  /* 60px */
 
   /* ═══════════════════════════════════════════════
      SPACING (8px rhythm)
@@ -118,24 +128,71 @@
   --animate-scale-in: scaleIn 0.2s ease-out forwards;
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
+
   @keyframes pulseSlow {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%      { opacity: 0.8; transform: scale(0.98); }
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
   }
+
   @keyframes scrollUp {
-    0%   { transform: translateY(0); }
-    100% { transform: translateY(-50%); }
+    0% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(-50%);
+    }
   }
+
   @keyframes scrollDown {
-    0%   { transform: translateY(-50%); }
-    100% { transform: translateY(0); }
+    0% {
+      transform: translateY(-50%);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
   }
+
   @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to   { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% center;
+    }
+
+    100% {
+      background-position: -200% center;
+    }
   }
 }
 
@@ -161,19 +218,24 @@
    (React primitives handle button/card/etc styles)
    ═══════════════════════════════════════════════ */
 @layer components {
+
   /* Legacy button classes — kept for existing pages during migration */
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-bold transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
+
   .btn-primary {
     @apply bg-primary text-white shadow-lg hover:bg-primary-hover hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:scale-95;
   }
+
   .btn-secondary {
     @apply bg-heading-dark text-white shadow-md hover:bg-[#111e11] hover:shadow-lg hover:-translate-y-1;
   }
+
   .btn-ghost {
     @apply bg-transparent text-heading-dark border border-heading-dark/10 hover:bg-heading-dark/5 hover:border-heading-dark/30;
   }
+
   .btn-cta {
     @apply bg-accent text-heading-dark text-lg px-10 py-4 shadow-glow hover:shadow-xl hover:scale-105 hover:-translate-y-1 active:scale-95 animate-pulse-slow;
   }
@@ -182,9 +244,11 @@
   .card-base {
     @apply bg-white rounded-card border border-border-light transition-all duration-300;
   }
+
   .card-hover {
     @apply hover:shadow-lg hover:-translate-y-1 hover:border-primary/20;
   }
+
   .card-feature {
     @apply bg-background-alt p-8 rounded-2xl border border-transparent hover:bg-white hover:border-primary/10 hover:shadow-md transition-all;
   }
@@ -197,6 +261,7 @@
   .mobile-card {
     @apply w-full bg-white rounded-2xl shadow-sm border border-border-light overflow-hidden;
   }
+
   .mobile-sticky-cta {
     @apply fixed bottom-[70px] left-4 right-4 z-40 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center justify-between gap-4 md:hidden animate-fade-in-up;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
@@ -207,27 +272,34 @@
   .text-balance {
     text-wrap: balance;
   }
+
   .hide-scroll::-webkit-scrollbar {
     display: none;
   }
+
   .hide-scroll {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .mask-gradient-b {
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
+
   .swipe-container {
     @apply flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 md:grid md:gap-8 md:pb-0 md:mx-0 md:px-0;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .swipe-container::-webkit-scrollbar {
     display: none;
   }
+
   .swipe-item {
     @apply snap-center shrink-0 w-[85vw] md:w-auto;
   }
+
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
@@ -250,4 +322,34 @@ body {
 /* Remove focus outline for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* ═══════════════════════════════════════════════
+   SKELETON SHIMMER ANIMATION
+   ═══════════════════════════════════════════════ */
+.skeleton-shimmer {
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.04) 40%,
+      rgba(0, 0, 0, 0.04) 60%,
+      transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+  }
 }
