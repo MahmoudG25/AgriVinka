@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { aiDiagnosisService } from '../../services/aiDiagnosisService';
+import { useAuth } from '../../app/contexts/AuthContext';
+import { aiDiagnosisService } from '../../services/firestore/aiDiagnosisService';
 import { logger } from '../../utils/logger';
 import SEOHead from '../../components/common/SEOHead';
 import { toast } from 'react-hot-toast';
@@ -97,7 +97,7 @@ const AIDiagnosisPage = () => {
       />
 
       <div className="pt-32 pb-20 min-h-screen bg-[#f8f9fb]" dir="rtl">
-        <div className="container-layout ">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] ">
 
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-bold text-heading-dark mb-4 flex items-center justify-center gap-3">

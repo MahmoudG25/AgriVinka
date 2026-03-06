@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import AdminRoutes from './admin/routes/AdminRoutes';
+import AdminRoutes from '../features/admin/routes/AdminRoutes';
 import PublicRoutes from './routes/PublicRoutes';
-import ScrollToTop from './components/common/ScrollToTop';
-import MobileBottomNav from './components/layout/MobileBottomNav';
-import ErrorBoundary from './components/common/ErrorBoundary';
+import ScrollToTop from '../components/common/ScrollToTop';
+import MobileBottomNav from '../components/layout/MobileBottomNav';
+import ErrorBoundary from '../components/common/ErrorBoundary';
 
 import { AuthProvider } from './contexts/AuthContext';
-import { themeService } from './services/themeService';
+import { themeService } from '../services/firestore/themeService';
 
 function App() {
 	React.useEffect(() => {
@@ -49,7 +49,7 @@ function App() {
 					<ScrollToTop />
 					<div className="pb-20 md:pb-0 min-h-screen">
 						<Routes>
-							<Route path="/admin/*" element={<AdminRoutes />} />
+							<Route path="/features/admin/*" element={<AdminRoutes />} />
 							<Route path="/*" element={<PublicRoutes />} />
 						</Routes>
 					</div>

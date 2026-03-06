@@ -5,7 +5,7 @@ const Mission = ({ data }) => {
 
   return (
     <section className="py-20 bg-background-alt relative overflow-hidden">
-      <div className="container-layout text-center relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] text-center relative z-10">
         <div className="w-16 h-16 rounded-full bg-white border border-primary/20 flex items-center justify-center text-primary mx-auto mb-6 shadow-soft">
           <span className="material-symbols-outlined text-3xl">wb_sunny</span>
         </div>

@@ -1,41 +1,41 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
-import TopOfferBar from '../components/common/TopOfferBar';
-import Footer from '../components/layout/Footer';
-import { pageService } from '../services/pageService';
-import { logger } from '../utils/logger';
+import Navbar from '../../components/layout/Navbar';
+import TopOfferBar from '../../components/common/TopOfferBar';
+import Footer from '../../components/layout/Footer';
+import { pageService } from '../../services/firestore/pageService';
+import { logger } from '../../utils/logger';
 
 // Lazy load pages for better performance
-const Home = lazy(() => import('../pages/Home'));
-const PathsPage = lazy(() => import('../pages/PathsPage'));
-const CoursesPage = lazy(() => import('../pages/CoursesPage'));
-const RoadmapDetails = lazy(() => import('../pages/RoadmapDetails'));
-const CourseDetails = lazy(() => import('../pages/CourseDetails'));
-const PaymentSubmission = lazy(() => import('../pages/Checkout/PaymentSubmission'));
-const OrderUnderReview = lazy(() => import('../pages/Checkout/OrderUnderReview'));
-const OrderSuccess = lazy(() => import('../pages/Checkout/OrderSuccess'));
-const AboutPage = lazy(() => import('../pages/AboutPage'));
-const ContactPage = lazy(() => import('../pages/ContactPage'));
-const TermsPage = lazy(() => import('../pages/TermsPage'));
-const HelpCenterPage = lazy(() => import('../pages/HelpCenterPage'));
-const RequestCoursePage = lazy(() => import('../pages/RequestCoursePage'));
-const AIDiagnosisPage = lazy(() => import('../pages/ai/AIDiagnosisPage'));
-const PracticalTrainingPage = lazy(() => import('../pages/PracticalTrainingPage'));
-const ApplyTrainingPage = lazy(() => import('../pages/ApplyTrainingPage'));
+const Home = lazy(() => import('../../pages/Home'));
+const PathsPage = lazy(() => import('../../pages/PathsPage'));
+const CoursesPage = lazy(() => import('../../pages/CoursesPage'));
+const RoadmapDetails = lazy(() => import('../../pages/RoadmapDetails'));
+const CourseDetails = lazy(() => import('../../pages/CourseDetails'));
+const PaymentSubmission = lazy(() => import('../../pages/Checkout/PaymentSubmission'));
+const OrderUnderReview = lazy(() => import('../../pages/Checkout/OrderUnderReview'));
+const OrderSuccess = lazy(() => import('../../pages/Checkout/OrderSuccess'));
+const AboutPage = lazy(() => import('../../pages/AboutPage'));
+const ContactPage = lazy(() => import('../../pages/ContactPage'));
+const TermsPage = lazy(() => import('../../pages/TermsPage'));
+const HelpCenterPage = lazy(() => import('../../pages/HelpCenterPage'));
+const RequestCoursePage = lazy(() => import('../../pages/RequestCoursePage'));
+const AIDiagnosisPage = lazy(() => import('../../pages/ai/AIDiagnosisPage'));
+const PracticalTrainingPage = lazy(() => import('../../pages/PracticalTrainingPage'));
+const ApplyTrainingPage = lazy(() => import('../../pages/ApplyTrainingPage'));
 
 // Auth Pages
-const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
-const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'));
-const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
-const UserDashboard = lazy(() => import('../pages/dashboard/UserDashboard'));
-const UserPracticalTrainingPage = lazy(() => import('../pages/dashboard/UserPracticalTrainingPage'));
-const CoursePlayer = lazy(() => import('../pages/CoursePlayer'));
-const PathPlayer = lazy(() => import('../pages/PathPlayer'));
-const CertificateVerification = lazy(() => import('../pages/CertificateVerification'));
-const CertificateViewPage = lazy(() => import('../modules/certificates/pages/CertificateViewPage.jsx'));
+const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('../../pages/auth/RegisterPage'));
+const ResetPasswordPage = lazy(() => import('../../pages/auth/ResetPasswordPage'));
+const UserDashboard = lazy(() => import('../../pages/dashboard/UserDashboard'));
+const UserPracticalTrainingPage = lazy(() => import('../../pages/dashboard/UserPracticalTrainingPage'));
+const CoursePlayer = lazy(() => import('../../pages/CoursePlayer'));
+const PathPlayer = lazy(() => import('../../pages/PathPlayer'));
+const CertificateVerification = lazy(() => import('../../pages/CertificateVerification'));
+const CertificateViewPage = lazy(() => import('../../features/certificates/pages/CertificateViewPage.jsx'));
 
-import RequireAuth from '../admin/components/RequireAuth';
+import RequireAuth from '../../features/admin/components/RequireAuth';
 
 // Loading skeleton component
 const PageLoader = () => (

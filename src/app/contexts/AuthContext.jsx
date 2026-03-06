@@ -2,9 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-import { auth } from '../firebase/config';
-import { userService } from '../services/userService';
-import { logger } from '../utils/logger';
+import { auth } from '../../services/firebase';
+import { userService } from '../../services/firestore/userService';
+import { logger } from '../../utils/logger';
 import { setAuthStatus, clearAuth } from '../store/slices/authSlice';
 
 const AuthContext = createContext();

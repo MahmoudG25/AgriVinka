@@ -17,8 +17,8 @@ import AboutPreview from '../components/home/AboutPreview';
 import HeroSkeleton from '../components/skeletons/HeroSkeleton';
 import CardSkeleton from '../components/skeletons/CardSkeleton';
 
-import { pageService } from '../services/pageService';
-import { SectionRegistry } from '../admin/utils/SectionRegistry';
+import { pageService } from '../services/firestore/pageService';
+import { SectionRegistry } from '../features/admin/utils/SectionRegistry';
 
 const Home = () => {
   const [homeData, setHomeData] = useState(null);
@@ -39,7 +39,7 @@ const Home = () => {
     return (
       <main className="w-full min-h-screen bg-white">
         <HeroSkeleton />
-        <div className="container-layout py-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] py-16 grid grid-cols-1 md:grid-cols-3 gap-8">
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />

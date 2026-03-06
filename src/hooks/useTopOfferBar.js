@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db } from '../services/firebase';
 
 export const useTopOfferBar = () => {
   const [offerData, setOfferData] = useState(null);

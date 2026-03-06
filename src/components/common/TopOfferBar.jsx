@@ -86,7 +86,7 @@ const TopOfferBar = () => {
 
   return (
     <div id="top-offer-bar" className={`w-full fixed top-0 left-0 transition-all duration-300 z-[60] py-2.5 px-4 ${currentThemeClasses}`}>
-      <div className="container-layout mx-auto flex flex-col md:flex-row items-center justify-center relative md:px-8 gap-2 md:gap-4 lg:gap-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto flex flex-col md:flex-row items-center justify-center relative md:px-8 gap-2 md:gap-4 lg:gap-8">
 
         {/* Close Button (Absolute on Mobile, Static on Desktop) */}
         {offerData.showClose && (

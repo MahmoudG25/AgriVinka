@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ImageWithFallback } from '../../utils/imageUtils';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { useAuth } from '../../contexts/AuthContext';
-import { favoritesService } from '../../services/favoritesService';
+import { useAuth } from '../../app/contexts/AuthContext';
+import { favoritesService } from '../../services/firestore/favoritesService';
 
 const CourseCard = ({ course }) => {
   const {

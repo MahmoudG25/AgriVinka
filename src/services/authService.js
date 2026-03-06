@@ -8,8 +8,8 @@ import {
   sendEmailVerification,
   updateProfile as updateFirebaseAuthProfile
 } from 'firebase/auth';
-import { auth } from '../firebase/config';
-import { userService } from './userService';
+import { auth } from './firebase';
+import { userService } from './firestore/userService';
 import { logger } from '../utils/logger';
 
 const googleProvider = new GoogleAuthProvider();

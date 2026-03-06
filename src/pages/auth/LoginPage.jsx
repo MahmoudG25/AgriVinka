@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authService } from '../../services/authService';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../app/contexts/AuthContext';
 import SEOHead from '../../components/common/SEOHead';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 // Logo removed

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useAuth } from '../contexts/AuthContext';
-import { courseService } from '../services/courseService';
-import { enrollmentService } from '../services/enrollmentService';
-import { lessonProgressService } from '../services/lessonProgressService';
+import { useAuth } from '../app/contexts/AuthContext';
+import { courseService } from '../services/firestore/courseService';
+import { enrollmentService } from '../services/firestore/enrollmentService';
+import { lessonProgressService } from '../services/firestore/lessonProgressService';
 import { logger } from '../utils/logger';
 import SEOHead from '../components/common/SEOHead';
 import { FaChevronRight, FaPlayCircle, FaCheckCircle, FaLock, FaCertificate, FaListUl, FaTimes } from 'react-icons/fa';
-import { getOrCreateCertificate } from '../modules/certificates/services/certificateService.js';
+import { getOrCreateCertificate } from '../features/certificates/services/certificateService.js';
 
 const CoursePlayer = () => {
   const { courseId } = useParams();

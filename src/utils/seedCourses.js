@@ -1,5 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db } from "../services/firebase";
 
 import courses from "../data/courses.json";
 import roadmaps from "../data/roadmaps.json";

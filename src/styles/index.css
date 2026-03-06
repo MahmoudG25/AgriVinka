@@ -161,14 +161,9 @@
     @apply bg-background-alt p-8 rounded-2xl border border-transparent hover:bg-white hover:border-primary/10 hover:shadow-md transition-all;
   }
 
-  /* --- Global Layout System (Strictly Fluid, No max-w) --- */
-  .container-layout {
-    @apply w-full px-[5%] md:px-[8%] lg:px-[10%] mx-auto;
-  }
+  /* --- Global Layout System --- */
+  /* Replaced by <PageShell> component to prevent max-w conflicts */
 
-  .container-narrow {
-    @apply w-full px-[5%] md:px-[15%] lg:px-[20%] mx-auto;
-  }
 
   .section-padding {
     @apply py-16 lg:py-24;

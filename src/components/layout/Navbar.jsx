@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { logger } from '../../utils/logger';
 // Logo removed
 import { Link, useNavigate } from 'react-router-dom';
-import { orderService } from '../../services/orderService';
+import { orderService } from '../../services/firestore/orderService';
 import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaTachometerAlt, FaBoxOpen } from 'react-icons/fa';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../app/contexts/AuthContext';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/config';
+import { auth } from '../../services/firebase';
 import { useTopOfferBar } from '../../hooks/useTopOfferBar';
 
 // Map known Arabic link labels to real routes
@@ -138,7 +138,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
     <nav className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-border-light shadow-sm h-16 md:h-20 ${mobileMenuOpen ? 'bg-surface-white' : 'bg-surface-white/90 backdrop-blur-md'}`}
       style={{ top: isOfferVisible ? `${offerBarHeight}px` : '0px' }}
     >
-      <div className="container-layout h-full flex items-center justify-between">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] h-full flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-3 group">

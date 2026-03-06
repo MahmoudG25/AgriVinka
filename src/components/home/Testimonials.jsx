@@ -35,7 +35,7 @@ const Testimonials = ({ testimonials, data }) => {
 
   return (
     <section className="section-padding bg-background-alt relative overflow-hidden" id="testimonials">
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
 
         {/* Header */}
         <div className="text-center mb-16">

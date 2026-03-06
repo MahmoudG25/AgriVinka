@@ -2,7 +2,7 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { ArabicShaper } from 'arabic-persian-reshaper';
 import { generateQRMatrix } from '../utils/qrcode';
-import { getCertificateTemplateSettingsCached } from '../modules/certificates/services/templateSettingsService.js';
+import { getCertificateTemplateSettingsCached } from '../features/certificates/services/templateSettingsService.js';
 
 // Template version — increment when layout changes significantly
 export const TEMPLATE_VERSION = '2.0.0';

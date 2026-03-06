@@ -105,7 +105,7 @@ const Roadmap = ({ data }) => {
         <div className="absolute bottom-[20%] left-[10%] w-96 h-96 bg-accent/5 rounded-full blur-3xl mix-blend-multiply"></div>
       </div>
 
-      <div className="container-layout relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10">
 
         {/* 1. Psychological Header */}
         <div className="text-center mb-24 mx-auto">

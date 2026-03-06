@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { roadmapService } from '../../services/roadmapService';
+import { roadmapService } from '../../services/firestore/roadmapService';
 import CardSkeleton from '../skeletons/CardSkeleton';
 import { ImageWithFallback } from '../../utils/imageUtils';
 

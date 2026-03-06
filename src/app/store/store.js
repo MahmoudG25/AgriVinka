@@ -5,7 +5,7 @@ import uploadsReducer from './slices/uploadsSlice';
 import authReducer from './slices/authSlice';
 
 // simple listener for persistence
-import { saveState } from '../services/dbStorage';
+import { saveState } from '../../services/dbStorage';
 // We will implement debounce in the listener or in the service
 
 const store = configureStore({

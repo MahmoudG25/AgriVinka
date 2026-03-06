@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdSchool } from 'react-icons/md';
-import { useAuth } from '../../../contexts/AuthContext';
-import { enrollmentService } from '../../../services/enrollmentService';
+import { useAuth } from '../../../app/contexts/AuthContext';
+import { enrollmentService } from '../../../services/firestore/enrollmentService';
 import toast from 'react-hot-toast';
-import { getOrCreateCertificate } from '../../../modules/certificates/services/certificateService.js';
-import { downloadCertificatePdf } from '../../../modules/certificates/services/pdfService.js';
+import { getOrCreateCertificate } from '../../../features/certificates/services/certificateService.js';
+import { downloadCertificatePdf } from '../../../features/certificates/services/pdfService.js';
 
 const MyCoursesGrid = ({ courses, loading }) => {
   const { currentUser } = useAuth();

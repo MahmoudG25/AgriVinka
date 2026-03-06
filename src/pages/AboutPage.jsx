@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SEOHead from '../components/common/SEOHead';
 import { motion } from 'framer-motion';
-import { aboutService, defaultAboutData } from '../services/aboutService';
+import { aboutService, defaultAboutData } from '../services/firestore/aboutService';
 import { logger } from '../utils/logger';
 import { Link } from 'react-router-dom';
 
@@ -55,7 +55,7 @@ const AboutPage = () => {
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-l from-black/20 to-transparent pointer-events-none"></div>
 
-        <div className="container-layout relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
           {/* Left: Image Card (e.g. Book) */}
           <motion.div
@@ -127,7 +127,7 @@ const AboutPage = () => {
 
       {/* --- SECTION 2: QUOTE (WHITE) --- */}
       <section className="py-10 bg-[#FDFBF7] relative">
-        <div className="container-layout text-center">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -149,7 +149,7 @@ const AboutPage = () => {
 
       {/* --- SECTION 3: STORY (LIGHT) --- */}
       <section className="py-20 bg-white relative overflow-hidden">
-        <div className="container-layout">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
             {/* Left: Image Composition (Order 2 on mobile, Order 1 on Desktop if LTR, but in RTL grid, first item is Right) */}

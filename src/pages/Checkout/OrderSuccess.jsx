@@ -3,8 +3,8 @@ import { useLocation, Link } from 'react-router-dom';
 import { FaCheck, FaArrowLeft, FaRegCopy, FaCloud } from 'react-icons/fa6';
 import { FaRegFolderOpen } from 'react-icons/fa';
 import ProductSummaryCard from '../../components/checkout/ProductSummaryCard';
-import { courseService } from '../../services/courseService';
-import { roadmapService } from '../../services/roadmapService';
+import { courseService } from '../../services/firestore/courseService';
+import { roadmapService } from '../../services/firestore/roadmapService';
 
 const OrderSuccess = () => {
   const location = useLocation();

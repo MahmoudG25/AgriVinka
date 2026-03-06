@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { courseRequestService } from '../services/courseRequestService';
+import { courseRequestService } from '../services/firestore/courseRequestService';
 import { logger } from '../utils/logger';
 import FAQ from '../components/home/FAQ';
 

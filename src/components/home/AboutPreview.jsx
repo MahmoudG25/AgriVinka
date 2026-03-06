@@ -25,7 +25,7 @@ const AboutPreview = ({ data }) => {
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#C6A87C 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
           {/* Text Side */}

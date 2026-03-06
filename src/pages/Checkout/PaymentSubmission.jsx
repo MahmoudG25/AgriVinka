@@ -8,11 +8,11 @@ import UploadZone from '../../components/checkout/UploadZone';
 import OrderSummaryCard from '../../components/checkout/OrderSummaryCard';
 import { FaMoneyBillWave, FaWallet, FaCopy, FaUser, FaEnvelope, FaPhone, FaArrowLeft, FaShieldAlt, FaHeadset } from 'react-icons/fa';
 import { saveOrder, calculateOrderTotals } from '../../utils/checkoutUtils';
-import { courseService } from '../../services/courseService';
-import { roadmapService } from '../../services/roadmapService';
-import { orderService } from '../../services/orderService';
-import { cloudinaryService } from '../../services/cloudinaryService';
-import { useAuth } from '../../contexts/AuthContext';
+import { courseService } from '../../services/firestore/courseService';
+import { roadmapService } from '../../services/firestore/roadmapService';
+import { orderService } from '../../services/firestore/orderService';
+import { cloudinaryService } from '../../services/cloudinary';
+import { useAuth } from '../../app/contexts/AuthContext';
 
 const PaymentSubmission = () => {
   const navigate = useNavigate();
@@ -182,7 +182,7 @@ const PaymentSubmission = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] pt-32 pb-20 font-sans">
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
         <CheckoutSteps currentStep={2} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-12">

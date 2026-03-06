@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { downloadCertificatePdf } from '../../../modules/certificates/services/pdfService.js';
+import { downloadCertificatePdf } from '../../../features/certificates/services/pdfService.js';
 
 const CertificatesGrid = ({ certificates, loading }) => {
   if (loading) {

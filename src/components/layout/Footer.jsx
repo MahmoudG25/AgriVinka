@@ -82,7 +82,7 @@ const Footer = ({ data = defaultFooterData }) => {
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary rounded-full blur-[128px]"></div>
       </div>
 
-      <div className="container-layout relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-16">
 
           {/* Brand Column */}

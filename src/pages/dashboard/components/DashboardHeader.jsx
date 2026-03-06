@@ -51,7 +51,7 @@ const DashboardHeader = ({ userData, isAdmin }) => {
         <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
           {isAdmin && (
             <button
-              onClick={() => navigate('/admin')}
+              onClick={() => navigate('/features/admin')} // TODO: change this to /admin
               className="flex-1 sm:flex-initial px-4 py-2.5 bg-heading-dark text-white font-bold rounded-xl text-sm hover:bg-primary transition-colors flex items-center justify-center gap-1.5"
             >
               <span className="material-symbols-outlined text-base">shield</span>

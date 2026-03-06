@@ -1,4 +1,4 @@
-import { db } from '../firebase/config';
+import { db } from './firebase';
 import { logger } from '../utils/logger';
 import {
   collection,
@@ -11,7 +11,7 @@ import {
   orderBy,
   serverTimestamp
 } from 'firebase/firestore';
-import { cloudinaryService } from './cloudinaryService';
+import { cloudinaryService } from './cloudinary';
 import { createCertificatePdf, TEMPLATE_VERSION } from './createCertificatePdf';
 import { APP_URL } from '../constants/env';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SEOHead from '../components/common/SEOHead';
 import { Link } from 'react-router-dom';
-import { pageService } from '../services/pageService';
+import { pageService } from '../services/firestore/pageService';
 import { logger } from '../utils/logger';
 import FAQ from '../components/home/FAQ';
 

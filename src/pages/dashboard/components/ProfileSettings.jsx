@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { useAuth } from '../../../contexts/AuthContext';
-import { userService } from '../../../services/userService';
-import { cloudinaryService } from '../../../services/cloudinaryService';
+import { useAuth } from '../../../app/contexts/AuthContext';
+import { userService } from '../../../services/firestore/userService';
+import { cloudinaryService } from '../../../services/cloudinary';
 import { logger } from '../../../utils/logger';
 
 const ProfileSettings = () => {
