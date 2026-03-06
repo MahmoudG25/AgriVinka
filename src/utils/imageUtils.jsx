@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect as useLayoutEffect } from 'react';
 
 // Default fallback image
 const DEFAULT_FALLBACK = "https://placehold.co/600x400?text=No+Image";
@@ -57,28 +57,39 @@ export const optimizeCloudinaryUrl = (url, options = {}) => {
   if (parts.length !== 2) return url;
 
   const [cloudinaryBase, imagePath] = parts;
-  
+
   // Build transformation string
   const transformations = [];
-  
+
   if (format && format !== 'auto') {
     transformations.push(`f_${format}`);
   } else {
     transformations.push('f_auto'); // Auto format
   }
-  
+
   if (quality) {
     transformations.push(`q_${quality}`);
   }
-  
+
   if (width) transformations.push(`w_${width}`);
   if (height) transformations.push(`h_${height}`);
   if (crop) transformations.push(`c_${crop}`);
   if (gravity) transformations.push(`g_${gravity}`);
 
   const transformString = transformations.join(',');
-  
+
   return `${cloudinaryBase}/upload/${transformString}/${imagePath}`;
+};
+
+/**
+ * Generate a tiny blurred placeholder URL (LQIP) via Cloudinary.
+ * Returns null if the URL is not a Cloudinary URL.
+ */
+export const getLqipUrl = (url) => {
+  if (!url || !url.includes('cloudinary.com')) return null;
+  const parts = url.split('/upload/');
+  if (parts.length !== 2) return null;
+  return `${parts[0]}/upload/w_40,e_blur:200,q_10,f_auto/${parts[1]}`;
 };
 
 /**
@@ -105,20 +116,22 @@ export const getResponsiveImageUrl = (url, breakpoints = {}) => {
  * Replaces invalid or broken images with a fallback.
  * Includes lazy loading and responsive image support.
  */
-export const ImageWithFallback = ({ 
-  src, 
-  fallbackSrc = DEFAULT_FALLBACK, 
-  alt, 
-  className, 
+export const ImageWithFallback = ({
+  src,
+  fallbackSrc = DEFAULT_FALLBACK,
+  alt,
+  className,
   loading = 'lazy',
   optimize = true,
-  ...props 
+  ...props
 }) => {
   const [imgSrc, setImgSrc] = useState(() => {
     const validUrl = getValidImageUrl(src, fallbackSrc);
     return optimize ? optimizeCloudinaryUrl(validUrl) : validUrl;
   });
   const [hasError, setHasError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const lqip = getLqipUrl(imgSrc);
 
   const handleError = () => {
     if (!hasError) {
@@ -133,17 +146,33 @@ export const ImageWithFallback = ({
     const finalUrl = optimize ? optimizeCloudinaryUrl(validUrl) : validUrl;
     setImgSrc(finalUrl);
     setHasError(false);
+    setLoaded(false);
   }, [src, fallbackSrc, optimize]);
 
   return (
-    <img
-      src={imgSrc}
-      alt={alt}
-      className={className}
-      loading={loading}
-      onError={handleError}
-      {...props}
-    />
+    <div className={`relative overflow-hidden ${className || ''}`} style={props.style}>
+      {/* LQIP blurred placeholder */}
+      {lqip && !loaded && (
+        <img
+          src={lqip}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: 'blur(20px)', transform: 'scale(1.1)' }}
+        />
+      )}
+      <img
+        src={imgSrc}
+        alt={alt}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        loading={loading}
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        onError={handleError}
+        {...props}
+        style={undefined}
+      />
+    </div>
   );
 };
 
@@ -194,6 +223,7 @@ export const ResponsiveImage = ({
       alt={alt}
       className={className}
       loading="lazy"
+      decoding="async"
       onError={handleError}
       {...props}
     />

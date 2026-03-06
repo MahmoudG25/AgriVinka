@@ -136,7 +136,7 @@ const Hero = ({ data }) => {
 
           {/* Mobile Static Image */}
           <div className="block lg:hidden w-[85%] mx-auto rounded-2xl overflow-hidden shadow-lg border border-white/20 relative">
-            <img src={allImages[0]} alt="Hero" className="w-full h-auto" />
+            <img src={allImages[0]} alt="Hero" className="w-full h-auto" loading="eager" fetchPriority="high" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
           </div>
 
@@ -149,7 +149,7 @@ const Hero = ({ data }) => {
               <div className="animate-scroll-up flex flex-col gap-4">
                 {[...sliderImages[0], ...sliderImages[0], ...sliderImages[0]].map((src, i) => (
                   <div key={`c1-${i}`} className="w-full relative rounded-2xl overflow-hidden shadow-md">
-                    <img src={src} className="w-full h-auto hover:scale-105 transition-transform duration-700" alt="Student" />
+                    <img src={src} className="w-full h-auto hover:scale-105 transition-transform duration-700" alt="Student" loading="lazy" decoding="async" />
                   </div>
                 ))}
               </div>
@@ -158,7 +158,7 @@ const Hero = ({ data }) => {
               <div className="animate-scroll-down flex flex-col gap-4 -mt-32">
                 {[...sliderImages[1], ...sliderImages[1], ...sliderImages[1]].map((src, i) => (
                   <div key={`c2-${i}`} className="w-full relative rounded-2xl overflow-hidden shadow-md">
-                    <img src={src} className="w-full h-auto hover:scale-105 transition-transform duration-700" alt="Student" />
+                    <img src={src} className="w-full h-auto hover:scale-105 transition-transform duration-700" alt="Student" loading="lazy" decoding="async" />
                   </div>
                 ))}
               </div>
@@ -182,4 +182,4 @@ const Hero = ({ data }) => {
   );
 };
 
-export default Hero;
+export default React.memo(Hero);

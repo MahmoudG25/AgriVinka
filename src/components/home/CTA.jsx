@@ -9,7 +9,7 @@ const CTA = ({ data }) => {
       <div className="absolute inset-0 bg-heading-dark">
         {/* DB Image as background */}
         {data?.images?.[0] && (
-          <img src={data.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <img src={data.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" loading="lazy" decoding="async" />
         )}
         <div className="absolute inset-0 bg-gradient-to-r from-heading-dark via-heading-dark/10 to-black/70"></div>
         {/* Abstract Shapes */}

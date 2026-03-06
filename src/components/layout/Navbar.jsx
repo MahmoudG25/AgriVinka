@@ -183,7 +183,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
                 {/* Avatar */}
                 <div className="w-10 h-10 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10 flex items-center justify-center shadow-md group-hover:border-primary transition-colors">
                   {avatarUrl
-                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
                     : <span className="text-primary font-black text-lg">{avatarLetter}</span>}
                 </div>
                 <span className="hidden lg:block text-sm font-bold text-heading-dark w-24 truncate">{displayName.split(' ')[0]}</span>
@@ -292,7 +292,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <div className="w-12 h-12 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10 flex items-center justify-center shrink-0">
                   {avatarUrl
-                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
                     : <span className="text-primary font-black text-xl">{avatarLetter}</span>}
                 </div>
                 <div className="min-w-0">

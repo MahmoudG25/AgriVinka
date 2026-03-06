@@ -66,7 +66,7 @@ const CoursesListPage = () => {
       render: (item) => (
         <div className="flex items-center gap-3">
           {item.media?.thumbnail ? (
-            <img src={item.media.thumbnail} alt="" className="w-10 h-10 rounded-lg object-cover" />
+            <img src={item.media.thumbnail} alt="" className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />
           ) : (
             <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-xs text-gray-400">N/A</div>
           )}

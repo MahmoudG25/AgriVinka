@@ -116,8 +116,8 @@ const PathContent = ({ data, userProgressMap = {} }) => {
                 <div key={module.id} className="relative group">
                   {/* Timeline Node */}
                   <div className={`absolute -right-[43px] w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300 z-10 ${isCompleted ? 'bg-green-500 text-white' :
-                      inProgress ? 'bg-primary text-white animate-pulse' :
-                        isLocked ? 'bg-gray-200 text-gray-400' : 'bg-gray-100 text-gray-500 hover:bg-primary/20'
+                    inProgress ? 'bg-primary text-white animate-pulse' :
+                      isLocked ? 'bg-gray-200 text-gray-400' : 'bg-gray-100 text-gray-500 hover:bg-primary/20'
                     }`}>
                     {isCompleted ? <span className="material-symbols-outlined text-[16px] font-bold">check</span> :
                       isLocked ? <FaLock className="text-[12px]" /> :
@@ -126,14 +126,14 @@ const PathContent = ({ data, userProgressMap = {} }) => {
 
                   {/* Course Content Card */}
                   <div className={`bg-gray-50 rounded-2xl p-6 border transition-all duration-300 ${inProgress ? 'border-primary/30 shadow-md shadow-primary/5' :
-                      'border-gray-100 hover:border-gray-300 hover:shadow-sm'
+                    'border-gray-100 hover:border-gray-300 hover:shadow-sm'
                     } ${isLocked ? 'opacity-75 grayscale-[50%]' : ''}`}>
 
                     <div className="flex flex-col md:flex-row gap-6 items-start">
                       {/* Course Image */}
                       <div className="w-full md:w-48 h-32 rounded-xl overflow-hidden shrink-0 relative bg-gray-200">
                         {module.image ? (
-                          <img src={module.image} alt={module.title} className="w-full h-full object-cover" />
+                          <img src={module.image} alt={module.title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold">بدون صورة</div>
                         )}
@@ -171,8 +171,8 @@ const PathContent = ({ data, userProgressMap = {} }) => {
                             <Link
                               to={`/courses/${module.courseId}`}
                               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors ${inProgress ? 'bg-primary text-heading-dark hover:bg-primary-hover shadow-sm' :
-                                  isCompleted ? 'bg-green-50 text-green-700 hover:bg-green-100' :
-                                    'bg-gray-200 text-heading-dark hover:bg-gray-300'
+                                isCompleted ? 'bg-green-50 text-green-700 hover:bg-green-100' :
+                                  'bg-gray-200 text-heading-dark hover:bg-gray-300'
                                 }`}
                             >
                               <FaPlayCircle />

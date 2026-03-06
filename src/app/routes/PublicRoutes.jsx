@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import TopOfferBar from '../../components/common/TopOfferBar';
@@ -74,9 +74,9 @@ const PublicRoutes = () => {
     }
   }, [isDarkMode]);
 
-  const toggleDarkMode = () => {
+  const toggleDarkMode = useCallback(() => {
     setIsDarkMode(prev => !prev);
-  };
+  }, []);
 
   if (!pageData) {
     return <PageLoader />;

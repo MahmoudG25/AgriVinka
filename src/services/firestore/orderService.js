@@ -10,7 +10,9 @@ import {
   query,
   where,
   orderBy,
-  deleteDoc
+  deleteDoc,
+  limit,
+  startAfter
 } from 'firebase/firestore';
 import { enrollmentService } from './enrollmentService';
 
@@ -54,20 +56,29 @@ export const orderService = {
     }
   },
 
-  // Get all orders (admin)
-  getOrders: async (filters = {}) => {
+  // Get all orders (admin) — paginated
+  getOrders: async (filters = {}, pageSize = 50, lastVisibleDoc = null) => {
     try {
       const ordersRef = collection(db, COLLECTION_NAME);
       let q;
       try {
-        q = query(ordersRef, orderBy('createdAt', 'desc'));
+        q = lastVisibleDoc
+          ? query(ordersRef, orderBy('createdAt', 'desc'), startAfter(lastVisibleDoc), limit(pageSize))
+          : query(ordersRef, orderBy('createdAt', 'desc'), limit(pageSize));
         const snapshot = await getDocs(q);
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null;
+        return {
+          orders: snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+          lastVisible
+        };
       } catch (indexErr) {
         // Fallback if index missing
         logger.warn('Orders index missing, fetching without order', indexErr);
-        const snapshot = await getDocs(ordersRef);
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const snapshot = await getDocs(query(ordersRef, limit(pageSize)));
+        return {
+          orders: snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+          lastVisible: null
+        };
       }
     } catch (error) {
       logger.error('Error fetching orders:', error);
@@ -79,7 +90,7 @@ export const orderService = {
   getUserOrders: async (userId) => {
     try {
       const ordersRef = collection(db, COLLECTION_NAME);
-      const q = query(ordersRef, where('userId', '==', userId));
+      const q = query(ordersRef, where('userId', '==', userId), limit(30));
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } catch (error) {

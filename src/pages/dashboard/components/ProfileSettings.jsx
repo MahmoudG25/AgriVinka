@@ -99,7 +99,7 @@ const ProfileSettings = () => {
             <div className="relative">
               <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 shrink-0">
                 {avatarSrc ? (
-                  <img src={avatarSrc} alt="" className="w-full h-full object-cover" />
+                  <img src={avatarSrc} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                 ) : (
                   <div className="w-full h-full bg-primary flex items-center justify-center text-white text-2xl font-bold">
                     {userData?.displayName?.[0] || 'ن'}
@@ -118,8 +118,8 @@ const ProfileSettings = () => {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${uploadingAvatar
-                    ? 'bg-gray-100 text-gray-400 cursor-wait'
-                    : 'bg-primary/10 text-primary hover:bg-primary/20'
+                  ? 'bg-gray-100 text-gray-400 cursor-wait'
+                  : 'bg-primary/10 text-primary hover:bg-primary/20'
                   }`}
               >
                 {uploadingAvatar ? 'جاري الرفع...' : 'تغيير الصورة'}
@@ -213,7 +213,7 @@ const ProfileSettings = () => {
           <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-primary flex items-center justify-center shrink-0 border-2 border-primary/10">
               {userData?.photoURL ? (
-                <img src={userData.photoURL} alt="" className="w-full h-full object-cover" />
+                <img src={userData.photoURL} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
               ) : (
                 <span className="text-lg font-bold text-white">{userData?.displayName?.[0] || 'ن'}</span>
               )}

@@ -19,7 +19,7 @@ const OrdersListPage = () => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const data = await orderService.getOrders();
+      const { orders: data } = await orderService.getOrders();
       setOrders(data);
     } catch (error) {
       logger.error('Failed to fetch orders:', error);

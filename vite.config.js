@@ -82,9 +82,9 @@ export default defineConfig({
       "@reduxjs/toolkit",
       "react-redux",
       "@react-pdf/renderer",
-      "firebase",
-      "firebase-auth",
-      "firebase-firestore",
+      "firebase/app",
+      "firebase/auth",
+      "firebase/firestore",
     ],
   },
 

@@ -114,7 +114,7 @@ const Roadmap = ({ data }) => {
             <div className="flex -space-x-4 space-x-reverse rtl:space-x-reverse">
               {[1, 2, 3].map(i => (
                 <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 overflow-hidden">
-                  <img src={`https://i.pravatar.cc/150?u=${i + 20}`} alt="Student" className="w-full h-full object-cover" />
+                  <img src={`https://i.pravatar.cc/150?u=${i + 20}`} alt="Student" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                 </div>
               ))}
               <div className="w-10 h-10 rounded-full border-2 border-white bg-heading-dark text-white flex items-center justify-center text-xs font-bold relative z-10">

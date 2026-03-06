@@ -21,7 +21,7 @@ const OrderSummaryCard = ({ product, type }) => {
       <div className="flex items-start gap-4 mb-6">
         <div className="w-20 h-20 bg-gray-50 rounded-2xl flex-shrink-0 overflow-hidden border border-gray-100 shadow-sm">
           {image ? (
-            <img src={image} alt={title} className="w-full h-full object-cover" />
+            <img src={image} alt={title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
           ) : (
             <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs p-1 text-center">
               {type === 'track' ? 'مسار' : 'دورة'}
