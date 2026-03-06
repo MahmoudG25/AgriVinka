@@ -2,48 +2,73 @@
 @import "tailwindcss";
 
 @theme {
-  /* --- Color System: AgriTech Academic --- */
+  /* ═══════════════════════════════════════════════
+     COLOR SYSTEM — AgriTech Modern Palette
+     ═══════════════════════════════════════════════ */
+
+  /* Primary — Deep Academic Green */
   --color-primary: #1B5E20;
-  /* Deep Academic Green - Main Action */
   --color-primary-hover: #145218;
-  /* Darker Green - Hover */
   --color-primary-light: #E8F5E9;
-  /* Very Light Green - Backgrounds */
+  --color-primary-foreground: #FFFFFF;
 
+  /* Accent — Wheat Gold */
   --color-accent: #D4A843;
-  /* Wheat Gold */
   --color-accent-hover: #C49A38;
-  /* Gold Hover */
+  --color-accent-foreground: #1A2E1A;
 
+  /* Secondary — Fresh Tech Green */
   --color-secondary: #4CAF50;
-  /* Fresh Tech Green */
+  --color-secondary-foreground: #FFFFFF;
 
+  /* Neutral Text */
   --color-heading-dark: #1A2E1A;
-  /* Dark Forest - Headings */
   --color-body-text: #4A4A4A;
-  /* Charcoal - Body Text */
   --color-muted: #8B8B8B;
-  /* Gray - Muted Text */
+  --color-muted-foreground: #6B6B6B;
 
+  /* Surfaces */
+  --color-background: #FFFFFF;
   --color-background-alt: #F5F7F5;
-  /* Light greenish-gray - Sections */
   --color-warm-light: #F0F4F0;
-  /* Light Green Tint - Highlights */
   --color-surface-white: #FFFFFF;
-  /* Pure White - Cards */
 
+  /* Borders */
+  --color-border: #E0EAE0;
   --color-border-light: #E0EAE0;
-  /* Light Green/Gray - Borders */
-  --color-success: #2D8F5E;
-  /* Green - Success */
-  --color-danger: #D94F4F;
-  /* Red - Errors */
+  --color-ring: #1B5E20;
 
-  /* --- Typography --- */
+  /* Semantic */
+  --color-success: #2D8F5E;
+  --color-success-light: #ECFDF5;
+  --color-danger: #D94F4F;
+  --color-danger-light: #FEF2F2;
+  --color-warning: #E5A100;
+  --color-warning-light: #FFFBEB;
+  --color-info: #2563EB;
+  --color-info-light: #EFF6FF;
+
+  /* ═══════════════════════════════════════════════
+     TYPOGRAPHY
+     ═══════════════════════════════════════════════ */
   --font-display: "Cairo", sans-serif;
   --font-body: "Tajawal", sans-serif;
 
-  /* --- Spacing Scale (8px rhythm) --- */
+  /* Type Scale (used as --text-* utilities) */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+  --text-6xl: 3.75rem;   /* 60px */
+
+  /* ═══════════════════════════════════════════════
+     SPACING (8px rhythm)
+     ═══════════════════════════════════════════════ */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
@@ -54,7 +79,9 @@
   --spacing-4xl: 96px;
   --spacing-5xl: 128px;
 
-  /* --- Radius System --- */
+  /* ═══════════════════════════════════════════════
+     RADIUS
+     ═══════════════════════════════════════════════ */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -63,110 +90,116 @@
   --radius-card: 24px;
   --radius-full: 9999px;
 
-  /* --- Elevation System (Shadows) --- */
+  /* ═══════════════════════════════════════════════
+     ELEVATION (Shadows)
+     ═══════════════════════════════════════════════ */
   --shadow-xs: 0 1px 2px rgba(27, 94, 32, 0.04);
   --shadow-sm: 0 2px 8px rgba(27, 94, 32, 0.06);
   --shadow-md: 0 4px 16px rgba(27, 94, 32, 0.08);
   --shadow-lg: 0 8px 32px rgba(27, 94, 32, 0.10);
   --shadow-xl: 0 16px 48px rgba(27, 94, 32, 0.12);
   --shadow-glow: 0 0 30px rgba(76, 175, 80, 0.25);
-  /* Green Glow */
 
-  /* --- Animation Tokens --- */
+  /* ═══════════════════════════════════════════════
+     TRANSITIONS
+     ═══════════════════════════════════════════════ */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ═══════════════════════════════════════════════
+     ANIMATIONS
+     ═══════════════════════════════════════════════ */
   --animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
   --animate-pulse-slow: pulseSlow 3s infinite ease-in-out;
   --animate-scroll-up: scrollUp 30s linear infinite;
   --animate-scroll-down: scrollDown 30s linear infinite;
+  --animate-scale-in: scaleIn 0.2s ease-out forwards;
 
   @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes pulseSlow {
-
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    50% {
-      opacity: 0.8;
-      transform: scale(0.98);
-    }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.8; transform: scale(0.98); }
   }
-
   @keyframes scrollUp {
-    0% {
-      transform: translateY(0);
-    }
-
-    100% {
-      transform: translateY(-50%);
-    }
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
   }
-
   @keyframes scrollDown {
-    0% {
-      transform: translateY(-50%);
-    }
-
-    100% {
-      transform: translateY(0);
-    }
+    0%   { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
   }
 }
 
-@layer components {
+/* ═══════════════════════════════════════════════
+   DARK MODE TOKEN OVERRIDES
+   ═══════════════════════════════════════════════ */
+.dark {
+  --color-background: #0F1A0F;
+  --color-background-alt: #162016;
+  --color-warm-light: #1A2A1A;
+  --color-surface-white: #1A2A1A;
+  --color-heading-dark: #E8F5E9;
+  --color-body-text: #C5D1C5;
+  --color-muted: #8B9B8B;
+  --color-muted-foreground: #A0B0A0;
+  --color-border: #2A3F2A;
+  --color-border-light: #2A3F2A;
+  --color-primary-light: #1A3A1A;
+}
 
-  /* --- Button System --- */
+/* ═══════════════════════════════════════════════
+   COMPONENT LAYER — Structural utilities only
+   (React primitives handle button/card/etc styles)
+   ═══════════════════════════════════════════════ */
+@layer components {
+  /* Legacy button classes — kept for existing pages during migration */
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-bold transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
-
   .btn-primary {
     @apply bg-primary text-white shadow-lg hover:bg-primary-hover hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:scale-95;
   }
-
   .btn-secondary {
     @apply bg-heading-dark text-white shadow-md hover:bg-[#111e11] hover:shadow-lg hover:-translate-y-1;
   }
-
   .btn-ghost {
     @apply bg-transparent text-heading-dark border border-heading-dark/10 hover:bg-heading-dark/5 hover:border-heading-dark/30;
   }
-
   .btn-cta {
     @apply bg-accent text-heading-dark text-lg px-10 py-4 shadow-glow hover:shadow-xl hover:scale-105 hover:-translate-y-1 active:scale-95 animate-pulse-slow;
   }
 
-  /* --- Card System --- */
+  /* Legacy card classes */
   .card-base {
     @apply bg-white rounded-card border border-border-light transition-all duration-300;
   }
-
   .card-hover {
     @apply hover:shadow-lg hover:-translate-y-1 hover:border-primary/20;
   }
-
   .card-feature {
     @apply bg-background-alt p-8 rounded-2xl border border-transparent hover:bg-white hover:border-primary/10 hover:shadow-md transition-all;
   }
 
-  /* --- Global Layout System --- */
-  /* Replaced by <PageShell> component to prevent max-w conflicts */
-
-
+  /* Layout */
   .section-padding {
     @apply py-16 lg:py-24;
+  }
+
+  .mobile-card {
+    @apply w-full bg-white rounded-2xl shadow-sm border border-border-light overflow-hidden;
+  }
+  .mobile-sticky-cta {
+    @apply fixed bottom-[70px] left-4 right-4 z-40 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center justify-between gap-4 md:hidden animate-fade-in-up;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -174,55 +207,47 @@
   .text-balance {
     text-wrap: balance;
   }
-
   .hide-scroll::-webkit-scrollbar {
     display: none;
   }
-
   .hide-scroll {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
   .mask-gradient-b {
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
-
-  /* --- Mobile Utilities --- */
   .swipe-container {
     @apply flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 md:grid md:gap-8 md:pb-0 md:mx-0 md:px-0;
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
   }
-
   .swipe-container::-webkit-scrollbar {
     display: none;
   }
-
   .swipe-item {
     @apply snap-center shrink-0 w-[85vw] md:w-auto;
   }
-
-  /* Safe Area for iPhone Home Indicator */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
-@layer components {
-  .mobile-card {
-    @apply w-full bg-white rounded-2xl shadow-sm border border-border-light overflow-hidden;
-  }
-
-  .mobile-sticky-cta {
-    @apply fixed bottom-[70px] left-4 right-4 z-40 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center justify-between gap-4 md:hidden animate-fade-in-up;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-  }
+/* ═══════════════════════════════════════════════
+   GLOBAL STYLES
+   ═══════════════════════════════════════════════ */
+body {
+  @apply bg-background text-body-text font-body antialiased selection:bg-primary/20 selection:text-heading-dark;
 }
 
-/* Global Reset adjustments */
-body {
-  @apply bg-white text-body-text font-body antialiased selection:bg-primary/20 selection:text-heading-dark;
+/* Global focus-visible ring for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
 }
