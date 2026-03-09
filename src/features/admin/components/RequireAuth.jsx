@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../app/contexts/AuthContext';
 
-const RequireAuth = ({ children, requireAdmin = true }) => {
-  const { currentUser, isAdmin, loading } = useAuth();
+const RequireAuth = ({ children, requireAdmin = true, allowedRoles = [] }) => {
+  const { currentUser, isAdmin, userData, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -23,6 +23,11 @@ const RequireAuth = ({ children, requireAdmin = true }) => {
   if (requireAdmin && !isAdmin) {
     // If requires admin but user is not admin
     return <Navigate to="/" replace />;
+  }
+
+  if (allowedRoles.length > 0 && userData?.role && !allowedRoles.includes(userData.role)) {
+    // User is signed in and is an admin/editor, but does not have the specific required role
+    return <Navigate to="/features/admin" replace />;
   }
 
   return children;

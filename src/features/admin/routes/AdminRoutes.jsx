@@ -57,15 +57,19 @@ const AdminRoutes = () => {
         } />
 
         <Route path="builder" element={
-          <Suspense fallback={<AdminPageLoader />}>
-            <PageBuilder />
-          </Suspense>
+          <RequireAuth allowedRoles={['admin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <PageBuilder />
+            </Suspense>
+          </RequireAuth>
         } />
 
         <Route path="theme" element={
-          <Suspense fallback={<AdminPageLoader />}>
-            <ThemeManager />
-          </Suspense>
+          <RequireAuth allowedRoles={['admin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <ThemeManager />
+            </Suspense>
+          </RequireAuth>
         } />
 
         <Route path="about" element={
@@ -75,9 +79,11 @@ const AdminRoutes = () => {
         } />
 
         <Route path="orders" element={
-          <Suspense fallback={<AdminPageLoader />}>
-            <OrdersListPage />
-          </Suspense>
+          <RequireAuth allowedRoles={['admin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <OrdersListPage />
+            </Suspense>
+          </RequireAuth>
         } />
 
         <Route path="courses" element={
@@ -141,21 +147,27 @@ const AdminRoutes = () => {
         } />
 
         <Route path="users" element={
-          <Suspense fallback={<AdminPageLoader />}>
-            <UsersListPage />
-          </Suspense>
+          <RequireAuth allowedRoles={['admin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <UsersListPage />
+            </Suspense>
+          </RequireAuth>
         } />
 
         <Route path="certificates" element={
-          <Suspense fallback={<AdminPageLoader />}>
-            <AdminCertificatesPage />
-          </Suspense>
+          <RequireAuth allowedRoles={['admin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <AdminCertificatesPage />
+            </Suspense>
+          </RequireAuth>
         } />
 
         <Route path="certificate-settings" element={
-          <Suspense fallback={<AdminPageLoader />}>
-            <CertificateSettingsPage />
-          </Suspense>
+          <RequireAuth allowedRoles={['admin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <CertificateSettingsPage />
+            </Suspense>
+          </RequireAuth>
         } />
 
         <Route path="top-offer-bar" element={

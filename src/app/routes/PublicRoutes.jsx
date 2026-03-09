@@ -24,6 +24,7 @@ const RequestCoursePage = lazy(() => import('../../pages/RequestCoursePage'));
 const AIDiagnosisPage = lazy(() => import('../../pages/ai/AIDiagnosisPage'));
 const PracticalTrainingPage = lazy(() => import('../../pages/PracticalTrainingPage'));
 const ApplyTrainingPage = lazy(() => import('../../pages/ApplyTrainingPage'));
+const PlantAnalyzerPage = lazy(() => import('../../features/plant-analyzer/pages/PlantAnalyzerPage'));
 
 // Auth Pages
 const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
@@ -117,6 +118,7 @@ const PublicRoutes = () => {
             <Route path="/certificate/:certificateId" element={<CertificateViewPage />} />
             <Route path="/ai/diagnose" element={<AIDiagnosisPage />} />
             <Route path="/practical-training" element={<PracticalTrainingPage />} />
+            <Route path="/analyzer" element={<PlantAnalyzerPage />} />
 
             <Route element={<AuthShell />}>
               <Route path="/login" element={<LoginPage />} />

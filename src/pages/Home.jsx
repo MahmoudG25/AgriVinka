@@ -13,6 +13,7 @@ import CTA from '../components/home/CTA';
 import FAQ from '../components/home/FAQ';
 import Mission from '../components/home/Mission';
 import AboutPreview from '../components/home/AboutPreview';
+import AnalyzerPreview from '../components/home/AnalyzerPreview';
 
 import HeroSkeleton from '../components/skeletons/HeroSkeleton';
 import CardSkeleton from '../components/skeletons/CardSkeleton';
@@ -69,6 +70,7 @@ const Home = () => {
           <>
             <Hero data={homeData.hero} />
             <Partners data={homeData.partners} />
+            <AnalyzerPreview />
             <Diagnosis data={homeData.diagnosis} />
             <Tracks data={homeData.tracks} />
             <Roadmap data={homeData.roadmap || { steps: [] }} />

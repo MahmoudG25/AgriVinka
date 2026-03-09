@@ -131,6 +131,10 @@ const Navbar = ({ data = defaultNavbarData }) => {
         <div className="hidden md:flex items-center gap-8 text-lg font-medium text-body-text/80">
           <Link to="/" className="hover:text-primary transition-colors">الرئيسية</Link>
           <Link to="/courses" className="hover:text-primary transition-colors">الكورسات</Link>
+          <Link to="/analyzer" className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl transition-all font-bold">
+            <span className="material-symbols-outlined text-sm">psychiatry</span>
+            فاحص النباتات
+          </Link>
           <Link to="/learning-paths" className="hover:text-primary transition-colors">المسارات</Link>
           <Link to="/practical-training" className="hover:text-primary transition-colors">التدريب العملي</Link>
           {data?.links && data.links
@@ -295,6 +299,10 @@ const Navbar = ({ data = defaultNavbarData }) => {
             <div className="space-y-1">
               <Link to="/" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الرئيسية</Link>
               <Link to="/courses" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الكورسات</Link>
+              <Link to="/analyzer" onClick={handleLinkClick} className="flex items-center gap-2 px-4 py-3 mb-1 mt-1 rounded-xl text-lg font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all">
+                <span className="material-symbols-outlined mb-1">psychiatry</span>
+                فاحص أمراض النبات الذكي
+              </Link>
               <Link to="/learning-paths" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">المسارات</Link>
               <Link to="/practical-training" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">التدريب العملي</Link>
               {data?.links && data.links

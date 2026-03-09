@@ -6,106 +6,77 @@ import {
   collection,
   doc,
   setDoc,
+  deleteDoc,
   getDocs,
   query,
-  where,
   orderBy,
+  limit,
+  startAfter,
   serverTimestamp
 } from 'firebase/firestore';
 
-// Mock responses for development
-const MOCK_DISEASES = [
-  {
-    name: "عفن الأوراق (Leaf Blight)",
-    confidence: 0.92,
-    symptoms: ["بقع بنية أو سوداء على الأوراق", "اصفرار حواف الأوراق", "ذبول مبكر"],
-    treatment: ["إزالة الأوراق المصابة فوراً", "تحسين التهوية حول النبات", "استخدام مبيد فطري نحاسي"],
-    severity: "high"
-  },
-  {
-    name: "نقص النيتروجين (Nitrogen Deficiency)",
-    confidence: 0.85,
-    symptoms: ["اصفرار عام في الأوراق القديمة", "بطء في النمو", "سيقان ضعيفة"],
-    treatment: ["استخدام سماد غني بالنيتروجين", "إضافة مواد عضوية للتربة", "الري المنتظم"],
-    severity: "low"
-  },
-  {
-    name: "نبات سليم (Healthy Plant)",
-    confidence: 0.98,
-    symptoms: ["أوراق خضراء نضرة", "نمو طبيعي", "خلو من البقع أو الحشرات"],
-    treatment: ["الاستمرار في العناية الحالية", "توفير إضاءة مناسبة", "تسميد دوري خفيف"],
-    severity: "none"
-  },
-  {
-    name: "البياض الدقيقي (Powdery Mildew)",
-    confidence: 0.88,
-    symptoms: ["بقع بيضاء مسحوقية على الأوراق", "تجعد الأوراق", "تساقط مبكر"],
-    treatment: ["تقليل الرطوبة حول النبات", "رش بمحلول بيكربونات الصوديوم", "استخدام مبيد فطري كبريتي"],
-    severity: "medium"
-  }
-];
+// Re-export the real analysis function so dashboard can use it directly
+export { analyzePlantImage, PROVIDERS } from '../../features/plant-analyzer/services/analysisService';
 
 export const aiDiagnosisService = {
   /**
-   * Analyzes a plant image using an AI API.
-   * Currently mocked for development. Replace with actual API call (e.g., Plant.id).
+   * Saves a diagnosis result + image to the user's Firestore history.
+   * Uploads image to Cloudinary for permanent storage.
+   *
+   * @param {string} userId
+   * @param {{ base64: string, mimeType: string }} imageData - compressed base64 image
+   * @param {string} provider - 'openai' | 'gemini' | 'grok'
+   * @param {Object} analysisResult - structured result from the AI adapter
+   * @returns {Promise<string>} The saved scan document ID
    */
-  analyzeImage: async (imageFile) => {
-    try {
-      // 1. Simulate API delay (2-4 seconds)
-      const delay = Math.floor(Math.random() * 2000) + 2000;
-      await new Promise(resolve => setTimeout(resolve, delay));
-
-      // 2. Select a random mock result (simulating AI prediction)
-      const randomIndex = Math.floor(Math.random() * MOCK_DISEASES.length);
-      const prediction = MOCK_DISEASES[randomIndex];
-
-      // 3. Return a standardized format
-      return {
-        id: `scan_${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        prediction: prediction,
-      };
-
-      /*
-      // --- Example of Real Integration (Plant.id) ---
-      const base64Image = await fileToBase64(imageFile);
-      const response = await fetch('https://api.plant.id/v2/health_assessment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Api-Key': 'YOUR_API_KEY'
-        },
-        body: JSON.stringify({ images: [base64Image], disease_details: ['description', 'treatment'] })
-      });
-      const data = await response.json();
-      return mapPlantIdResponse(data);
-      */
-
-    } catch (error) {
-      logger.error('Error analyzing plant image:', error);
-      throw new Error('فشل في تحليل الصورة. يرجى المحاولة مرة أخرى.');
-    }
-  },
-
-  /**
-   * Saves the diagnosis result and the uploaded image to the user's history in Firestore.
-   */
-  saveScanHistory: async (userId, imageFile, analysisResult) => {
-    if (!userId) return null; // Guest user, don't save
+  saveScanHistory: async (userId, imageData, provider, analysisResult) => {
+    if (!userId) return null;
 
     try {
-      // 1. Upload image to Cloudinary instead of Firebase Storage
-      const downloadUrl = await cloudinaryService.uploadFile(imageFile, `users/${userId}/ai-scans`);
+      const scanId = `scan_${Date.now()}`;
 
-      // 2. Save metadata to Firestore subcollection: users/{uid}/aiScans
-      const scanId = analysisResult.id;
+      // Convert base64 to a File-like Blob for Cloudinary upload
+      const byteString = atob(imageData.base64);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const uint8 = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        uint8[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([arrayBuffer], { type: imageData.mimeType });
+      const file = new File([blob], `scan_${Date.now()}.jpg`, { type: imageData.mimeType });
+
+      // Upload to Cloudinary
+      let imageUrl = '';
+      try {
+        imageUrl = await cloudinaryService.uploadFile(file, `users/${userId}/ai-scans`);
+      } catch (uploadErr) {
+        logger.error('Cloudinary upload failed, saving without image URL:', uploadErr);
+      }
+
+      // Save to Firestore: users/{uid}/aiScans/{scanId}
       const scanRef = doc(db, COLLECTIONS.USERS, userId, 'aiScans', scanId);
 
       const scanData = {
-        scanId: scanId,
-        imageUrl: downloadUrl,
-        prediction: analysisResult.prediction,
+        scanId,
+        imageUrl,
+        provider,
+        // Legacy-compatible prediction field
+        prediction: {
+          name: analysisResult.diagnosis || 'غير محدد',
+          confidence: analysisResult.confidence === 'High' ? 0.95 :
+            analysisResult.confidence === 'Medium' ? 0.7 : 0.4,
+          severity: analysisResult.confidence === 'High' ? 'high' :
+            analysisResult.confidence === 'Medium' ? 'medium' : 'low',
+        },
+        // Full structured result
+        result: {
+          diagnosis: analysisResult.diagnosis || '',
+          confidence: analysisResult.confidence || '',
+          causes: analysisResult.causes || [],
+          careSteps: analysisResult.careSteps || [],
+          warnings: analysisResult.warnings || [],
+          references: analysisResult.references || [],
+        },
         timestamp: serverTimestamp(),
       };
 
@@ -118,24 +89,62 @@ export const aiDiagnosisService = {
   },
 
   /**
-   * Retrieves all saved scans for a specific user, ordered by date.
+   * Retrieves paginated scans for a user, ordered by date descending.
+   *
+   * @param {string} userId
+   * @param {number} [pageSize=6] - Number of items per page
+   * @param {import('firebase/firestore').DocumentSnapshot} [lastDoc=null] - Last document for pagination
+   * @returns {Promise<{ items: Array, lastDoc: DocumentSnapshot|null, hasMore: boolean }>}
    */
-  getUserScans: async (userId) => {
+  getUserScans: async (userId, pageSize = 6, lastDoc = null) => {
     try {
-      if (!userId) return [];
+      if (!userId) return { items: [], lastDoc: null, hasMore: false };
 
       const scansRef = collection(db, COLLECTIONS.USERS, userId, 'aiScans');
-      const q = query(scansRef, orderBy('timestamp', 'desc'));
-      const snapshot = await getDocs(q);
 
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
+      let q;
+      if (lastDoc) {
+        q = query(scansRef, orderBy('timestamp', 'desc'), startAfter(lastDoc), limit(pageSize + 1));
+      } else {
+        q = query(scansRef, orderBy('timestamp', 'desc'), limit(pageSize + 1));
+      }
+
+      const snapshot = await getDocs(q);
+      const docs = snapshot.docs;
+
+      // If we got more than pageSize, there are more items
+      const hasMore = docs.length > pageSize;
+      const items = docs.slice(0, pageSize).map(d => ({
+        id: d.id,
+        _doc: d, // Keep the raw doc snapshot for pagination cursor
+        ...d.data()
       }));
+
+      return {
+        items,
+        lastDoc: items.length > 0 ? docs[items.length - 1] : null,
+        hasMore,
+      };
     } catch (error) {
-      // If index doesn't exist yet, Firestore throws an error with a link to create it.
       logger.error('Error fetching user scan history:', error);
-      return []; // Return empty array gracefully if it fails (e.g. missing index)
+      return { items: [], lastDoc: null, hasMore: false };
     }
-  }
+  },
+
+  /**
+   * Deletes a specific scan from the user's history.
+   *
+   * @param {string} userId
+   * @param {string} scanId
+   * @returns {Promise<void>}
+   */
+  deleteScan: async (userId, scanId) => {
+    try {
+      const scanRef = doc(db, COLLECTIONS.USERS, userId, 'aiScans', scanId);
+      await deleteDoc(scanRef);
+    } catch (error) {
+      logger.error('Error deleting scan:', scanId, error);
+      throw error;
+    }
+  },
 };

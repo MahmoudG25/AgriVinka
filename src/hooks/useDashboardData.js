@@ -76,7 +76,7 @@ export const useDashboardData = (uid) => {
         }
 
         if (scansData.status === 'fulfilled') {
-          setAiScans(scansData.value);
+          setAiScans(scansData.value.items || []);
         } else {
           logger.error('Failed to fetch AI scans', scansData.reason);
         }

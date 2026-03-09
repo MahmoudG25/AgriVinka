@@ -24,30 +24,32 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../../services/firebase';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../app/store/slices/uiSlice';
+import { useAuth } from '../../../app/contexts/AuthContext';
 
 const PRIMARY_TABS = [
   { label: 'الرئيسية', path: '/features/admin', icon: MdDashboard, end: true },
   { label: 'الدورات', path: '/features/admin/courses', icon: MdClass },
-  { label: 'الطلبات', path: '/features/admin/orders', icon: MdShoppingCart },
-  { label: 'المستخدمين', path: '/features/admin/users', icon: MdPeople },
+  { label: 'الطلبات', path: '/features/admin/orders', icon: MdShoppingCart, roles: ['admin'] },
+  { label: 'المستخدمين', path: '/features/admin/users', icon: MdPeople, roles: ['admin'] },
 ];
 
 const MORE_LINKS = [
   { label: 'تحرير الرئيسية', path: '/features/admin/home', icon: MdHome },
-  { label: 'منشئ الصفحات', path: '/features/admin/builder', icon: MdDashboardCustomize },
-  { label: 'تخصيص الهوية', path: '/features/admin/theme', icon: MdPalette },
+  { label: 'منشئ الصفحات', path: '/features/admin/builder', icon: MdDashboardCustomize, roles: ['admin'] },
+  { label: 'تخصيص الهوية', path: '/features/admin/theme', icon: MdPalette, roles: ['admin'] },
   { label: 'تحرير من نحن', path: '/features/admin/about', icon: MdInfo },
   { label: 'المسارات', path: '/features/admin/roadmaps', icon: MdMap },
   { label: 'التدريب العملي', path: '/features/admin/trainings', icon: MdAssignment },
   { label: 'الكورسات المطلوبة', path: '/features/admin/course-requests', icon: MdLibraryBooks },
-  { label: 'الشهادات', path: '/features/admin/certificates', icon: MdWork },
-  { label: 'إعدادات الشهادات', path: '/features/admin/certificate-settings', icon: MdSettings },
+  { label: 'الشهادات', path: '/features/admin/certificates', icon: MdWork, roles: ['admin'] },
+  { label: 'إعدادات الشهادات', path: '/features/admin/certificate-settings', icon: MdSettings, roles: ['admin'] },
   { label: 'شريط العروض', path: '/features/admin/top-offer-bar', icon: MdCampaign },
 ];
 
 const MobileBottomNav = () => {
   const [showMore, setShowMore] = useState(false);
   const dispatch = useDispatch();
+  const { userData } = useAuth(); // Capture active user role
 
   const handleLogout = async () => {
     try {
@@ -57,6 +59,10 @@ const MobileBottomNav = () => {
       console.error("Logout failed:", error);
     }
   };
+
+  const userRole = userData?.role || 'student';
+  const visiblePrimaryTabs = PRIMARY_TABS.filter((tab) => !tab.roles || tab.roles.includes(userRole));
+  const visibleMoreLinks = MORE_LINKS.filter((link) => !link.roles || link.roles.includes(userRole));
 
   return (
     <>
@@ -87,7 +93,7 @@ const MobileBottomNav = () => {
         </div>
         <nav className="overflow-y-auto p-3 pb-safe" style={{ maxHeight: 'calc(70vh - 56px)' }}>
           <div className="grid grid-cols-3 gap-2">
-            {MORE_LINKS.map((link) => (
+            {visibleMoreLinks.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
@@ -118,7 +124,7 @@ const MobileBottomNav = () => {
       {/* Bottom Tab Bar */}
       <nav className="fixed inset-x-0 bottom-0 z-30 md:hidden bg-white border-t border-border-light pb-safe">
         <div className="flex items-center justify-around h-16">
-          {PRIMARY_TABS.map((tab) => (
+          {visiblePrimaryTabs.map((tab) => (
             <NavLink
               key={tab.path}
               to={tab.path}
