@@ -3,8 +3,8 @@ import { useLocation, Link } from 'react-router-dom';
 import { FaCheck, FaArrowLeft, FaRegCopy, FaCloud } from 'react-icons/fa6';
 import { FaRegFolderOpen } from 'react-icons/fa';
 import ProductSummaryCard from '../../components/checkout/ProductSummaryCard';
-import { courseService } from '../../services/courseService';
-import { roadmapService } from '../../services/roadmapService';
+import { courseService } from '../../services/firestore/courseService';
+import { roadmapService } from '../../services/firestore/roadmapService';
 
 const OrderSuccess = () => {
   const location = useLocation();
@@ -78,7 +78,7 @@ const OrderSuccess = () => {
           تمت عملية الشراء بنجاح!
         </h1>
         <p className="text-gray-500 mb-10 text-lg">
-          شكراً لانضمامك إلينا. رحلتك المعرفية مع "أكاديمية نماء" تبدأ الآن.
+          شكراً لانضمامك إلينا. رحلتك المعرفية مع "AgriVinka" تبدأ الآن.
         </p>
 
         {/* Access Box */}

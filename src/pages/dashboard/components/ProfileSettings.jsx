@@ -1,8 +1,29 @@
-import React, { useState, useRef } from 'react';
-import { useAuth } from '../../../contexts/AuthContext';
-import { userService } from '../../../services/userService';
-import { cloudinaryService } from '../../../services/cloudinaryService';
+import React, { useState, useRef, useCallback } from 'react';
+import { useAuth } from '../../../app/contexts/AuthContext';
+import { userService } from '../../../services/firestore/userService';
+import { cloudinaryService } from '../../../services/cloudinary';
 import { logger } from '../../../utils/logger';
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
+
+/**
+ * Custom styling overrides for react-international-phone
+ * to match the design system (rounded-xl, border-gray-200, focus:ring-primary, etc.)
+ */
+const phoneInputStyle = {
+  '--react-international-phone-height': '42px',
+  '--react-international-phone-border-radius': '12px',
+  '--react-international-phone-border-color': '#e5e7eb',
+  '--react-international-phone-background-color': '#f9fafb',
+  '--react-international-phone-text-color': '#1A2E1A',
+  '--react-international-phone-font-size': '14px',
+  '--react-international-phone-country-selector-background-color': '#f9fafb',
+  '--react-international-phone-country-selector-background-color-hover': '#f3f4f6',
+  '--react-international-phone-selected-dropdown-item-background-color': '#E8F5E9',
+  '--react-international-phone-country-selector-border-color': '#e5e7eb',
+  '--react-international-phone-dropdown-item-background-color': 'white',
+  '--react-international-phone-focus-border-color': '#1B5E20',
+};
 
 const ProfileSettings = () => {
   const { currentUser, userData } = useAuth();
@@ -12,6 +33,7 @@ const ProfileSettings = () => {
   const [displayName, setDisplayName] = useState(userData?.displayName || '');
   const [bio, setBio] = useState(userData?.bio || '');
   const [phone, setPhone] = useState(userData?.phone || '');
+  const [phoneError, setPhoneError] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [message, setMessage] = useState('');
@@ -22,11 +44,43 @@ const ProfileSettings = () => {
     setTimeout(() => setMessage(''), 3000);
   };
 
+  /**
+   * Validate E.164: optional but if provided must be + followed by 7-15 digits.
+   */
+  const validatePhone = useCallback((value) => {
+    if (!value || value === '+') {
+      setPhoneError('');
+      return true; // phone is optional
+    }
+    // E.164: + followed by 7-15 digits
+    const e164 = /^\+[1-9]\d{6,14}$/;
+    if (!e164.test(value)) {
+      setPhoneError('رقم الهاتف غير صالح');
+      return false;
+    }
+    setPhoneError('');
+    return true;
+  }, []);
+
+  const handlePhoneChange = useCallback((value) => {
+    setPhone(value);
+    if (phoneError) validatePhone(value);
+  }, [phoneError, validatePhone]);
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
+
+    // Validate phone before save
+    const cleanPhone = (!phone || phone === '+') ? '' : phone;
+    if (cleanPhone && !validatePhone(cleanPhone)) return;
+
     try {
       setLoading(true);
-      await userService.updateProfile(currentUser.uid, { displayName, bio, phone });
+      await userService.updateProfile(currentUser.uid, {
+        displayName,
+        bio,
+        phone: cleanPhone,
+      });
       showMessage('✅ تم حفظ التغييرات بنجاح');
       setIsEditing(false);
     } catch (error) {
@@ -40,11 +94,9 @@ const ProfileSettings = () => {
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    // Show preview
     const reader = new FileReader();
     reader.onload = (ev) => setPreviewUrl(ev.target.result);
     reader.readAsDataURL(file);
-    // Upload
     handleAvatarUpload(file);
   };
 
@@ -54,7 +106,7 @@ const ProfileSettings = () => {
       const url = await cloudinaryService.uploadFile(file, 'Namaa-Academy/avatars');
       await userService.updateProfile(currentUser.uid, { photoURL: url });
       showMessage('✅ تم تحديث الصورة بنجاح');
-      setPreviewUrl(null); // Clear preview, real URL is now in userData
+      setPreviewUrl(null);
     } catch (error) {
       logger.error('Error uploading avatar:', error);
       showMessage('❌ حدث خطأ أثناء رفع الصورة');
@@ -62,6 +114,15 @@ const ProfileSettings = () => {
     } finally {
       setUploadingAvatar(false);
     }
+  };
+
+  const handleCancelEditing = () => {
+    setIsEditing(false);
+    setDisplayName(userData?.displayName || '');
+    setBio(userData?.bio || '');
+    setPhone(userData?.phone || '');
+    setPhoneError('');
+    setPreviewUrl(null);
   };
 
   const avatarSrc = previewUrl || userData?.photoURL;
@@ -99,7 +160,7 @@ const ProfileSettings = () => {
             <div className="relative">
               <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 shrink-0">
                 {avatarSrc ? (
-                  <img src={avatarSrc} alt="" className="w-full h-full object-cover" />
+                  <img src={avatarSrc} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                 ) : (
                   <div className="w-full h-full bg-primary flex items-center justify-center text-white text-2xl font-bold">
                     {userData?.displayName?.[0] || 'ن'}
@@ -118,8 +179,8 @@ const ProfileSettings = () => {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${uploadingAvatar
-                    ? 'bg-gray-100 text-gray-400 cursor-wait'
-                    : 'bg-primary/10 text-primary hover:bg-primary/20'
+                  ? 'bg-gray-100 text-gray-400 cursor-wait'
+                  : 'bg-primary/10 text-primary hover:bg-primary/20'
                   }`}
               >
                 {uploadingAvatar ? 'جاري الرفع...' : 'تغيير الصورة'}
@@ -158,17 +219,28 @@ const ProfileSettings = () => {
             />
           </div>
 
-          {/* Phone */}
+          {/* Phone — with country flags */}
           <div>
             <label className="block text-xs font-bold text-gray-600 mb-1.5">رقم الهاتف</label>
-            <input
-              type="tel"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium transition-all outline-none"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+20 10x xxx xxxx"
-              dir="ltr"
-            />
+            <div dir="ltr" style={phoneInputStyle}>
+              <PhoneInput
+                defaultCountry="eg"
+                value={phone}
+                onChange={handlePhoneChange}
+                onBlur={() => validatePhone(phone)}
+                inputClassName="!rounded-xl !font-medium !text-sm"
+                countrySelectorStyleProps={{
+                  buttonClassName: '!rounded-r-xl !border-gray-200',
+                }}
+                charAfterDialCode=" "
+                disableDialCodeAndPrefix={false}
+                showDisabledDialCodeAndPrefix={false}
+              />
+            </div>
+            {phoneError && (
+              <p className="text-xs font-medium text-danger mt-1" role="alert">{phoneError}</p>
+            )}
+            <p className="text-[10px] text-gray-400 mt-1">اختياري — سيُحفظ بتنسيق دولي (مثال: ‎+201012345678)</p>
           </div>
 
           {/* Bio */}
@@ -187,20 +259,14 @@ const ProfileSettings = () => {
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !!phoneError}
               className="flex-1 py-2.5 bg-primary text-white font-bold rounded-xl text-sm hover:bg-heading-dark transition-colors disabled:opacity-50"
             >
               {loading ? 'جاري الحفظ...' : 'حفظ التغييرات'}
             </button>
             <button
               type="button"
-              onClick={() => {
-                setIsEditing(false);
-                setDisplayName(userData?.displayName || '');
-                setBio(userData?.bio || '');
-                setPhone(userData?.phone || '');
-                setPreviewUrl(null);
-              }}
+              onClick={handleCancelEditing}
               className="px-4 bg-gray-100 text-gray-600 font-bold rounded-xl text-sm hover:bg-gray-200 transition-colors"
             >
               إلغاء
@@ -213,7 +279,7 @@ const ProfileSettings = () => {
           <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-primary flex items-center justify-center shrink-0 border-2 border-primary/10">
               {userData?.photoURL ? (
-                <img src={userData.photoURL} alt="" className="w-full h-full object-cover" />
+                <img src={userData.photoURL} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
               ) : (
                 <span className="text-lg font-bold text-white">{userData?.displayName?.[0] || 'ن'}</span>
               )}

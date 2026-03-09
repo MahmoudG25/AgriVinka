@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
-import { roadmapService } from '../../services/roadmapService';
+import { roadmapService } from '../../services/firestore/roadmapService';
 import HorizontalCardSkeleton from '../skeletons/HorizontalCardSkeleton';
 import { ImageWithFallback } from '../../utils/imageUtils';
 
@@ -62,7 +62,7 @@ const Tracks = ({ data }) => {
 
   return (
     <section className="section-padding bg-background-alt relative border-b border-border-light w-full overflow-hidden" id="tracks">
-      <div className="container-layout relative">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative">
 
         {/* 1. Header */}
         <div className="text-center mb-16">

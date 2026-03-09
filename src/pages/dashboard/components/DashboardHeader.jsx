@@ -31,7 +31,7 @@ const DashboardHeader = ({ userData, isAdmin }) => {
         <div className="flex items-center gap-4 flex-1 w-full sm:w-auto">
           <div className="w-14 h-14 rounded-full border-2 border-primary/20 overflow-hidden bg-primary flex items-center justify-center shrink-0">
             {userData?.photoURL ? (
-              <img src={userData.photoURL} alt={userData.displayName} className="w-full h-full object-cover" />
+              <img src={userData.photoURL} alt={userData.displayName} className="w-full h-full object-cover" loading="lazy" decoding="async" />
             ) : (
               <span className="text-2xl font-bold text-white">{userData?.displayName?.[0] || 'ن'}</span>
             )}
@@ -51,7 +51,7 @@ const DashboardHeader = ({ userData, isAdmin }) => {
         <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
           {isAdmin && (
             <button
-              onClick={() => navigate('/admin')}
+              onClick={() => navigate('/features/admin')} // TODO: change this to /admin
               className="flex-1 sm:flex-initial px-4 py-2.5 bg-heading-dark text-white font-bold rounded-xl text-sm hover:bg-primary transition-colors flex items-center justify-center gap-1.5"
             >
               <span className="material-symbols-outlined text-base">shield</span>

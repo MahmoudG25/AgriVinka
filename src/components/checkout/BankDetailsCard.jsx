@@ -6,7 +6,7 @@ const BankDetailsCard = () => {
   const [copied, setCopied] = useState(false);
   const bankDetails = {
     bankName: 'مصرف الراجحي',
-    accountName: 'مؤسسة أكاديمية نماء للتدريب',
+    accountName: 'مؤسسة AgriVinka للتدريب',
     iban: 'SA05 8000 0000 6080 1010 1234'
   };
 

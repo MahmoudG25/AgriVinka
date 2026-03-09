@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdCheckCircle } from 'react-icons/md';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../app/contexts/AuthContext';
 
 const PricingWidget = ({ price, discount, currency, features = [], roadmapId, isEnrolled, orderStatus, nextCourseId }) => {
   const navigate = useNavigate();

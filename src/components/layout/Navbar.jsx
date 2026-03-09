@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { logger } from '../../utils/logger';
-import logo from '../../assets/000.png';
+// Logo removed
 import { Link, useNavigate } from 'react-router-dom';
-import { orderService } from '../../services/orderService';
+import { orderService } from '../../services/firestore/orderService';
 import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaTachometerAlt, FaBoxOpen } from 'react-icons/fa';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../app/contexts/AuthContext';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/config';
-import { useTopOfferBar } from '../../hooks/useTopOfferBar';
+import { auth } from '../../services/firebase';
+
 
 // Map known Arabic link labels to real routes
 const NAVBAR_LINK_ROUTES = {
@@ -29,7 +29,7 @@ const resolveHref = (link) => NAVBAR_LINK_ROUTES[link.text] || link.href || '/';
 const isPhoneLike = (str) => /^\d{7,}$/.test(str.replace(/[\s\-\+]/g, ''));
 
 const defaultNavbarData = {
-  logo: 'أكاديمية نماء',
+  logo: 'AgriVinka',
   links: [
     { text: 'الرئيسية', href: '/' },
     { text: 'المسارات', href: '/learning-paths' },
@@ -49,26 +49,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
-  const { offerData, loading: offerLoading } = useTopOfferBar();
-  const [isOfferVisible, setIsOfferVisible] = useState(false);
-
   const dropdownRef = useRef(null);
-
-  // Check offer bar visibility state
-  useEffect(() => {
-    if (offerLoading || !offerData || !offerData.enabled) {
-      setIsOfferVisible(false);
-      return;
-    }
-
-    const dismissedOfferId = localStorage.getItem('dismissedOfferId');
-    if (dismissedOfferId === offerData.offerId) {
-      setIsOfferVisible(false);
-      return;
-    }
-
-    setIsOfferVisible(true);
-  }, [offerData, offerLoading]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -132,16 +113,17 @@ const Navbar = ({ data = defaultNavbarData }) => {
   const displayName = userData?.displayName || currentUser?.displayName || currentUser?.email || 'مستخدم';
   const avatarLetter = displayName.charAt(0).toUpperCase();
 
-  const offerBarHeight = document.getElementById('top-offer-bar')?.offsetHeight || 0;
-
   return (
     <nav className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-border-light shadow-sm h-16 md:h-20 ${mobileMenuOpen ? 'bg-surface-white' : 'bg-surface-white/90 backdrop-blur-md'}`}
-      style={{ top: isOfferVisible ? `${offerBarHeight}px` : '0px' }}
     >
-      <div className="container-layout h-full flex items-center justify-between">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] h-full flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <Link to="/">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-xl">eco</span>
+            </div>
+            <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wide">AgriVinka</span>
           </Link>
         </div>
 
@@ -149,6 +131,10 @@ const Navbar = ({ data = defaultNavbarData }) => {
         <div className="hidden md:flex items-center gap-8 text-lg font-medium text-body-text/80">
           <Link to="/" className="hover:text-primary transition-colors">الرئيسية</Link>
           <Link to="/courses" className="hover:text-primary transition-colors">الكورسات</Link>
+          <Link to="/analyzer" className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl transition-all font-bold">
+            <span className="material-symbols-outlined text-sm">psychiatry</span>
+            فاحص النباتات
+          </Link>
           <Link to="/learning-paths" className="hover:text-primary transition-colors">المسارات</Link>
           <Link to="/practical-training" className="hover:text-primary transition-colors">التدريب العملي</Link>
           {data?.links && data.links
@@ -179,7 +165,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
                 {/* Avatar */}
                 <div className="w-10 h-10 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10 flex items-center justify-center shadow-md group-hover:border-primary transition-colors">
                   {avatarUrl
-                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
                     : <span className="text-primary font-black text-lg">{avatarLetter}</span>}
                 </div>
                 <span className="hidden lg:block text-sm font-bold text-heading-dark w-24 truncate">{displayName.split(' ')[0]}</span>
@@ -288,7 +274,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <div className="w-12 h-12 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10 flex items-center justify-center shrink-0">
                   {avatarUrl
-                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
                     : <span className="text-primary font-black text-xl">{avatarLetter}</span>}
                 </div>
                 <div className="min-w-0">
@@ -313,6 +299,10 @@ const Navbar = ({ data = defaultNavbarData }) => {
             <div className="space-y-1">
               <Link to="/" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الرئيسية</Link>
               <Link to="/courses" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">الكورسات</Link>
+              <Link to="/analyzer" onClick={handleLinkClick} className="flex items-center gap-2 px-4 py-3 mb-1 mt-1 rounded-xl text-lg font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all">
+                <span className="material-symbols-outlined mb-1">psychiatry</span>
+                فاحص أمراض النبات الذكي
+              </Link>
               <Link to="/learning-paths" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">المسارات</Link>
               <Link to="/practical-training" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-lg font-bold text-heading-dark hover:bg-primary/10 hover:text-primary transition-colors">التدريب العملي</Link>
               {data?.links && data.links

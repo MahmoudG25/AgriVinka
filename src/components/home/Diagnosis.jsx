@@ -35,7 +35,7 @@ const Diagnosis = ({ data }) => {
         <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-orange-500/5 rounded-full blur-[100px] opacity-30"></div>
       </div>
 
-      <div className="container-layout relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10">
 
         {/* Header */}
         <div className="text-center w-full mx-auto mb-16">

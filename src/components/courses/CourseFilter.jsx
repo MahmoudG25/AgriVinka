@@ -11,7 +11,7 @@ const CourseFilter = ({
 }) => {
   return (
     <div className="relative top-20 z-40 bg-surface-white/90 backdrop-blur-xl border-y border-border-light shadow-sm mb-10 py-4 transition-all duration-300">
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
 
           {/* Search */}

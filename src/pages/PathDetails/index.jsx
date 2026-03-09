@@ -2,11 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import SEOHead from '../../components/common/SEOHead';
 import { useParams } from 'react-router-dom';
 import { ROADMAP_CONFIGS } from '../../data/roadmapConfigs';
-import { roadmapService } from '../../services/roadmapService';
-import { courseService } from '../../services/courseService';
-import { enrollmentService } from '../../services/enrollmentService';
-import { orderService } from '../../services/orderService';
-import { useAuth } from '../../contexts/AuthContext';
+import { roadmapService } from '../../services/firestore/roadmapService';
+import { courseService } from '../../services/firestore/courseService';
+import { enrollmentService } from '../../services/firestore/enrollmentService';
+import { orderService } from '../../services/firestore/orderService';
+import { useAuth } from '../../app/contexts/AuthContext';
 import { logger } from '../../utils/logger';
 import { adaptPathData } from './utils/pathAdapter';
 
@@ -170,7 +170,7 @@ const PathDetailsPage = () => {
   if (loading) {
     return (
       <div className="bg-[#fcfdfd] min-h-screen pt-8 pb-16 ">
-        <div className="container-layout">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
           {/* Breadcrumb Skeleton */}
           <div className="h-4 w-48 bg-gray-200 rounded mb-8 animate-pulse"></div>
 
@@ -207,14 +207,14 @@ const PathDetailsPage = () => {
   return (
     <>
       <SEOHead
-        title={roadmapConfig?.seo?.metaTitle || `${roadmapConfig?.title || 'مسار برمجة'} | أكاديمية نماء`}
+        title={roadmapConfig?.seo?.metaTitle || `${roadmapConfig?.title || 'مسار برمجة'} | AgriVinka`}
         description={roadmapConfig?.seo?.metaDescription || roadmapConfig?.description || 'تعلم من خلال مسار برمجة منظم ومتكامل'}
         canonical={window.location.href}
         keywords={roadmapConfig?.seo?.keywords || `${roadmapConfig?.title}, مسار, برمجة, تعلم`}
         structuredData={roadmapSchema}
       />
       <div className="bg-[#fcfdfd] min-h-screen pt-8 pb-16" dir="rtl">
-        <div className="container-layout">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
           {/* 1. Breadcrumbs */}
           <PathBreadcrumbs title={normalizedData.meta.title} />
 

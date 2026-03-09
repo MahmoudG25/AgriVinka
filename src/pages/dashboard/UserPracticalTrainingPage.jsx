@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { db } from '../../firebase/config';
+import { useAuth } from '../../app/contexts/AuthContext';
+import { db } from '../../services/firebase';
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 import SEOHead from '../../components/common/SEOHead';
 import { Link } from 'react-router-dom';
@@ -52,7 +52,7 @@ const UserPracticalTrainingPage = () => {
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark pt-28 pb-20 px-4 md:px-8">
-      <SEOHead title="طلبات التدريب العملي | أكاديمية نماء" />
+      <SEOHead title="طلبات التدريب العملي | AgriVinka" />
 
       <div className="w-full lg:w-11/12 mx-auto">
         <div className="flex items-center gap-4 mb-8">

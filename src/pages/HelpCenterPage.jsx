@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SEOHead from '../components/common/SEOHead';
 import { Link } from 'react-router-dom';
-import { pageService } from '../services/pageService';
+import { pageService } from '../services/firestore/pageService';
 import { logger } from '../utils/logger';
 import FAQ from '../components/home/FAQ';
 
@@ -46,8 +46,8 @@ const HelpCenterPage = () => {
   return (
     <>
       <SEOHead
-        title="مركز المساعدة | أكاديمية نماء"
-        description="جد إجابات لأسئلتك الشائعة والدعم الفني في مركز مساعدة أكاديمية نماء."
+        title="مركز المساعدة | AgriVinka"
+        description="جد إجابات لأسئلتك الشائعة والدعم الفني في مركز مساعدة AgriVinka."
         canonical={window.location.href}
         keywords="مساعدة, أسئلة شائعة, دعم, FAQ"
       />

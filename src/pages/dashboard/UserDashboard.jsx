@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../app/contexts/AuthContext';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import SEOHead from '../../components/common/SEOHead';
 import DashboardHeader from './components/DashboardHeader';
@@ -28,9 +28,9 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background-alt pt-24 pb-12">
-      <SEOHead title="لوحة التحكم | أكاديمية نماء" />
+      <SEOHead title="لوحة التحكم | AgriVinka" />
 
-      <div className="w-full px-4 md:px-8 lg:px-[5%]">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
         {/* Compact Header */}
         <DashboardHeader userData={userData} isAdmin={isAdmin} />
 

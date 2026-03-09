@@ -37,23 +37,23 @@ export default defineConfig({
           ],
 
           // Feature chunks (let Vite handle imports to avoid circular deps)
-          "admin-dashboard": ["src/admin/pages/DashboardPage.jsx"],
+          "admin-dashboard": ["src/features/admin/pages/DashboardPage.jsx"],
           "admin-courses": [
-            "src/admin/pages/CoursesListPage.jsx",
-            "src/admin/pages/CourseEditPage.jsx",
-            "src/admin/importer/ImportCoursesPage.jsx",
+            "src/features/admin/pages/CoursesListPage.jsx",
+            "src/features/admin/pages/CourseEditPage.jsx",
+            "src/features/admin/importer/ImportCoursesPage.jsx",
           ],
           "admin-roadmaps": [
-            "src/admin/pages/RoadmapsListPage.jsx",
-            "src/admin/pages/RoadmapEditPage.jsx",
+            "src/features/admin/pages/RoadmapsListPage.jsx",
+            "src/features/admin/pages/RoadmapEditPage.jsx",
           ],
           "admin-content": [
-            "src/admin/pages/HomeEditPage.jsx",
-            "src/admin/pages/AboutEditPage.jsx",
+            "src/features/admin/pages/HomeEditPage.jsx",
+            "src/features/admin/pages/AboutEditPage.jsx",
           ],
           "admin-orders": [
-            "src/admin/pages/OrdersListPage.jsx",
-            "src/admin/pages/CourseRequestsPage.jsx",
+            "src/features/admin/pages/OrdersListPage.jsx",
+            "src/features/admin/pages/CourseRequestsPage.jsx",
           ],
         },
       },
@@ -82,9 +82,9 @@ export default defineConfig({
       "@reduxjs/toolkit",
       "react-redux",
       "@react-pdf/renderer",
-      "firebase",
-      "firebase-auth",
-      "firebase-firestore",
+      "firebase/app",
+      "firebase/auth",
+      "firebase/firestore",
     ],
   },
 

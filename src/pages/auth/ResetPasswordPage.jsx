@@ -4,6 +4,15 @@ import { motion } from 'framer-motion';
 import { authService } from '../../services/authService';
 import SEOHead from '../../components/common/SEOHead';
 
+/* ─── Stagger Animation Helpers ─── */
+const stagger = {
+  parent: { animate: { transition: { staggerChildren: 0.06 } } },
+  child: {
+    initial: { opacity: 0, y: 12 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+  },
+};
+
 const ResetPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -31,96 +40,89 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background-alt flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <SEOHead title="استعادة كلمة المرور | أكاديمية نماء" />
+    <>
+      <SEOHead title="استعادة كلمة المرور | AgriVinka" />
 
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-[100px] pointer-events-none translate-y-1/2"></div>
+      <motion.div variants={stagger.parent} initial="initial" animate="animate" className="space-y-6">
+        {/* Heading */}
+        <motion.div variants={stagger.child}>
+          <h2 className="text-2xl sm:text-3xl font-black text-heading-dark mb-1">استعادة كلمة المرور 🔑</h2>
+          <p className="text-gray-500 text-sm font-medium leading-relaxed">
+            أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإنشاء كلمة مرور جديدة.
+          </p>
+        </motion.div>
 
-      <div className="sm:mx-auto sm:w-full  relative z-10">
-        <Link to="/" className="flex justify-center mb-6 drop-shadow-sm group">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-transform">
-            <span className="material-symbols-outlined text-4xl">eco</span>
-          </div>
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-black text-heading-dark">
-          استعادة كلمة المرور
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-500 font-medium">
-          أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإنشاء كلمة مرور جديدة.
-        </p>
-      </div>
+        {/* Error */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-red-50 text-red-600 p-3 rounded-xl text-sm font-medium border border-red-100 flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-red-500 shrink-0 text-lg">error</span>
+            {error}
+          </motion.div>
+        )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mt-8 sm:mx-auto sm:w-full  relative z-10"
-      >
-        <div className="bg-white py-8 px-4 shadow-xl shadow-gray-200/50 rounded-3xl sm:px-10 border border-gray-100">
+        {/* Success */}
+        {message && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-green-50 text-green-700 p-3 rounded-xl text-sm font-medium border border-green-200 flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-green-600 shrink-0 text-lg">check_circle</span>
+            {message}
+          </motion.div>
+        )}
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm font-medium border border-red-100 flex items-center gap-2">
-                <span className="material-symbols-outlined text-red-500 shrink-0">error</span>
-                {error}
+        {/* Form */}
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <motion.div variants={stagger.child}>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">البريد الإلكتروني</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-gray-400 text-xl">mail</span>
               </div>
-            )}
-
-            {message && (
-              <div className="bg-green-50 text-green-700 p-3 rounded-xl text-sm font-medium border border-green-200 flex items-center gap-2">
-                <span className="material-symbols-outlined text-green-600 shrink-0">check_circle</span>
-                {message}
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">
-                البريد الإلكتروني
-              </label>
-              <div className="mt-1 relative rounded-xl shadow-sm">
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="material-symbols-outlined text-gray-400 text-xl">mail</span>
-                </div>
-                <input
-                  type="email"
-                  required
-                  dir="ltr"
-                  className="block w-full pr-10 pl-3 py-3 font-mono text-left border-gray-200 rounded-xl focus:ring-primary focus:border-primary sm:text-sm bg-gray-50 hover:bg-white transition-colors"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+              <input
+                type="email"
+                required
+                dir="ltr"
+                className="block w-full pr-11 pl-4 py-3 font-mono text-left border border-gray-200 rounded-xl bg-gray-50/80 hover:bg-white focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-gray-900 font-medium outline-none placeholder:text-gray-400"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
+          </motion.div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-lg font-bold text-white bg-primary hover:bg-heading-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                ) : (
-                  <>
-                    إرسال الرابط
-                    <span className="material-symbols-outlined rtl:rotate-180">send</span>
-                  </>
-                )}
-              </button>
-            </div>
+          <motion.div variants={stagger.child}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl text-base font-bold text-white bg-heading-dark hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+            >
+              {loading ? (
+                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  إرسال الرابط
+                  <span className="material-symbols-outlined rtl:rotate-180 text-lg">send</span>
+                </>
+              )}
+            </button>
+          </motion.div>
+        </form>
 
-            <div className="text-center mt-4">
-              <Link to="/login" className="font-bold text-gray-500 hover:text-heading-dark transition-colors text-sm flex items-center justify-center gap-1">
-                <span className="material-symbols-outlined text-sm rtl:rotate-180">arrow_back</span>
-                العودة لتسجيل الدخول
-              </Link>
-            </div>
-          </form>
-        </div>
+        {/* Back to Login */}
+        <motion.div variants={stagger.child} className="text-center">
+          <Link to="/login" className="inline-flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-heading-dark transition-colors">
+            <span className="material-symbols-outlined text-sm rtl:rotate-180">arrow_back</span>
+            العودة لتسجيل الدخول
+          </Link>
+        </motion.div>
       </motion.div>
-    </div>
+    </>
   );
 };
 

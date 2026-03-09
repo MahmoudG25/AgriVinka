@@ -1,5 +1,5 @@
 import React from 'react';
-import CertificateVerificationPage from '../modules/certificates/pages/CertificateVerificationPage.jsx';
+import CertificateVerificationPage from '../features/certificates/pages/CertificateVerificationPage.jsx';
 
 const CertificateVerification = () => {
   return <CertificateVerificationPage />;

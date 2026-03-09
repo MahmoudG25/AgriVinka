@@ -1,4 +1,4 @@
-import { db } from '../firebase/config';
+import { db } from './firebase';
 import { logger } from '../utils/logger';
 import {
   collection,
@@ -11,7 +11,7 @@ import {
   orderBy,
   serverTimestamp
 } from 'firebase/firestore';
-import { cloudinaryService } from './cloudinaryService';
+import { cloudinaryService } from './cloudinary';
 import { createCertificatePdf, TEMPLATE_VERSION } from './createCertificatePdf';
 import { APP_URL } from '../constants/env';
 
@@ -119,7 +119,7 @@ export const certificateService = {
    * @param {string} instructorName Instructor display name
    * @returns {Promise<Object>} Certificate record with id, pdfUrl, etc.
    */
-  issueCertificate: async (userId, studentName, courseId, courseTitle, instructorName = "أكاديمية نماء") => {
+  issueCertificate: async (userId, studentName, courseId, courseTitle, instructorName = "AgriVinka") => {
     try {
       // ── 0. Idempotency Check ──
       const existing = await certificateService.getExistingCertificate(userId, courseId);
@@ -163,7 +163,7 @@ export const certificateService = {
         courseTitle,
         studentName,
         instructorName,
-        platformName: "Namaa Academy / أكاديمية نماء",
+        platformName: "AgriVinka / AgriVinka",
         issuedAt: serverTimestamp(),
         completionDate: serverTimestamp(),
         certificateCode,

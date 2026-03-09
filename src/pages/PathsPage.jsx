@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
 import PathsHeader from '../components/paths/PathsHeader';
 import PathCard from '../components/paths/PathCard';
 import FAQ from '../components/home/FAQ';
-import { roadmapService } from '../services/roadmapService';
+import { roadmapService } from '../services/firestore/roadmapService';
 
 const PathsPage = () => {
   const [roadmaps, setRoadmaps] = useState([]);
@@ -23,7 +23,7 @@ const PathsPage = () => {
         setLoading(true);
         const [roadmapsData, coursesData] = await Promise.all([
           roadmapService.getAllRoadmaps(),
-          import('../services/courseService').then(m => m.courseService.getAllCourses())
+          import('../services/firestore/courseService').then(m => m.courseService.getAllCourses())
         ]);
 
         const courseMap = {};
@@ -107,7 +107,7 @@ const PathsPage = () => {
 
   return (
     <main className="pt-32 pb-20 min-h-screen bg-[#f8f9fb]">
-      <div className="container-layout space-y-12">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] space-y-12">
         <PathsHeader
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

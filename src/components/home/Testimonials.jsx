@@ -35,7 +35,7 @@ const Testimonials = ({ testimonials, data }) => {
 
   return (
     <section className="section-padding bg-background-alt relative overflow-hidden" id="testimonials">
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
 
         {/* Header */}
         <div className="text-center mb-16">
@@ -62,7 +62,7 @@ const Testimonials = ({ testimonials, data }) => {
               {/* User Info */}
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20 p-0.5 shrink-0">
-                  <img src={item.image || `https://i.pravatar.cc/150?u=${index}`} alt={item.name} className="w-full h-full rounded-full object-cover" />
+                  <img src={item.image || `https://i.pravatar.cc/150?u=${index}`} alt={item.name} className="w-full h-full rounded-full object-cover" loading="lazy" decoding="async" />
                 </div>
                 <div>
                   <h4 className="font-bold text-heading-dark text-lg">{item.name}</h4>
@@ -110,4 +110,4 @@ const Testimonials = ({ testimonials, data }) => {
   );
 };
 
-export default Testimonials;
+export default React.memo(Testimonials);

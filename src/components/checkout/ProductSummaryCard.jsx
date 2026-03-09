@@ -26,7 +26,7 @@ const ProductSummaryCard = ({ product, type }) => {
       <div className="flex gap-4 mb-6">
         <div className="w-24 h-24 bg-gray-200 rounded-xl flex-shrink-0 overflow-hidden">
           {image ? (
-            <img src={image} alt={title} className="w-full h-full object-cover" />
+            <img src={image} alt={title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
           ) : (
             <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
               {type === 'track' ? 'مسار' : 'دورة'}

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { roadmapService } from '../services/roadmapService';
-import { courseService } from '../services/courseService';
-import { enrollmentService } from '../services/enrollmentService';
+import { useAuth } from '../app/contexts/AuthContext';
+import { roadmapService } from '../services/firestore/roadmapService';
+import { courseService } from '../services/firestore/courseService';
+import { enrollmentService } from '../services/firestore/enrollmentService';
 import { logger } from '../utils/logger';
 import SEOHead from '../components/common/SEOHead';
 import { FaChevronRight, FaPlayCircle, FaCheckCircle, FaLock } from 'react-icons/fa';
@@ -80,7 +80,7 @@ const PathPlayer = () => {
       </header>
 
       {/* Timeline Content */}
-      <main className="container mx-auto py-12 px-4 max-w-4xl">
+      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl pb-safe min-w-0">
         <div className="relative pl-4 md:pl-0">
           {/* Vertical Line */}
           <div className="absolute right-[23px] top-6 bottom-6 w-1 bg-gray-200 rounded-full"></div>
@@ -100,8 +100,8 @@ const PathPlayer = () => {
                 <div key={course.id} className="relative flex items-start gap-6">
                   {/* Timeline Badge */}
                   <div className={`relative z-10 w-12 h-12 shrink-0 rounded-full flex items-center justify-center border-4 border-background-alt shadow-sm transition-colors ${isCompleted ? 'bg-green-500 text-white' :
-                      enr && progress > 0 ? 'bg-primary text-white' :
-                        isLocked ? 'bg-gray-200 text-gray-400' : 'bg-white text-gray-400 border-gray-300'
+                    enr && progress > 0 ? 'bg-primary text-white' :
+                      isLocked ? 'bg-gray-200 text-gray-400' : 'bg-white text-gray-400 border-gray-300'
                     }`}>
                     {isCompleted ? <FaCheckCircle className="text-xl" /> :
                       isLocked ? <FaLock className="text-lg" /> :

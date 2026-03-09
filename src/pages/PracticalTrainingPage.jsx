@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db } from '../services/firebase';
 import SEOHead from '../components/common/SEOHead';
 import TrainingCard from '../components/training/TrainingCard';
 import { logger } from '../utils/logger';
@@ -66,11 +66,11 @@ const PracticalTrainingPage = () => {
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark pt-28 pb-20">
       <SEOHead
-        title="التدريب العملي | أكاديمية نماء"
+        title="التدريب العملي | AgriVinka"
         description="فرص التدريب العملي المتاحة لطلاب وخريجي كليات الزراعة."
       />
 
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
 
         {/* Page Header */}
         <div className="mb-10 text-center w-full md:w-8/12 lg:w-6/12 mx-auto">

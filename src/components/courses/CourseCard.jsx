@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { ScaleCard } from '../../utils/motion';
 import { ImageWithFallback } from '../../utils/imageUtils';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { useAuth } from '../../contexts/AuthContext';
-import { favoritesService } from '../../services/favoritesService';
+import { useAuth } from '../../app/contexts/AuthContext';
+import { favoritesService } from '../../services/firestore/favoritesService';
 
 const CourseCard = ({ course }) => {
   const {
@@ -63,12 +63,7 @@ const CourseCard = ({ course }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
+    <ScaleCard
       className="group bg-white rounded-2xl overflow-hidden border border-border-light shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full relative"
     >
       <Link to={`/courses/${id}`} className="block h-full flex flex-col">
@@ -146,7 +141,7 @@ const CourseCard = ({ course }) => {
             </div>
 
             {/* CTA */}
-            <button className="flex-1 bg-heading-dark text-white text-sm font-bold py-2.5 rounded-xl hover:bg-accent transition-colors flex items-center justify-center gap-2 group/btn">
+            <button className="cursor-pointer flex-1 bg-heading-dark text-white text-sm font-bold py-2.5 rounded-xl hover:bg-accent transition-colors flex items-center justify-center gap-2 group/btn">
               <span>عرض التفاصيل</span>
               <span className="material-symbols-outlined text-sm rtl:rotate-180 group-hover/btn:-translate-x-1 transition-transform">arrow_right_alt</span>
             </button>
@@ -154,7 +149,7 @@ const CourseCard = ({ course }) => {
 
         </div>
       </Link>
-    </motion.div>
+    </ScaleCard>
   );
 };
 

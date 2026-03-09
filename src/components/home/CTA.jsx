@@ -9,7 +9,7 @@ const CTA = ({ data }) => {
       <div className="absolute inset-0 bg-heading-dark">
         {/* DB Image as background */}
         {data?.images?.[0] && (
-          <img src={data.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <img src={data.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" loading="lazy" decoding="async" />
         )}
         <div className="absolute inset-0 bg-gradient-to-r from-heading-dark via-heading-dark/10 to-black/70"></div>
         {/* Abstract Shapes */}
@@ -34,7 +34,7 @@ const CTA = ({ data }) => {
           </h2>
 
           <p className="text-xl text-gray-200 mb-10 mx-auto font-medium drop-shadow-md leading-relaxed">
-            {data?.description || "لا תضيع المزيد من الوقت في البحث العشوائي. انضم الآن وابدأ رحلة الاحتراف في الهندسة الزراعية مع خطة مدروسة."}
+            {data?.subtitle || data?.description || "لا تضيع المزيد من الوقت في البحث العشوائي. انضم الآن وابدأ رحلة الاحتراف في الهندسة الزراعية مع خطة مدروسة."}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-4 sm:px-0">

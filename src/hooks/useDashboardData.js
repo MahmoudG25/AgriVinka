@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { enrollmentService } from '../services/enrollmentService';
-import { orderService } from '../services/orderService';
-import { favoritesService } from '../services/favoritesService';
-import { aiDiagnosisService } from '../services/aiDiagnosisService';
+import { enrollmentService } from '../services/firestore/enrollmentService';
+import { orderService } from '../services/firestore/orderService';
+import { favoritesService } from '../services/firestore/favoritesService';
+import { aiDiagnosisService } from '../services/firestore/aiDiagnosisService';
 import { certificateService } from '../services/certificateService';
 import { logger } from '../utils/logger';
 
@@ -76,7 +76,7 @@ export const useDashboardData = (uid) => {
         }
 
         if (scansData.status === 'fulfilled') {
-          setAiScans(scansData.value);
+          setAiScans(scansData.value.items || []);
         } else {
           logger.error('Failed to fetch AI scans', scansData.reason);
         }

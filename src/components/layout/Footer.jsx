@@ -43,7 +43,7 @@ const defaultFooterData = {
     title: 'النشرة البريدية',
     placeholder: 'البريد الإلكتروني'
   },
-  copyright: 'جميع الحقوق محفوظة © أكاديمية نماء',
+  copyright: 'جميع الحقوق محفوظة © AgriVinka',
   legal: ['الشروط والأحكام', 'سياسة الخصوصية']
 };
 
@@ -82,7 +82,7 @@ const Footer = ({ data = defaultFooterData }) => {
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary rounded-full blur-[128px]"></div>
       </div>
 
-      <div className="container-layout relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-16">
 
           {/* Brand Column */}
@@ -91,7 +91,7 @@ const Footer = ({ data = defaultFooterData }) => {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-xl">eco</span>
               </div>
-              <span className="text-2xl font-bold text-white tracking-wide">أكاديمية نماء</span>
+              <span className="text-2xl font-bold text-white tracking-wide">AgriVinka</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed ">
               {data?.description || defaultFooterData.description}

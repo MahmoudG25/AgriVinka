@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import SEOHead from '../components/common/SEOHead';
-import { courseService } from '../services/courseService';
+import { courseService } from '../services/firestore/courseService';
 import { logger } from '../utils/logger';
 import CourseCard from '../components/courses/CourseCard';
 import CourseSkeleton from '../components/courses/CourseSkeleton';
@@ -78,7 +78,7 @@ const CoursesPage = () => {
   return (
     <div className="min-h-screen bg-background-alt pb-20">
       <SEOHead
-        title="كورسات برمجة متقدمة | أكاديمية نماء"
+        title="كورسات برمجة متقدمة | AgriVinka"
         description="اكتشف أفضل كورسات البرمجة والتصميم. دورات تدريبية متقدمة من المبتدئ للمتقدم في ويب، تطبيقات، ذكاء اصطناعي وأكثر."
         keywords="كورسات برمجة, دورات تدريبية, تعلم البرمجة, JavaScript, React, Python, ويب"
         canonical={window.location.href}
@@ -88,7 +88,7 @@ const CoursesPage = () => {
       <section className="relative pt-32 pb-20 overflow-hidden bg-surface-white border-b border-border-light">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
 
-        <div className="container-layout relative z-10 text-center">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -120,7 +120,7 @@ const CoursesPage = () => {
       />
 
       {/* 3. Courses Grid */}
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
 
         {/* Results Count */}
         <div className="mb-8 text-gray-500 font-bold text-sm">

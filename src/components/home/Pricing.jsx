@@ -12,7 +12,7 @@ const Pricing = ({ data }) => {
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="container-layout relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10">
 
         {/* Header */}
         <div className="text-center mb-20">
@@ -48,7 +48,7 @@ const Pricing = ({ data }) => {
                 {/* Background Image from DB */}
                 {plan.image && (
                   <div className="absolute inset-0 pointer-events-none">
-                    <img src={plan.image} alt="" className="w-full h-full object-cover opacity-10" />
+                    <img src={plan.image} alt="" className="w-full h-full object-cover opacity-10" loading="lazy" decoding="async" />
                     <div className={`absolute inset-0 ${isPopular ? 'bg-heading-dark/1' : 'bg-white/1'}`}></div>
                   </div>
                 )}
@@ -115,4 +115,4 @@ const Pricing = ({ data }) => {
   );
 };
 
-export default Pricing;
+export default React.memo(Pricing);

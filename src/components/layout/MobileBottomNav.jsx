@@ -4,11 +4,20 @@ import { NavLink, useLocation } from 'react-router-dom';
 const MobileBottomNav = () => {
   const location = useLocation();
 
+  // Hide on auth pages, player pages, and admin
+  const hiddenPaths = ['/login', '/register', '/reset-password'];
+  const isHidden =
+    hiddenPaths.includes(location.pathname) ||
+    location.pathname.includes('/play') ||
+    location.pathname.startsWith('/features/admin');
+
+  if (isHidden) return null;
+
   const navItems = [
     { name: 'الرئيسية', icon: 'home', to: '/' },
     { name: 'الكورسات', icon: 'menu_book', to: '/courses' },
     { name: 'المسارات', icon: 'school', to: '/learning-paths' },
-    { name: 'الأسعار', icon: 'workspace_premium', to: '/#pricing', isHash: true },
+    { name: 'التدريب العملي', icon: 'workspace_premium', to: '/practical-training', isHash: true },
     { name: 'عن المنصة', icon: 'person', to: '/about' }
   ];
 

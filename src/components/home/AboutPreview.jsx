@@ -6,7 +6,7 @@ const AboutPreview = ({ data }) => {
   // Default data from AboutPage if not provided
   const defaultStory = {
     title: "من المزرعة إلى الأكاديمية",
-    content: `تأسست أكاديمية نماء لسد الفجوة العميقة بين التعليم الجامعي النظري، وبين المهارات العملية المطلوبة بشدة في القطاع الزراعي الحديث. نحن نؤمن أن المهندس الزراعي الناجح يحتاج إلى أكثر من مجرد شهادة؛ يحتاج إلى قدرة على تشخيص الآفات، إدارة أنظمة الري والتسميد الذكية، واتخاذ قرارات تنقذ المحاصيل.
+    content: `تأسست AgriVinka لسد الفجوة العميقة بين التعليم الجامعي النظري، وبين المهارات العملية المطلوبة بشدة في القطاع الزراعي الحديث. نحن نؤمن أن المهندس الزراعي الناجح يحتاج إلى أكثر من مجرد شهادة؛ يحتاج إلى قدرة على تشخيص الآفات، إدارة أنظمة الري والتسميد الذكية، واتخاذ قرارات تنقذ المحاصيل.
 
 يجمع فريقنا من المدربين والخبراء سنوات طويلة من العمل الميداني والبحث العلمي، لدمج الخبرة التطبيقية في مسارات تعليمية وتدريبية منهجية وميسرة لكل شغوف بالزراعة.`,
     image1: 'https://images.unsplash.com/photo-1592982537447-6f29fb25ff71?q=80&w=2070&auto=format&fit=crop',
@@ -25,7 +25,7 @@ const AboutPreview = ({ data }) => {
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#C6A87C 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 
-      <div className="container-layout">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
           {/* Text Side */}

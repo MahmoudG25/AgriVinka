@@ -52,7 +52,7 @@ const PathOverview = ({ roadmap }) => {
       {/* Roadmap Image (New) */}
       {roadmap.image && (
         <div className="mb-6 rounded-xl overflow-hidden shadow-sm aspect-video">
-          <img src={roadmap.image} alt={roadmap.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          <img src={roadmap.image} alt={roadmap.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
         </div>
       )}
 
@@ -104,7 +104,7 @@ const PathOverview = ({ roadmap }) => {
         </p>
         <div className="flex gap-4">
           {partnerLogos.map((logo, idx) => (
-            <img key={idx} src={logo.url} alt={logo.name} className="h-5 object-contain" />
+            <img key={idx} src={logo.url} alt={logo.name} className="h-5 object-contain" loading="lazy" decoding="async" />
           ))}
         </div>
       </div> */}

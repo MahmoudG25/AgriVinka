@@ -105,7 +105,7 @@ const Roadmap = ({ data }) => {
         <div className="absolute bottom-[20%] left-[10%] w-96 h-96 bg-accent/5 rounded-full blur-3xl mix-blend-multiply"></div>
       </div>
 
-      <div className="container-layout relative z-10">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10">
 
         {/* 1. Psychological Header */}
         <div className="text-center mb-24 mx-auto">
@@ -114,7 +114,7 @@ const Roadmap = ({ data }) => {
             <div className="flex -space-x-4 space-x-reverse rtl:space-x-reverse">
               {[1, 2, 3].map(i => (
                 <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 overflow-hidden">
-                  <img src={`https://i.pravatar.cc/150?u=${i + 20}`} alt="Student" className="w-full h-full object-cover" />
+                  <img src={`https://i.pravatar.cc/150?u=${i + 20}`} alt="Student" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                 </div>
               ))}
               <div className="w-10 h-10 rounded-full border-2 border-white bg-heading-dark text-white flex items-center justify-center text-xs font-bold relative z-10">

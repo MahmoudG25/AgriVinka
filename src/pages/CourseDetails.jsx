@@ -26,19 +26,19 @@ import {
   FaHeart,
   FaRegHeart
 } from 'react-icons/fa';
-import { courseService } from '../services/courseService';
-import { roadmapService } from '../services/roadmapService';
-import { enrollmentService } from '../services/enrollmentService';
-import { favoritesService } from '../services/favoritesService';
-import { orderService } from '../services/orderService';
+import { courseService } from '../services/firestore/courseService';
+import { roadmapService } from '../services/firestore/roadmapService';
+import { enrollmentService } from '../services/firestore/enrollmentService';
+import { favoritesService } from '../services/firestore/favoritesService';
+import { orderService } from '../services/firestore/orderService';
 import FAQ from '../components/home/FAQ';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../app/contexts/AuthContext';
 import HeroSkeleton from '../components/skeletons/HeroSkeleton';
 import SidebarSkeleton from '../components/skeletons/SidebarSkeleton';
 import AccordionSkeleton from '../components/skeletons/AccordionSkeleton';
 import { ImageWithFallback } from '../utils/imageUtils';
 import { logger } from '../utils/logger';
-import { useIssueCertificate } from '../modules/certificates/hooks/useIssueCertificate.js';
+import { useIssueCertificate } from '../features/certificates/hooks/useIssueCertificate.js';
 
 const CourseDetails = () => {
   const { courseId } = useParams();
@@ -191,13 +191,13 @@ const CourseDetails = () => {
     try {
       toast.loading('جاري إصدار الشهادة وتحميلها...', { id: 'cert' });
 
-      const studentName = currentUser.displayName || 'متدرب نماء';
+      const studentName = currentUser.displayName || 'AgriVinka Trainee';
       const newCert = await issueAndDownload({
         userId: currentUser.uid,
         courseId: course.id,
         studentName,
         courseName: course.title,
-        instructorName: course.instructor?.name || 'Namaa Academy',
+        instructorName: course.instructor?.name || 'AgriVinka',
       });
 
       if (newCert) {
@@ -216,7 +216,7 @@ const CourseDetails = () => {
   if (loading) {
     return (
       <div className="bg-background-alt min-h-screen transition-colors duration-300">
-        <main className="container-layout py-8 md:py-12">
+        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] py-8 md:py-12">
           {/* Breadcrumbs Skeleton */}
           <div className="h-4 w-64 bg-gray-200 rounded mb-8 animate-pulse"></div>
 
@@ -281,7 +281,7 @@ const CourseDetails = () => {
     "description": course.seo?.metaDescription || course.description?.substring(0, 160),
     "provider": {
       "@type": "Organization",
-      "name": "أكاديمية نماء",
+      "name": "AgriVinka",
       "sameAs": window.location.origin
     },
     "hasCourseInstance": {
@@ -299,14 +299,14 @@ const CourseDetails = () => {
   return (
     <>
       <SEOHead
-        title={course.seo?.metaTitle || `${course.title} | أكاديمية نماء`}
+        title={course.seo?.metaTitle || `${course.title} | AgriVinka`}
         description={course.seo?.metaDescription || course.description?.substring(0, 160) || `تعرف على ${course.title}`}
         canonical={window.location.href}
-        keywords={course.seo?.keywords || `${course.title}, دورة تعليمية, أكاديمية نماء`}
+        keywords={course.seo?.keywords || `${course.title}, دورة تعليمية, AgriVinka`}
         structuredData={courseSchema}
       />
       <div className="bg-background-alt text-heading-dark transition-colors duration-300 min-h-screen">
-        <main className="container-layout py-8 md:py-12">
+        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] py-8 md:py-12">
 
           {/* Breadcrumbs */}
           <div className="flex items-center text-sm text-yellow-600 mb-8 overflow-x-auto whitespace-nowrap">

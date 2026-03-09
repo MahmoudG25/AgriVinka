@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { db } from '../firebase/config';
+import { useAuth } from '../app/contexts/AuthContext';
+import { db } from '../services/firebase';
 import { doc, getDoc, collection, query, where, getDocs, writeBatch, serverTimestamp, increment } from 'firebase/firestore';
 import { EGYPT_UNIVERSITIES } from '../constants/egyptUniversities';
 import SEOHead from '../components/common/SEOHead';

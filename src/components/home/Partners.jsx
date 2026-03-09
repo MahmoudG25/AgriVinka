@@ -18,7 +18,7 @@ const Partners = ({ data }) => {
 
   return (
     <section className="w-full bg-white border-b border-border-light py-10 overflow-hidden relative" aria-label="Trusted By">
-      <div className="container-layout mb-10 text-center">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] mb-10 text-center">
         <h2 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">{title}</h2>
       </div>
 
