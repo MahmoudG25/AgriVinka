@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, Navigate } from 'react-router-dom';
 import { FaWhatsapp, FaHourglassHalf, FaFileInvoice, FaRegClock, FaCircleInfo, FaCopy, FaArrowLeft } from 'react-icons/fa6';
+import { orderService } from '../../services/firestore/orderService';
+import { logger } from '../../utils/logger';
 
 // --- Helper Components ---
 
@@ -135,17 +137,48 @@ hover:text-[#0cc042] cursor-pointer"
 const OrderUnderReview = () => {
   const location = useLocation();
   const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (location.state?.order) {
-      setOrder(location.state.order);
-    } else {
-      const orders = JSON.parse(localStorage.getItem('shams_orders') || '[]');
-      if (orders.length > 0) {
-        setOrder(orders[orders.length - 1]);
+    const fetchOrder = async () => {
+      // 1. Try to get full order from state (if passed directly)
+      if (location.state?.order) {
+        setOrder(location.state.order);
+        setLoading(false);
+        return;
       }
-    }
+      
+      // 2. Try to get orderId from state and fetch
+      const orderId = location.state?.orderId;
+      if (orderId) {
+        try {
+          const fetchedOrder = await orderService.getOrderById(orderId);
+          if (fetchedOrder) {
+            setOrder({ ...fetchedOrder, id: fetchedOrder.id || orderId });
+          } else {
+             logger.warn(`Order not found for ID: ${orderId}`);
+          }
+        } catch (error) {
+          logger.error('Error fetching order for review page:', error);
+        }
+      }
+      // If no orderId in state, it will remain null and show error state
+      setLoading(false);
+    };
+
+    fetchOrder();
   }, [location.state]);
+
+  if (loading) {
+     return (
+        <div className="min-h-screen flex items-center justify-center bg-[#F8F9FB]">
+           <div className="animate-pulse flex flex-col items-center">
+              <div className="w-12 h-12 border-4 border-[#e6a219] border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-500 font-bold">جاري تحميل بيانات الطلب...</p>
+           </div>
+        </div>
+     );
+  }
 
   if (!order) {
     return (
@@ -161,10 +194,10 @@ const OrderUnderReview = () => {
     return fullName.trim().split(' ')[0];
   };
 
-  const firstName = getFirstName(order.customerInfo?.name);
+  const firstName = getFirstName(order.customerName || order.customerInfo?.name);
 
   if (order.status === 'approved') {
-    return <Navigate to="/checkout/success" state={{ order }} replace />;
+    return <Navigate to="/checkout/success" state={{ orderId: order.id || order.orderId }} replace />;
   }
 
   return (

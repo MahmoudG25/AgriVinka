@@ -45,7 +45,7 @@ const AboutPage = () => {
     <div className="min-h-screen bg-[#FDFBF7] text-gray-800 font-tajawal overflow-hidden" dir="rtl">
       <SEOHead
         title="عن AgriVinka | مبادراتنا وقصتنا"
-        description="تعرف على مبادرات AgriVinka الثقافية وقصتنا في دعم المحتوى العربي."
+        description="تعرف على مبادرات AgriVinka الزراعية وقصتنا في تمكين وتعليم المهندسين الزراعيين."
         canonical={window.location.href}
       />
 
@@ -67,12 +67,12 @@ const AboutPage = () => {
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group w-[90%] md:w-[80%] lg:w-[450px] h-[450px] mx-auto lg:mx-0 lg:ml-auto">
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
               <img
-                src={hero?.image || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80'}
-                alt="Cultural Initiatives"
+                src={hero?.image || 'https://images.unsplash.com/photo-1592982537447-6f29fb25ff71?q=80&w=2070&auto=format&fit=crop'}
+                alt="Agricultural Initiatives"
                 className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 aspect-[3/4]"
               />
               <div className="absolute bottom-6 right-6 z-20">
-                <p className="font-serif italic text-accent text-base">"الثقافة هي الشمس التي لا تغيب"</p>
+                <p className="font-serif italic text-accent text-base">"الزراعة هي شريان الحياة الذي لا ينضب"</p>
               </div>
             </div>
             {/* Glow Effect */}
@@ -90,13 +90,13 @@ const AboutPage = () => {
               variants={fadeUp}
               className="text-3xl lg:text-4xl font-bold mb-4 text-white"
             >
-              مبادراتنا الثقافية
+              مبادراتنا الزراعية
             </motion.h1>
             <motion.p
               variants={fadeUp}
               className="text-gray-300 text-base lg:text-lg mb-8 leading-relaxed "
             >
-              {hero?.description || 'نحن لا نكتفي بنقل الخبر، بل نصنع الحدث. تهدف مبادرات "AgriVinka" إلى دعم المبدعين، توثيق التراث، وتعزيز الحوار الثقافي.'}
+              {hero?.description || 'نحن لا نكتفي بالتعليم الأكاديمي، بل نركز على التطبيق العملي. تهدف مبادرات "AgriVinka" إلى تأهيل المزارعين والمهندسين الزراعيين بأحدث الممارسات الزراعية.'}
             </motion.p>
 
             <div className="space-y-6">
@@ -185,10 +185,10 @@ const AboutPage = () => {
                 {story?.content || (
                   <>
                     <p>
-                      تأسست منصة AgriVinka لتكون منارة إعلامية وثقافية تجمع شتات المبدعين العرب. انطلقنا من فكرة بسيطة: أن المحتوى العربي يستحق أن يقدم بأعلى معايير الجودة والاحترافية.
+                      تأسست منصة AgriVinka لسد الفجوة العميقة بين التعليم الجامعي النظري والمهارات العملية المطلوبة في القطاع الزراعي الحديث. انطلقنا من إيماننا بأن المهندس الزراعي يجب أن يمتلك خبرة عملية وتطبيقية حقيقية.
                     </p>
                     <p>
-                      فريقنا يتكون من نخبة من الكتاب، الفنانين، والمطورين الشغوفين بإبراز الوجه المشرق لحضارتنا. نسعى لبناء مجتمع تفاعلي يثري المحتوى العربي على الإنترنت.
+                      فريقنا يتكون من نخبة من المهندسين، الخبراء، والمدربين الميدانيين الشغوفين بنقل المعرفة. نسعى لبناء مجتمع تفاعلي يثري القطاع بأحدث التقنيات الزراعية الحديثة.
                     </p>
                   </>
                 )}

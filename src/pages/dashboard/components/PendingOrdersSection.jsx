@@ -16,23 +16,57 @@ const PendingOrdersSection = ({ orders, rejectedOrders = [] }) => {
             <span className="text-[10px] bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded-full">{orders.length}</span>
           </h2>
           <div className="space-y-3">
-            {orders.map(order => (
+            {orders.map(order => {
+              const isTraining = order.itemType === 'training';
+              return (
               <div
                 key={order.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-yellow-100 bg-yellow-50/30"
+                className="flex flex-col gap-2 p-4 rounded-xl border border-yellow-100 bg-yellow-50/30"
               >
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-heading-dark text-sm truncate">{order.productTitle || order.items?.[0]?.title || (order.itemType === 'roadmap' ? 'مسار' : 'دورة')}</h4>
-                  <p className="text-xs text-gray-400 mt-0.5" dir="ltr">
-                    #{order.id.slice(0, 8)} • {order.totalAmount} ج.م
-                  </p>
+                {/* Type Badge */}
+                <div className="flex items-center justify-between">
+                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 ${
+                    isTraining
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-yellow-100 text-yellow-700'
+                  }`}>
+                    <span className="material-symbols-outlined text-xs">{isTraining ? 'work' : 'shopping_cart'}</span>
+                    {isTraining ? 'طلب تدريب عملي' : 'طلب شراء'}
+                  </span>
+                  <span className="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs">schedule</span>
+                    قيد المراجعة
+                  </span>
                 </div>
-                <span className="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1 self-start sm:self-center shrink-0">
-                  <span className="material-symbols-outlined text-xs">schedule</span>
-                  قيد المراجعة
-                </span>
+
+                {/* Title & Details */}
+                <div className="min-w-0">
+                  <h4 className="font-bold text-heading-dark text-sm truncate">
+                    {order.productTitle || order.items?.[0]?.title || (order.itemType === 'roadmap' ? 'مسار' : 'دورة')}
+                  </h4>
+                  <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1 flex-wrap">
+                    <span dir="ltr">#{order.id.slice(0, 8)}</span>
+                    <span>•</span>
+                    {isTraining ? (
+                      <>
+                        <span className="material-symbols-outlined text-[11px]">calendar_today</span>
+                        {order.createdAt?.seconds
+                          ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', year: 'numeric' })
+                          : 'تاريخ غير محدد'}
+                      </>
+                    ) : (
+                      <span>{order.totalAmount} ج.م</span>
+                    )}
+                  </p>
+                  {isTraining && order.adminMessage && (
+                    <p className="text-[11px] text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-lg">
+                      <span className="material-symbols-outlined text-[11px] align-middle ml-1">info</span>
+                      {order.adminMessage}
+                    </p>
+                  )}
+                </div>
               </div>
-            ))}
+            )})}
           </div>
           <p className="text-[11px] text-gray-400 mt-3 text-center">
             سيتم التفعيل تلقائياً بعد موافقة الإدارة على طلبك
@@ -49,23 +83,57 @@ const PendingOrdersSection = ({ orders, rejectedOrders = [] }) => {
             <span className="text-[10px] bg-red-100 text-red-600 font-bold px-2 py-0.5 rounded-full">{rejectedOrders.length}</span>
           </h2>
           <div className="space-y-3">
-            {rejectedOrders.map(order => (
+            {rejectedOrders.map(order => {
+              const isTraining = order.itemType === 'training';
+              return (
               <div
                 key={order.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-red-100 bg-red-50/30"
+                className="flex flex-col gap-2 p-4 rounded-xl border border-red-100 bg-red-50/30"
               >
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-heading-dark text-sm truncate">{order.productTitle || order.items?.[0]?.title || (order.itemType === 'roadmap' ? 'مسار' : 'دورة')}</h4>
-                  <p className="text-xs text-gray-400 mt-0.5" dir="ltr">
-                    #{order.id.slice(0, 8)} • {order.totalAmount} ج.م
-                  </p>
+                {/* Type Badge */}
+                <div className="flex items-center justify-between">
+                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 ${
+                    isTraining
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-red-100 text-red-600'
+                  }`}>
+                    <span className="material-symbols-outlined text-xs">{isTraining ? 'work' : 'shopping_cart'}</span>
+                    {isTraining ? 'طلب تدريب عملي' : 'طلب شراء'}
+                  </span>
+                  <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs">close</span>
+                    مرفوض
+                  </span>
                 </div>
-                <span className="bg-red-100 text-red-600 text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1 self-start sm:self-center shrink-0">
-                  <span className="material-symbols-outlined text-xs">close</span>
-                  مرفوض
-                </span>
+
+                {/* Title & Details */}
+                <div className="min-w-0">
+                  <h4 className="font-bold text-heading-dark text-sm truncate">
+                    {order.productTitle || order.items?.[0]?.title || (order.itemType === 'roadmap' ? 'مسار' : 'دورة')}
+                  </h4>
+                  <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1 flex-wrap">
+                    <span dir="ltr">#{order.id.slice(0, 8)}</span>
+                    <span>•</span>
+                    {isTraining ? (
+                      <>
+                        <span className="material-symbols-outlined text-[11px]">calendar_today</span>
+                        {order.createdAt?.seconds
+                          ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', year: 'numeric' })
+                          : 'تاريخ غير محدد'}
+                      </>
+                    ) : (
+                      <span>{order.totalAmount} ج.م</span>
+                    )}
+                  </p>
+                  {isTraining && order.adminMessage && (
+                    <p className="text-[11px] text-red-600 mt-1 bg-red-50 px-2 py-1 rounded-lg">
+                      <span className="material-symbols-outlined text-[11px] align-middle ml-1">info</span>
+                      {order.adminMessage}
+                    </p>
+                  )}
+                </div>
               </div>
-            ))}
+            )})}
           </div>
         </div>
       )}

@@ -6,7 +6,7 @@ import { doc, getDoc, collection, query, where, getDocs, writeBatch, serverTimes
 import { EGYPT_UNIVERSITIES } from '../constants/egyptUniversities';
 import SEOHead from '../components/common/SEOHead';
 import { toast } from 'react-hot-toast';
-import { FaUser, FaPhone, FaEnvelope, FaIdCard, FaUniversity, FaGraduationCap, FaBookReader, FaSpinner, FaArrowRight } from 'react-icons/fa';
+import { FaUser, FaPhone, FaEnvelope, FaIdCard, FaUniversity, FaGraduationCap, FaBookReader, FaSpinner, FaArrowRight, FaInfoCircle } from 'react-icons/fa';
 import { logger } from '../utils/logger';
 
 const ApplyTrainingPage = () => {

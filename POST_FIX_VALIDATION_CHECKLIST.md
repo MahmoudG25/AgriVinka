@@ -109,7 +109,7 @@ All 9 public pages now have SEO-optimized meta tags:
 - [ ] Open each page in browser
 - [ ] Right-click → **Inspect** → **Elements**
 - [ ] Verify in `<head>`:
-  - [ ] `<title>` has page name + "| شمس العرب"
+  - [ ] `<title>` has page name + "| اجري فنكا AgriVinka"
   - [ ] `<meta name="description">` present (80-160 chars)
   - [ ] `<link rel="canonical">` matches current URL
   - [ ] Open Graph tags: `og:title`, `og:description`, `og:image`
@@ -128,7 +128,7 @@ grep -l "SEOHead" src/pages/**/*.jsx
 - [x] **All fixes preserve dir="rtl"**
   - ✅ ErrorBoundary: `dir="rtl"` on Arabic fallback UI
   - ✅ All pages maintain RTL layout
-  - ✅ Arabic text unchanged (شمس العرب, الشروط والأحكام, etc.)
+  - ✅ Arabic text unchanged (اجري فنكا AgriVinka, الشروط والأحكام, etc.)
   - Manual verification: Open any page → inspect layout direction
 
 ### Wallet Number Override

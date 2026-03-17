@@ -4,18 +4,7 @@ import { Link } from 'react-router-dom';
 const ContinueWatchingCard = ({ course, loading }) => {
   if (loading) {
     return (
-      <div className="animate-pulse bg-white rounded-2xl border border-gray-100 p-5">
-        <div className="h-5 bg-gray-100 rounded w-36 mb-5" />
-        <div className="flex flex-col sm:flex-row gap-5">
-          <div className="w-full sm:w-56 h-32 bg-gray-100 rounded-xl shrink-0" />
-          <div className="flex-1 space-y-3">
-            <div className="h-5 bg-gray-100 rounded w-3/4" />
-            <div className="h-3 bg-gray-50 rounded w-full" />
-            <div className="h-3 bg-gray-50 rounded w-1/2" />
-            <div className="h-2 bg-gray-100 rounded-full w-full mt-4" />
-          </div>
-        </div>
-      </div>
+      <div className="animate-pulse bg-white rounded-[2rem] border border-gray-100 p-6 h-48" />
     );
   }
 
@@ -25,62 +14,65 @@ const ContinueWatchingCard = ({ course, loading }) => {
   const lastLesson = course.enrollment.lastLessonTitle || '';
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="p-5 pb-0">
-        <h2 className="text-base font-bold text-heading-dark flex items-center gap-2 mb-4">
-          <span className="material-symbols-outlined text-primary text-xl">play_circle</span>
-          متابعة التعلم
+    <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6 relative overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-base font-black text-heading-dark">
+          التعلم الحالي
         </h2>
+        <Link to="/schedule" className="text-xs font-bold text-gray-400 hover:text-primary transition-colors flex items-center gap-1">
+          عرض الجدول
+          <span className="material-symbols-outlined text-[10px] rtl:rotate-180">open_in_new</span>
+        </Link>
       </div>
-      <Link
-        to={`/courses/${course.id}/play`}
-        className="group flex flex-col sm:flex-row gap-5 p-5 hover:bg-gray-50/50 transition-colors"
-      >
-        {/* Thumbnail */}
-        <div className="w-full sm:w-56 h-32 rounded-xl overflow-hidden bg-gray-100 shrink-0 relative">
+
+      <div className="flex flex-col sm:flex-row items-center gap-6">
+        {/* Thumbnail on left side per design? Actually RTL says image on the left from Arabic perspective. Standard RTL makes left visual, but looking at design picture, the image is on the LEFT SIDE of the card text. Actually design has: text on right, image on left. But we apply flex-row (with RTL, flex-row puts first item on RIGHT). So to put image on LEFT, image should be second item! */}
+        
+        {/* Info Area (Right side visually in RTL) */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="material-symbols-outlined text-green-500 text-sm">psychiatry</span>
+            <span className="text-[10px] font-bold text-gray-500">دورة الزراعة المائية المتطورة</span>
+          </div>
+          
+          <h3 className="text-lg md:text-xl font-bold text-heading-dark mb-4 leading-relaxed">
+            الدرس الثاني عشر: {lastLesson || course.title}
+          </h3>
+
+          {/* Progress row */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] font-bold text-gray-400">مكتمل {progress}%</span>
+                <span className="text-[10px] font-bold text-gray-500">تبقى 15 دقيقة من الفيديو</span>
+              </div>
+              <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden w-full">
+                <div
+                  className="h-full bg-green-700 rounded-full transition-all duration-700"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Link
+            to={`/courses/${course.id}/play`}
+            className="inline-flex justify-center items-center px-6 py-2 bg-[#2a5c3e] text-white font-bold rounded-xl text-xs hover:bg-[#1f452d] transition-colors"
+          >
+            متابعة الدرس
+          </Link>
+        </div>
+
+        {/* Thumbnail Area (Left side visually in RTL) */}
+        <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0 shadow-sm relative order-last">
           <img
             src={course.media?.thumbnail || 'https://placehold.co/600x400?text=Course'}
             alt={course.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover"
           />
-          {/* Play overlay */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-              <span className="material-symbols-outlined text-primary text-2xl">play_arrow</span>
-            </div>
-          </div>
         </div>
-
-        {/* Info */}
-        <div className="flex-1 flex flex-col justify-between">
-          <div>
-            <h3 className="text-lg font-bold text-heading-dark group-hover:text-primary transition-colors line-clamp-1">
-              {course.title}
-            </h3>
-            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{course.description}</p>
-            {lastLesson && (
-              <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
-                <span className="material-symbols-outlined text-sm">video_library</span>
-                آخر درس: {lastLesson}
-              </p>
-            )}
-          </div>
-
-          {/* Progress */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-bold text-gray-500">التقدم</span>
-              <span className="text-xs font-black text-primary">{progress}%</span>
-            </div>
-            <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-l from-primary to-green-500 rounded-full transition-all duration-700"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </Link>
+      </div>
     </div>
   );
 };

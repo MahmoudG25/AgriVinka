@@ -91,7 +91,6 @@ export default defineConfig({
   server: {
     open: true,
     host: "localhost",
-    port: 5173,
-    strictPort: true,
+    port: 3000,
   },
 });

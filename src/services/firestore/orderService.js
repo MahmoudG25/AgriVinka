@@ -154,6 +154,23 @@ export const orderService = {
     }
   },
 
+  // Get order by ID directly
+  getOrderById: async (orderId) => {
+    try {
+      const docRef = doc(db, COLLECTION_NAME, orderId);
+      const snap = await getDocs(query(collection(db, COLLECTION_NAME), where('__name__', '==', orderId)));
+      
+      if (!snap.empty) {
+        const docData = snap.docs[0];
+        return { id: docData.id, ...docData.data() };
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error fetching order by ID:', error);
+      throw error;
+    }
+  },
+
   // Find order by ID (code only)
   findOrder: async (searchQuery) => {
     try {

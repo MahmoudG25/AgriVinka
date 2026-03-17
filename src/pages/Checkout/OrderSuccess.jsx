@@ -5,6 +5,8 @@ import { FaRegFolderOpen } from 'react-icons/fa';
 import ProductSummaryCard from '../../components/checkout/ProductSummaryCard';
 import { courseService } from '../../services/firestore/courseService';
 import { roadmapService } from '../../services/firestore/roadmapService';
+import { orderService } from '../../services/firestore/orderService';
+import { logger } from '../../utils/logger';
 
 const OrderSuccess = () => {
   const location = useLocation();
@@ -12,34 +14,61 @@ const OrderSuccess = () => {
   const [product, setProduct] = useState(null);
   const [copied, setCopied] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchOrderAndProduct = async () => {
-      // Try to get order from state, otherwise fallback to local storage (latest order)
       let foundOrder = location.state?.order;
-      if (!foundOrder) {
-        const orders = JSON.parse(localStorage.getItem('shams_orders') || '[]');
-        if (orders.length > 0) {
-          foundOrder = orders[orders.length - 1];
+      
+      // If we only got the ID (from redirect or previous page)
+      const orderId = location.state?.orderId || foundOrder?.id || foundOrder?.orderId;
+
+      if (!foundOrder && orderId) {
+        try {
+           const fetchedOrder = await orderService.getOrderById(orderId);
+           if (fetchedOrder) {
+              foundOrder = { ...fetchedOrder, id: fetchedOrder.id || orderId };
+           } else {
+              logger.warn(`Order Success: Order not found for ID: ${orderId}`);
+           }
+        } catch (error) {
+           logger.error('Error fetching order for success page:', error);
         }
       }
+
       setOrder(foundOrder);
 
       if (foundOrder) {
         try {
           let fetchedProduct = null;
-          if (foundOrder.productType === 'course') {
-            fetchedProduct = await courseService.getCourseById(foundOrder.productId);
-          } else if (foundOrder.productType === 'track') {
-            fetchedProduct = await roadmapService.getRoadmapById(foundOrder.productId);
+          // Itemtype is used in the DB, productType might be legacy front-end map
+          const type = foundOrder.itemType || foundOrder.productType;
+          
+          if (type === 'course') {
+            fetchedProduct = await courseService.getCourseById(foundOrder.itemId || foundOrder.productId);
+          } else if (type === 'track' || type === 'roadmap') {
+            fetchedProduct = await roadmapService.getRoadmapById(foundOrder.itemId || foundOrder.productId);
           }
           setProduct(fetchedProduct);
         } catch (error) {
-          console.error("Error fetching product details:", error);
+          logger.error("Error fetching product details:", error);
         }
       }
+      setLoading(false);
     };
     fetchOrderAndProduct();
   }, [location.state]);
+
+  if (loading) {
+     return (
+        <div className="min-h-screen flex items-center justify-center bg-[#FFFBF5]">
+           <div className="animate-pulse flex flex-col items-center">
+              <div className="w-12 h-12 border-4 border-[#e6a219] border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-500 font-bold">جاري تحميل بيانات الطلب...</p>
+           </div>
+        </div>
+     );
+  }
 
   const handleCopyLink = () => {
     if (order?.accessLink) {
@@ -58,7 +87,9 @@ const OrderSuccess = () => {
   }
 
   // Use access link from order if available, otherwise fallback to course page link
-  const contentLink = order.accessLink || (order.productType === 'track' ? `/roadmaps/${order.productId}` : `/courses/${order.productId}`);
+  const productType = order.itemType || order.productType;
+  const productId = order.itemId || order.productId;
+  const contentLink = order.accessLink || (productType === 'track' || productType === 'roadmap' ? `/roadmaps/${productId}` : `/courses/${productId}`);
   const isExternalLink = !!order.accessLink;
 
   return (

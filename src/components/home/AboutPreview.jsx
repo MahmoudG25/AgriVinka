@@ -49,7 +49,7 @@ const AboutPreview = ({ data }) => {
 
               {/* Quote Highlight */}
               <div className="mt-8 p-6 bg-surface-white border-r-4 border-accent rounded-l-xl shadow-sm">
-                <p className="text-heading-dark font-serif italic text-xl">"الثقافة هي الشمس التي لا تغيب"</p>
+                <p className="text-heading-dark font-serif italic text-xl">"الزراعة هي شريان الحياة الذي لا ينضب"</p>
               </div>
 
               <div className="mt-12">
@@ -94,7 +94,7 @@ const AboutPreview = ({ data }) => {
               {/* Floating Badge */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bg-white p-2 rounded-full shadow-xl animate-pulse-slow">
                 <div className="w-20 h-20 rounded-full border-2 border-dashed border-accent flex items-center justify-center bg-surface-white">
-                  <span className="material-symbols-outlined text-4xl text-primary">wb_sunny</span>
+                  <span className="material-symbols-outlined text-4xl text-primary">eco</span>
                 </div>
               </div>
             </motion.div>

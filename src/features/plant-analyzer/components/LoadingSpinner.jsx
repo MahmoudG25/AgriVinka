@@ -27,7 +27,7 @@ const LoadingSpinner = () => {
       </div>
 
       <div className="text-center space-y-2">
-        <h3 className="font-bold text-lg text-heading-dark">يجري تحليل الصورة...</h3>
+        <h3 className="font-bold text-lg text-heading-dark">جاري تحليل صورة النبات...</h3>
         <p className="text-sm text-gray-500">يقوم الذكاء الاصطناعي الآن بفحص الأوراق وأعراض المرض</p>
       </div>
     </div>

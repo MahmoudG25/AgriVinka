@@ -39,18 +39,3 @@ export const calculateOrderTotals = (product, type) => {
   };
 };
 
-/**
- * Save order to local storage (simulating backend)
- * @param {object} orderData 
- */
-export const saveOrder = (orderData) => {
-  const orders = JSON.parse(localStorage.getItem('shams_orders') || '[]');
-  const newOrder = {
-    ...orderData,
-    createdAt: new Date().toISOString(),
-    status: 'pending'
-  };
-  orders.push(newOrder);
-  localStorage.setItem('shams_orders', JSON.stringify(orders));
-  return newOrder;
-};

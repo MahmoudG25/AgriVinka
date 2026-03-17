@@ -25,6 +25,7 @@ const AIDiagnosisPage = lazy(() => import('../../pages/ai/AIDiagnosisPage'));
 const PracticalTrainingPage = lazy(() => import('../../pages/PracticalTrainingPage'));
 const ApplyTrainingPage = lazy(() => import('../../pages/ApplyTrainingPage'));
 const PlantAnalyzerPage = lazy(() => import('../../features/plant-analyzer/pages/PlantAnalyzerPage'));
+const MyAnalysesPage = lazy(() => import('../../features/plant-analyzer/pages/MyAnalysesPage'));
 
 // Auth Pages
 const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
@@ -56,6 +57,7 @@ const PublicRoutes = () => {
   const location = useLocation();
   const isPlayerRoute = location.pathname.includes('/play');
   const isAuthRoute = ['/login', '/register', '/reset-password'].includes(location.pathname);
+  const isAnalyzerRoute = location.pathname === '/analyzer' || location.pathname === '/my-analyses';
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -87,7 +89,7 @@ const PublicRoutes = () => {
 
   return (
     <div dir="rtl" className="bg-surface-white dark:bg-background-dark font-display text-body-text dark:text-gray-100 antialiased selection:bg-primary/30 min-h-screen transition-colors duration-300">
-      {!isPlayerRoute && !isAuthRoute && (
+      {!isPlayerRoute && !isAuthRoute && !isAnalyzerRoute && (
         <>
           <TopOfferBar />
           <Navbar
@@ -98,7 +100,7 @@ const PublicRoutes = () => {
         </>
       )}
 
-      <div className={`w-full ${!isPlayerRoute && !isAuthRoute ? 'min-h-[calc(100vh-80px)]' : 'min-h-screen'}`}>
+      <div className={`w-full ${!isPlayerRoute && !isAuthRoute && !isAnalyzerRoute ? 'min-h-[calc(100vh-80px)]' : 'min-h-screen'}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -136,6 +138,11 @@ const PublicRoutes = () => {
                 <UserPracticalTrainingPage />
               </RequireAuth>
             } />
+            <Route path="/my-analyses" element={
+              <RequireAuth requireAdmin={false}>
+                <MyAnalysesPage />
+              </RequireAuth>
+            } />
             <Route path="/courses/:courseId/play" element={
               <RequireAuth requireAdmin={false}>
                 <CoursePlayer />
@@ -155,7 +162,7 @@ const PublicRoutes = () => {
         </Suspense>
       </div>
 
-      {!isPlayerRoute && !isAuthRoute && <Footer data={pageData.footer} />}
+      {!isPlayerRoute && !isAuthRoute && !isAnalyzerRoute && <Footer data={pageData.footer} />}
     </div>
   );
 };

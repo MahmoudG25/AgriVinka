@@ -7,7 +7,7 @@ import BankDetailsCard from '../../components/checkout/BankDetailsCard';
 import UploadZone from '../../components/checkout/UploadZone';
 import OrderSummaryCard from '../../components/checkout/OrderSummaryCard';
 import { FaMoneyBillWave, FaWallet, FaCopy, FaUser, FaEnvelope, FaPhone, FaArrowLeft, FaShieldAlt, FaHeadset } from 'react-icons/fa';
-import { saveOrder, calculateOrderTotals } from '../../utils/checkoutUtils';
+import { calculateOrderTotals } from '../../utils/checkoutUtils';
 import { courseService } from '../../services/firestore/courseService';
 import { roadmapService } from '../../services/firestore/roadmapService';
 import { orderService } from '../../services/firestore/orderService';
@@ -161,13 +161,10 @@ const PaymentSubmission = () => {
       // Save to Firestore
       const firestoreId = await orderService.createOrder(orderData);
 
-      // Add ID to orderData for local storage
+      // Add ID to orderData for passing to next route
       const finalOrderData = { ...orderData, id: firestoreId, orderId: firestoreId };
 
-      // Save Local (for success page fallback)
-      saveOrder(finalOrderData);
-
-      navigate('/checkout/review', { state: { order: finalOrderData } });
+      navigate('/checkout/review', { state: { orderId: firestoreId } });
 
     } catch (error) {
       logger.error('Order submission failed:', error);

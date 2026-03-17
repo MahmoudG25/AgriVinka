@@ -2,27 +2,35 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { downloadCertificatePdf } from '../../../features/certificates/services/pdfService.js';
 
-const CertificatesGrid = ({ certificates, loading }) => {
+import { useNavigate } from 'react-router-dom';
+
+const CertificatesGrid = ({ certificates, courses = [], loading }) => {
+  const navigate = useNavigate();
+
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 p-5">
-        <div className="h-5 bg-gray-100 rounded w-32 mb-5" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2].map(i => (
-            <div key={i} className="animate-pulse rounded-xl border border-gray-50 p-4 bg-gray-50">
-              <div className="h-4 bg-gray-100 rounded w-3/4 mb-3" />
-              <div className="h-3 bg-gray-50 rounded w-1/2 mb-4" />
-              <div className="h-8 bg-gray-100 rounded-lg w-full" />
-            </div>
-          ))}
-        </div>
+      <div className="bg-white rounded-[2rem] border border-gray-100 p-6 h-32 animate-pulse" />
+    );
+  }
+
+  // If there are no certificates, display empty state
+  const completedCourses = courses.filter(c => c.enrollment?.isCompleted);
+  const claimedCourseIds = certificates?.map(c => c.courseId) || [];
+  const unclaimedCourses = completedCourses.filter(c => !claimedCourseIds.includes(c.id));
+
+  const hasAnyCertificates = (certificates && certificates.length > 0) || unclaimedCourses.length > 0;
+
+  if (!hasAnyCertificates) {
+    return (
+      <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6 text-center">
+        <h2 className="text-base font-black text-heading-dark mb-4">الأوسمة والشهادات</h2>
+        <p className="text-xs text-gray-400">لا توجد أوسمة بعد</p>
       </div>
     );
   }
 
-  if (!certificates || certificates.length === 0) return null;
-
-  const handleDownload = async (cert) => {
+  const handleDownload = async (cert, e) => {
+    e.preventDefault();
     try {
       await downloadCertificatePdf(cert);
     } catch (err) {
@@ -32,72 +40,103 @@ const CertificatesGrid = ({ certificates, loading }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-      <h2 className="text-base font-bold text-heading-dark flex items-center gap-2 mb-5">
-        <span className="material-symbols-outlined text-amber-500 text-xl">workspace_premium</span>
-        شهاداتي
-        <span className="text-xs text-gray-400 font-medium">({certificates.length})</span>
+    <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6">
+      <h2 className="text-base font-black text-heading-dark mb-6 text-center">
+        الأوسمة والشهادات
       </h2>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {certificates.map(cert => (
-          <div
-            key={cert.id}
-            className="relative rounded-xl border border-amber-100 bg-linear-to-br from-amber-50/50 to-white p-4 hover:shadow-md transition-all group"
-          >
-            {/* Certificate icon */}
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined">verified</span>
-              </div>
-              <div className="min-w-0">
-                <h3 className="font-bold text-sm text-heading-dark truncate">
-                  {cert.courseName || cert.courseTitle}
-                </h3>
-                <p className="text-[10px] text-gray-400 mt-0.5">
-                  {cert.issuedAt?.seconds
-                    ? new Date(cert.issuedAt.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
-                    : cert.issueDate?.seconds
-                      ? new Date(cert.issueDate.seconds * 1000).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
-                      : '-'}
-                </p>
-              </div>
-            </div>
+      <div className="flex flex-col gap-4">
+        {/* Render Issued Certificates */}
+        {certificates.map((cert, index) => {
+          const styles = [
+            "bg-green-50 text-green-600 border-green-100",
+            "bg-blue-50 text-blue-600 border-blue-100",
+            "bg-amber-50 text-amber-500 border-amber-100",
+            "bg-purple-50 text-purple-600 border-purple-100"
+          ];
+          const style = styles[index % styles.length];
 
-            {/* Serial Number */}
-            {cert.serialNumber && (
-              <p className="text-[9px] text-gray-400 mb-3 font-mono" dir="ltr">{cert.serialNumber}</p>
-            )}
+          return (
+            <Link
+              key={cert.id}
+              to={`/certificate/${cert.id}`}
+              title={`شهادة: ${cert.courseName || cert.courseTitle}`}
+              className="relative rounded-2xl border p-4 flex items-center justify-between hover:shadow-md transition-all group bg-white border-gray-100"
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 shrink-0 rounded-xl flex items-center justify-center ${style}`}>
+                  <span className="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">
+                    workspace_premium
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-heading-dark line-clamp-1">
+                    {cert.courseName || cert.courseTitle || 'شهادة إتمام'}
+                  </h3>
+                  <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">event</span>
+                    <span>{cert.issuedAt ? new Date(cert.issuedAt?.seconds ? cert.issuedAt.seconds * 1000 : cert.issuedAt).toLocaleDateString('ar-EG') : 'تم الإصدار'}</span>
+                  </div>
+                </div>
+              </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-2">
               <button
-                onClick={() => handleDownload(cert)}
-                className="flex-1 py-2 bg-green-500 text-white font-bold rounded-lg text-xs text-center hover:bg-green-600 transition-colors flex items-center justify-center gap-1"
+                onClick={(e) => handleDownload(cert, e)}
+                className="flex items-center shrink-0 gap-1.5 px-3 py-1.5 bg-gray-50 hover:bg-primary/10 text-primary rounded-lg transition-colors border border-gray-100 group-hover:border-primary/20"
+                title="تحميل"
               >
-                <span className="material-symbols-outlined text-xs">download</span>
-                تحميل PDF
+                <span className="text-xs font-bold hidden sm:inline-block">تحميل</span>
+                <span className="material-symbols-outlined text-sm">download</span>
               </button>
-              <Link
-                to={`/certificate/${cert.id}`}
-                className="flex-1 py-2 bg-amber-500 text-white font-bold rounded-lg text-xs text-center hover:bg-amber-600 transition-colors flex items-center justify-center gap-1"
-              >
-                <span className="material-symbols-outlined text-xs">visibility</span>
-                عرض
-              </Link>
-              <Link
-                to={`/verify/${cert.id}`}
-                className="flex-1 py-2 bg-gray-100 text-heading-dark font-bold rounded-lg text-xs text-center hover:bg-gray-200 transition-colors flex items-center justify-center gap-1"
-              >
-                <span className="material-symbols-outlined text-xs">link</span>
-                تحقق
-              </Link>
-            </div>
+            </Link>
+          );
+        })}
 
-            {/* Code */}
-            <p className="text-[9px] text-gray-300 mt-2 text-center font-mono" dir="ltr">{cert.id}</p>
-          </div>
-        ))}
+        {/* Render Unclaimed Completed Courses */}
+        {unclaimedCourses.map((course, index) => {
+          const offset = (certificates?.length || 0) + index;
+          const styles = [
+            "bg-green-50 text-green-600 border-green-100",
+            "bg-blue-50 text-blue-600 border-blue-100",
+            "bg-amber-50 text-amber-500 border-amber-100",
+            "bg-purple-50 text-purple-600 border-purple-100"
+          ];
+          const style = styles[offset % styles.length];
+
+          return (
+            <button
+              key={`unclaimed-${course.id}`}
+              onClick={() => {
+                // The old route was `/course/${course.seo?.slug || course.id}` but PublicRoutes has `/courses/:courseId`
+                navigate(`/courses/${course.seo?.slug || course.id}`);
+              }}
+              title={`اصدار شهادة: ${course.title}`}
+              className="relative rounded-2xl border p-4 flex items-center justify-between hover:shadow-md transition-all group bg-white border-gray-100 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 text-right w-full"
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 shrink-0 rounded-xl flex items-center justify-center ${style}`}>
+                  <span className="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">
+                    workspace_premium
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-heading-dark line-clamp-1">
+                    {course.title || 'دورة مكتملة'}
+                  </h3>
+                  <div className="text-xs text-amber-500 mt-1 flex items-center gap-1 font-medium">
+                    <span className="material-symbols-outlined text-[14px]">info</span>
+                    <span>متاحة للاستخراج</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center shrink-0 gap-1.5 px-3 py-1.5 bg-gray-50 hover:bg-amber-50 text-amber-600 rounded-lg transition-colors border border-gray-100 group-hover:border-amber-200">
+                <span className="text-xs font-bold hidden sm:inline-block"> تفاصيل الكورس</span>
+                <span className="material-symbols-outlined text-sm">open_in_new</span>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

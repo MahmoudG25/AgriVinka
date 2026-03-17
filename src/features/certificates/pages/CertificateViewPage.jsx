@@ -69,7 +69,7 @@ const CertificateViewPage = () => {
   };
 
   return (
-    <div className=" bg-background-alt py-16">
+    <div className="bg-background-alt pt-32 pb-16 min-h-screen">
       <SEOHead title="عرض الشهادة | AgriVinka" />
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] px-4">
         <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
