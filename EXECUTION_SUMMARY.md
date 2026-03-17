@@ -134,7 +134,7 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 VITE_WALLET_NUMBER=01015580843
 
 # App Configuration
-VITE_APP_URL=https://shamsalarab.com
+VITE_APP_URL=https://agrivinka.com
 VITE_ENV=production
 ```
 **Purpose**: Template for .env.local; never commit actual values  
@@ -385,7 +385,7 @@ firebase deploy --only firestore:rules
 ```
 
 ### Post-Deployment
-- [ ] Verify `curl -I https://shamsalarab.com` shows security headers
+- [ ] Verify `curl -I https://agrivinka.com` shows security headers
 - [ ] Check Google Search Console for CSP violations
 - [ ] Monitor error rates in Firebase Console
 - [ ] Verify Google Fonts load correctly (in CSP allowlist)

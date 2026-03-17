@@ -1,6 +1,6 @@
 # 🛠️ Production Utilities & Best Practices Guide
 
-Quick reference guide for using the new production-grade utilities in Shams Al-Arab.
+Quick reference guide for using the new production-grade utilities in AgriVinka
 
 ---
 
@@ -116,7 +116,7 @@ updatePageMeta({
 addStructuredData(generateOrganizationSchema());
 
 // Generate full URL
-const url = getFullUrl('/courses'); // https://shamsalarab.com/courses
+const url = getFullUrl('/courses'); // https://agrivinka.com/courses
 ```
 
 ### Files

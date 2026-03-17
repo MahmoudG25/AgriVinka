@@ -6,7 +6,7 @@ import FAQ from '../components/home/FAQ';
 
 const FALLBACK = {
   contactItems: [
-    { icon: 'mail', title: 'البريد الإلكتروني', value: 'support@shamselarab.com' },
+    { icon: 'mail', title: 'البريد الإلكتروني', value: 'support@agrivinka.com' },
     { icon: 'schedule', title: 'ساعات العمل', value: 'الأحد - الخميس: 9 ص - 6 م' },
     { icon: 'location_on', title: 'الموقع', value: 'عبر الإنترنت — متاحون من كل مكان' },
   ]

@@ -78,10 +78,10 @@ const PricingSectionAdmin = ({ data = {}, onChange, onAddItem, onUpdateItem, onR
               </div>
 
               <MediaUploader
-                label="صورة الخطة"
+                label="صورة الخطة (خلفية الكارد)"
                 currentUrl={plan.image}
                 folder="Namaa-Academy/home"
-                onUploadComplete={(res) => onUpdateItem('pricing.plans', plan.id, 'image', res ? res.secure_url : '')}
+                onUploadComplete={(res) => onUpdateItem('pricing.plans', plan.id, 'image', res ? res.url : '')}
               />
 
               <div className="grid grid-cols-2 gap-2">

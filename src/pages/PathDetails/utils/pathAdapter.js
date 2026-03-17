@@ -70,7 +70,7 @@ export const adaptPathData = (config, courses) => {
 
   // ── Instructor (from config, fallback) ──
   const instructor = config.instructor || {
-    name: 'Shams Elarab Team',
+    name: 'AgriVinka Team',
     role: 'Instructor',
     image: '',
     bio: ''

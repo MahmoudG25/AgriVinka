@@ -50,7 +50,7 @@
     - [ ] VITE_CLOUDINARY_CLOUD_NAME
     - [ ] VITE_CLOUDINARY_UPLOAD_PRESET
     - [ ] VITE_WALLET_NUMBER (or will use default: 01015580843)
-    - [ ] VITE_APP_URL (e.g., https://shamsalarab.com)
+    - [ ] VITE_APP_URL (e.g., https://AgriVinka.com)
 
 - [ ] **.env.local is in .gitignore**
   - Verify: `git status` should NOT show .env.local
@@ -72,7 +72,7 @@
   - [ ] X-Frame-Options: SAMEORIGIN (clickjacking protection)
   - [ ] Strict-Transport-Security: max-age=31536000 (1-year HTTPS enforcement)
   - [ ] X-Content-Type-Options: nosniff
-  - [ ] Verify via: `curl -I https://shamsalarab.com` → Check response headers
+  - [ ] Verify via: `curl -I https://AgriVinka.com` → Check response headers
 
 ### ErrorBoundary Component
 - [ ] **ErrorBoundary renders gracefully**
@@ -150,7 +150,7 @@ grep -l "SEOHead" src/pages/**/*.jsx
 ### Firebase Auth & Hosting
 - [ ] **HSTS header enforcement**
   - Browser enforces HTTPS for 1 year
-  - Test: Visit http://shamsalarab.com → Auto-redirects to https://
+  - Test: Visit http://AgriVinka.com → Auto-redirects to https://
   - Browser stores HSTS setting in preload list
 
 ### Pre-Deployment Checklist
@@ -243,13 +243,13 @@ firebase hosting:channel:list  # Check hosting channels
 ### Step 4: Verify in Production
 ```bash
 # Check security headers
-curl -I https://shamsalarab.com
+curl -I https://AgriVinka.com
 
 # Search for CSP in headers
 # Should see: Content-Security-Policy: default-src 'self'; ...
 
 # Check SEO tags
-curl https://shamsalarab.com | grep -o '<title>.*</title>'
+curl https://AgriVinka.com | grep -o '<title>.*</title>'
 ```
 
 ### Step 5: Post-Deployment Monitoring

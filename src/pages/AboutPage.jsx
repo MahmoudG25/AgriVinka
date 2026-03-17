@@ -28,222 +28,238 @@ const AboutPage = () => {
     <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
   </div>;
 
-  const { hero, quote, story } = data || defaultAboutData;
-
-  // Animation Variants
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-  };
-
-  const stagger = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
-  };
+  const { hero, bridge, visionMission, stats, team, cta } = data || defaultAboutData;
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-gray-800 font-tajawal overflow-hidden" dir="rtl">
+    <div className="min-h-screen bg-white text-gray-800 font-tajawal overflow-hidden" dir="rtl">
       <SEOHead
-        title="عن AgriVinka | مبادراتنا وقصتنا"
-        description="تعرف على مبادرات AgriVinka الزراعية وقصتنا في تمكين وتعليم المهندسين الزراعيين."
+        title="عن AgriVinka | تمكين الابتكار الزراعي"
+        description="تعرف على رؤيتنا ومهمتنا في AgriVinka لتمكين الجيل القادم من المبتكرين الزراعيين."
         canonical={window.location.href}
       />
 
-      {/* --- SECTION 1: INITIATIVES (DARK) --- */}
-      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-[#4A3B2A] to-[#2E241B] text-white overflow-hidden">
-        {/* Background Texture */}
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-l from-black/20 to-transparent pointer-events-none"></div>
-
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-          {/* Left: Image Card (e.g. Book) */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative order-2 lg:order-1 flex justify-center lg:justify-end"
+      {/* --- HERO SECTION --- */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center text-white overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center z-0"
+          style={{ backgroundImage: `url(${hero?.backgroundImage})` }}
+        >
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+        
+        <div className="relative z-10 text-center px-4 max-w-4xl">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight"
           >
-            <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group w-[90%] md:w-[80%] lg:w-[450px] h-[450px] mx-auto lg:mx-0 lg:ml-auto">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-              <img
-                src={hero?.image || 'https://images.unsplash.com/photo-1592982537447-6f29fb25ff71?q=80&w=2070&auto=format&fit=crop'}
-                alt="Agricultural Initiatives"
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 aspect-[3/4]"
-              />
-              <div className="absolute bottom-6 right-6 z-20">
-                <p className="font-serif italic text-accent text-base">"الزراعة هي شريان الحياة الذي لا ينضب"</p>
-              </div>
-            </div>
-            {/* Glow Effect */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-accent/10 rounded-full blur-3xl -z-10"></div>
-          </motion.div>
-
-          {/* Right: Content & Initiatives List */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={stagger}
-            className="order-1 lg:order-2 text-right"
+            {hero?.title}
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl md:text-2xl text-gray-200"
           >
-            <motion.h1
-              variants={fadeUp}
-              className="text-3xl lg:text-4xl font-bold mb-4 text-white"
-            >
-              مبادراتنا الزراعية
-            </motion.h1>
-            <motion.p
-              variants={fadeUp}
-              className="text-gray-300 text-base lg:text-lg mb-8 leading-relaxed "
-            >
-              {hero?.description || 'نحن لا نكتفي بالتعليم الأكاديمي، بل نركز على التطبيق العملي. تهدف مبادرات "AgriVinka" إلى تأهيل المزارعين والمهندسين الزراعيين بأحدث الممارسات الزراعية.'}
-            </motion.p>
-
-            <div className="space-y-6">
-              {(hero?.initiatives || []).map((init, idx) => (
-                <motion.div
-                  key={idx}
-                  variants={fadeUp}
-                  className="flex items-start gap-4 group"
-                >
-                  <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center text-accent shadow-lg group-hover:bg-accent group-hover:text-[#2E241B] transition-all duration-300">
-                    <span className="material-symbols-outlined text-xl">{init.icon}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-accent group-hover:text-white transition-colors mb-1">
-                      {init.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
-                      {init.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
+            {hero?.description}
+          </motion.p>
         </div>
       </section>
 
-      {/* --- SECTION 2: QUOTE (WHITE) --- */}
-      <section className="py-10 bg-[#FDFBF7] relative">
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <span className="text-6xl text-accent font-serif opacity-30">“</span>
-            <h2 className="text-2xl md:text-4xl font-serif text-heading-dark leading-relaxed mx-auto mb-8 relative z-10">
-              {quote?.text}
-            </h2>
-            <div className="flex items-center justify-center gap-4">
-              <div className="h-px w-12 bg-accent"></div>
-              <span className="font-bold text-gray-600">{quote?.author}</span>
-              <div className="h-px w-12 bg-accent"></div>
+      {/* --- BRIDGE SECTION (Tradition & Tech) --- */}
+      <section className="py-20 bg-white">
+        <div className="w-full mx-auto px-4 max-w-[1240px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Images */}
+            <div className="relative flex gap-4 md:gap-8">
+              <motion.div 
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="w-1/2 rounded-2xl overflow-hidden shadow-xl"
+              >
+                <img src={bridge?.image1} alt="Agriculture Tradition" className="w-full aspect-square object-cover" />
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="w-1/2 rounded-2xl overflow-hidden shadow-xl mt-12 md:mt-20"
+              >
+                <img src={bridge?.image2} alt="Agriculture Tech" className="w-full aspect-square object-cover" />
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* --- SECTION 3: STORY (LIGHT) --- */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* Left: Image Composition (Order 2 on mobile, Order 1 on Desktop if LTR, but in RTL grid, first item is Right) */}
-            {/* Wait, in RTL: Col 1 is Right, Col 2 is Left.
-                The design has Text on Right, Images on Left.
-                So in the code (RTL), the first div should be the Text (Right), second div the Images (Left). 
-            */}
-
-            {/* Right: Text Content */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={stagger}
-              className="text-right order-1"
-            >
-              <motion.div variants={fadeUp} className="flex items-center gap-4 mb-4">
-                <span className="text-accent font-bold text-lg">قصتنا</span>
-                <div className="h-1 w-12 bg-accent rounded-full"></div>
-              </motion.div>
-
-              <motion.h2
-                variants={fadeUp}
-                className="text-4xl lg:text-5xl font-extrabold text-heading-dark mb-8 leading-tight"
-              >
-                {story?.title || 'قصة AgriVinka'}
-              </motion.h2>
-
-              <motion.div
-                variants={fadeUp}
-                className="text-gray-600 leading-loose text-lg mb-8 whitespace-pre-line font-medium space-y-6"
-              >
-                {story?.content || (
-                  <>
-                    <p>
-                      تأسست منصة AgriVinka لسد الفجوة العميقة بين التعليم الجامعي النظري والمهارات العملية المطلوبة في القطاع الزراعي الحديث. انطلقنا من إيماننا بأن المهندس الزراعي يجب أن يمتلك خبرة عملية وتطبيقية حقيقية.
-                    </p>
-                    <p>
-                      فريقنا يتكون من نخبة من المهندسين، الخبراء، والمدربين الميدانيين الشغوفين بنقل المعرفة. نسعى لبناء مجتمع تفاعلي يثري القطاع بأحدث التقنيات الزراعية الحديثة.
-                    </p>
-                  </>
-                )}
-              </motion.div>
-
-              <motion.div variants={fadeUp}>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-white rounded-full hover:bg-primary-hover hover:shadow-xl hover:-translate-y-1 transition-all duration-300 font-bold text-lg shadow-glow"
-                >
-                  <span>انضم إلى فريقنا</span>
-                  <span className="material-symbols-outlined rtl:rotate-180">arrow_forward</span>
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            {/* Left: Image Composition */}
-            <motion.div
+            {/* Content */}
+            <motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative h-[500px] lg:h-[600px] w-full flex items-center justify-center lg:justify-start order-2"
+              className="text-right"
             >
-              {/* Image 1 (Back/Top-Left) */}
-              <div className="absolute top-0 right-10 w-4/5 h-4/5 z-10 transform -rotate-3 transition-transform hover:rotate-0 duration-500">
-                <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-[8px] border-white">
-                  <img
-                    src={story?.image1 || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80'}
-                    alt="Team Interaction"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <span className="inline-block px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold mb-4">
+                {bridge?.badge}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-heading-dark mb-8 leading-tight">
+                {bridge?.title}
+              </h2>
+              <div className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
+                {bridge?.description}
               </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-              {/* Image 2 (Front/Bottom-Right) */}
-              <div className="absolute bottom-10 left-10 w-3/5 h-3/5 z-20 transform rotate-3 transition-transform hover:rotate-0 duration-500">
-                <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-[8px] border-white">
-                  <img
-                    src={story?.image2 || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80'}
-                    alt="Focus"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+      {/* --- VISION & VALUES SECTION --- */}
+      <section className="py-20 bg-[#f9fafb]">
+        <div className="w-full mx-auto px-4 max-w-[1240px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            {/* Vision (Main Card) */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="md:col-span-8 bg-[#2d5a27] text-white p-10 md:p-16 rounded-[2rem] relative overflow-hidden flex flex-col justify-center"
+            >
+              <div className="absolute top-8 left-8 text-white/10">
+                <span className="material-symbols-outlined text-[120px]">{visionMission?.vision?.icon}</span>
               </div>
-
-              {/* Decorative Badge (Center Overlap) */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bg-white p-2 rounded-full shadow-xl animate-pulse-slow">
-                <div className="border-2 border-dashed border-accent rounded-full w-20 h-20 flex items-center justify-center bg-white">
-                  <span className="material-symbols-outlined text-accent text-4xl">verified</span>
-                </div>
+              <div className="relative z-10">
+                <h3 className="text-3xl font-extrabold mb-6 flex items-center gap-4">
+                  <span className="material-symbols-outlined text-4xl">{visionMission?.vision?.icon}</span>
+                  {visionMission?.vision?.title}
+                </h3>
+                <p className="text-xl md:text-2xl leading-relaxed text-gray-100">
+                  {visionMission?.vision?.description}
+                </p>
               </div>
             </motion.div>
 
+            {/* Mission (Side Card) */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="md:col-span-4 bg-white p-10 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col"
+            >
+              <div className="mb-6 w-16 h-16 bg-green-50 text-green-700 rounded-2xl flex items-center justify-center">
+                <span className="material-symbols-outlined text-3xl">{visionMission?.mission?.icon}</span>
+              </div>
+              <h3 className="text-2xl font-extrabold text-heading-dark mb-4">{visionMission?.mission?.title}</h3>
+              <p className="text-gray-600 leading-relaxed">
+                {visionMission?.mission?.description}
+              </p>
+            </motion.div>
+
+            {/* Values (Small Cards) */}
+            {visionMission?.values?.map((val, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + (idx * 0.1) }}
+                className="md:col-span-4 bg-white p-10 rounded-[2rem] shadow-sm border border-gray-100"
+              >
+                <div className="mb-6 text-green-700">
+                  <span className="material-symbols-outlined text-4xl">{val.icon}</span>
+                </div>
+                <h3 className="text-2xl font-extrabold text-heading-dark mb-4">{val.title}</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {val.description}
+                </p>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* --- STATS SECTION --- */}
+      <section className="py-20 bg-[#def0d8]/30">
+        <div className="w-full mx-auto px-4 max-w-[1240px]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            {stats?.map((stat, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="space-y-2"
+              >
+                <div className="text-4xl md:text-5xl font-extrabold text-[#2d5a27]">{stat.value}</div>
+                <div className="text-gray-600 font-bold">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- TEAM SECTION --- */}
+      <section className="py-24 bg-white">
+        <div className="w-full mx-auto px-4 max-w-[1240px] text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <h2 className="text-4xl font-extrabold text-heading-dark mb-4">{team?.title}</h2>
+            <p className="text-gray-500 text-lg">{team?.subtitle}</p>
+          </motion.div>
+
+          <div className="flex flex-wrap justify-center gap-12">
+            {team?.members?.map((member, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }} // Fixed the y value while I'm at it
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="group w-full sm:w-[calc(50%-3rem)] lg:w-[calc(25%-3rem)] min-w-[250px] max-w-[300px]"
+              >
+                <div className="relative mb-6 mx-auto w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg transition-transform group-hover:scale-105">
+                  <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                </div>
+                <h3 className="text-xl font-bold text-heading-dark mb-1">{member.name}</h3>
+                <p className="text-green-700 font-medium text-sm">{member.role}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- CTA SECTION --- */}
+      <section className="py-20">
+        <div className="w-full mx-auto px-4 max-w-[1240px]">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-[#48593d] p-12 md:p-20 rounded-[3rem] text-center text-white"
+          >
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-8">{cta?.title}</h2>
+            <p className="text-gray-300 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+              {cta?.subtitle}
+            </p>
+            <div className="flex flex-wrap justify-center gap-6">
+              <Link 
+                to="/register" 
+                className="px-10 py-4 bg-white text-[#48593d] rounded-full font-extrabold text-lg hover:bg-gray-100 transition-all shadow-xl"
+              >
+                {cta?.primaryBtn}
+              </Link>
+              <Link 
+                to="/courses" 
+                className="px-10 py-4 border-2 border-white/50 text-white rounded-full font-extrabold text-lg hover:bg-white/10 transition-all"
+              >
+                {cta?.secondaryBtn}
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
 

@@ -1,6 +1,6 @@
-# 🚀 Shams Al-Arab - Production Deployment Checklist
+# 🚀 AgriVinka - Production Deployment Checklist
 
-**Project:** Shams Al-Arab (React + Vite + Firebase)  
+**Project:** AgriVinka (React + Vite + Firebase)  
 **Date:** February 2026  
 **Status:** Ready for Production
 

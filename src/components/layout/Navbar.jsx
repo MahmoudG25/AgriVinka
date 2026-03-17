@@ -144,7 +144,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
     <nav className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-gray-100 shadow-sm h-16 md:h-20 ${mobileMenuOpen ? 'bg-white' : 'bg-white/95 backdrop-blur-xl'}`}
     >
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1440px] h-full flex items-center justify-between">
-        
+
         {/* RIGHT SIDE: Logo */}
         <div className="flex items-center shrink-0">
           <Link to="/" className="flex items-center gap-3 group">
@@ -157,14 +157,14 @@ const Navbar = ({ data = defaultNavbarData }) => {
 
         {/* CENTER: Navigation Links (Desktop) */}
         <div className="hidden lg:flex items-center justify-center flex-1 gap-2 text-[15px] font-medium text-gray-600 px-6">
-            <Link to="/" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الرئيسية</Link>
-            <Link to="/courses" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
-            <Link to="/learning-paths" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">المسارات</Link>
-            <Link to="/practical-training" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap">التدريب العملي</Link>
-            <Link to="/analyzer" className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-primary hover:bg-green-100 rounded-lg transition-all font-semibold whitespace-nowrap">
-              <span className="material-symbols-outlined text-sm">psychiatry</span>
-              فاحص النباتات
-            </Link>
+          <Link to="/" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الرئيسية</Link>
+          <Link to="/courses" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
+          <Link to="/learning-paths" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">المسارات</Link>
+          <Link to="/practical-training" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap">التدريب العملي</Link>
+          <Link to="/analyzer" className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-primary hover:bg-green-100 rounded-lg transition-all font-semibold whitespace-nowrap">
+            <span className="material-symbols-outlined text-sm">psychiatry</span>
+            فاحص النباتات
+          </Link>
         </div>
 
         {/* LEFT SIDE: Notifications + User Auth */}
@@ -262,21 +262,21 @@ const Navbar = ({ data = defaultNavbarData }) => {
                         <div className="h-px bg-gray-100 my-1 mx-2"></div>
                         <div className="py-1">
                           <p className="px-4 py-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">أدوات الإدارة</p>
-                          <Link to="/admin" onClick={handleLinkClick} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
+                          <Link to="/features/admin" onClick={handleLinkClick} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
                             <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:shadow-sm group-hover:text-primary transition-all">
                               <FaTachometerAlt size={14} />
                             </div>
                             لوحة تحكم الإدارة
                           </Link>
 
-                          <Link to="/dashboard/practical-training" onClick={handleLinkClick} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
+                          <Link to="/features/admin/trainings" onClick={handleLinkClick} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
                             <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:shadow-sm group-hover:text-primary transition-all">
                               <FaUser size={14} />
                             </div>
                             طلبات التدريب
                           </Link>
 
-                          <Link to="/admin/users" onClick={handleLinkClick} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
+                          <Link to="/features/admin/users" onClick={handleLinkClick} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
                             <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:shadow-sm group-hover:text-primary transition-all">
                               <FaUsersCog size={14} />
                             </div>

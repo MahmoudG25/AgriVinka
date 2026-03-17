@@ -59,7 +59,7 @@ export const updatePageMeta = ({
 
 export const updateMetaTag = (name, content) => {
   let tag = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
-  
+
   if (!tag) {
     tag = document.createElement('meta');
     const isProperty = name.startsWith('og:') || name.startsWith('twitter:');
@@ -70,19 +70,19 @@ export const updateMetaTag = (name, content) => {
     }
     document.head.appendChild(tag);
   }
-  
+
   tag.setAttribute('content', content);
 };
 
 export const updateCanonical = (url) => {
   let canonical = document.querySelector('link[rel="canonical"]');
-  
+
   if (!canonical) {
     canonical = document.createElement('link');
     canonical.rel = 'canonical';
     document.head.appendChild(canonical);
   }
-  
+
   canonical.href = url;
 };
 
@@ -112,7 +112,7 @@ export const generateCourseSchema = ({
   url,
   price,
   currency = 'USD',
-  instructor = 'Shams Al-Arab',
+  instructor = 'AgriVinka',
   rating = 4.8,
   reviewCount = 100,
   studentCount = 1000
@@ -125,17 +125,17 @@ export const generateCourseSchema = ({
   'url': url,
   'isPartOf': {
     '@type': 'EducationalOrganization',
-    'name': 'Shams Al-Arab',
+    'name': 'AgriVinka',
     'url': getBaseUrl(),
     'logo': `${getBaseUrl()}/src/assets/logo.svg`,
     'sameAs': [
-      'https://www.facebook.com/shamsalarab',
-      'https://www.twitter.com/shamsalarab'
+      'https://www.facebook.com/agrivinka',
+      'https://www.twitter.com/agrivinka'
     ]
   },
   'provider': {
     '@type': 'EducationalOrganization',
-    'name': 'Shams Al-Arab',
+    'name': 'AgriVinka',
     'url': getBaseUrl()
   },
   'instructor': {
@@ -163,19 +163,19 @@ export const generateCourseSchema = ({
 export const generateOrganizationSchema = () => ({
   '@context': 'https://schema.org',
   '@type': 'EducationalOrganization',
-  'name': 'Shams Al-Arab',
+  'name': 'AgriVinka',
   'url': getBaseUrl(),
   'logo': `${getBaseUrl()}/src/assets/logo.svg`,
   'description': 'تعلم البرمجة بالعربية - كورسات مترجمة ومسارات برمجة متكاملة',
-  'email': 'contact@shamsalarab.com',
+  'email': 'contact@agrivinka.com',
   'sameAs': [
-    'https://www.facebook.com/shamsalarab',
-    'https://www.twitter.com/shamsalarab'
+    'https://www.facebook.com/agrivinka',
+    'https://www.twitter.com/agrivinka'
   ],
   'contactPoint': {
     '@type': 'ContactPoint',
     'contactType': 'Customer Service',
-    'email': 'contact@shamsalarab.com'
+    'email': 'contact@agrivinka.com'
   }
 });
 

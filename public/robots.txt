@@ -1,4 +1,4 @@
-# Shams Al-Arab - Robots.txt
+# AgriVinka - Robots.txt
 # Generated for SEO optimization
 
 # Allow all crawlers by default
@@ -15,7 +15,7 @@ Disallow: /checkout/payment
 Disallow: /checkout/review
 
 # Allow crawlers to discover sitemap
-Sitemap: https://shamsalarab.com/sitemap.xml
+Sitemap: https://agrivinka.com/sitemap.xml
 
 # Crawl delay (optional - respect server resources)
 Crawl-delay: 1

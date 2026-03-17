@@ -29,8 +29,8 @@ export const SEOHead = ({
   useEffect(() => {
     // Update meta tags
     updatePageMeta({
-      title: title ? `${title} | Shams Al-Arab` : 'Shams Al-Arab - تعلم البرمجة بالعربية',
-      description: description || 'تعلم البرمجة بالعربية مع كورسات مترجمة ومسارات برمجة متكاملة',
+      title: title ? `${title} | AgriVinka` : 'AgriVinka - الزراعة الذكية',
+      description: description || 'تعلم الزراعة الذكية مع كورسات ومسارات متكاملة',
       image: image || `${getFullUrl('/src/assets/og-image.png')}`,
       url: url || getFullUrl(window.location.pathname),
       type,

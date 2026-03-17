@@ -9,15 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { defaultRoadmapData, defaultSteps } from '../../../components/home/Roadmap';
 
 // Subcomponents
-import HeroSectionAdmin from '../components/home/HeroSectionAdmin';
-import PartnersSectionAdmin from '../components/home/PartnersSectionAdmin';
-import DiagnosisSectionAdmin from '../components/home/DiagnosisSectionAdmin';
+import HeroSectionAdmin from '../components/home/HeroSectionAdmin'; 
+import FeaturedCoursesSectionAdmin from '../components/home/FeaturedCoursesSectionAdmin'; 
+import PlatformFeaturesSectionAdmin from '../components/home/PlatformFeaturesSectionAdmin'; 
 import TracksSectionAdmin from '../components/home/TracksSectionAdmin';
-import RoadmapSectionAdmin from '../components/home/RoadmapSectionAdmin';
 import TestimonialsSectionAdmin from '../components/home/TestimonialsSectionAdmin';
-import FaqSectionAdmin from '../components/home/FaqSectionAdmin';
 import PricingSectionAdmin from '../components/home/PricingSectionAdmin';
-import AboutSectionAdmin from '../components/home/AboutSectionAdmin';
+import FaqSectionAdmin from '../components/home/FaqSectionAdmin';
 import CtaSectionAdmin from '../components/home/CtaSectionAdmin';
 
 const HomeEditPage = () => {
@@ -25,16 +23,77 @@ const HomeEditPage = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('hero');
   const [formData, setFormData] = useState({
-    hero: { title: '', subtitle: '', ctaText: '', ctaLink: '/paths', stats: [], bgImage: '', images: [], badge: '', videoUrl: '' }, // Added badge & videoUrl
-    partners: [],
-    mission: { title: '', description: '', features: [] },
-    diagnosis: { title: '', subtitle: '', items: [] }, // NEW: Problem Agitation
+    hero: { title: '', subtitle: '', ctaText: '', ctaLink: '/paths', stats: [], bgImage: '', images: [], badge: '', videoUrl: '' },
+    featuredCourses: { title: '', subtitle: '', limit: 4 },
+    platformFeatures: { badge: '', title: '', subtitle: '', features: [] },
     tracks: { title: '', subtitle: '', items: [] },
-    roadmap: { title: '', subtitle: '', steps: [] }, // NEW: Journey
     testimonials: [],
+    pricing: {
+      title: 'استثمر في مستقبلك الزراعي',
+      subtitle: 'خطط مرنة تناسب جميع المستويات، مع ضمان استرداد الأموال خلال 30 يوماً.',
+      plans: [
+        {
+          id: 'plan-basic',
+          title: 'الخطة الأساسية',
+          price: '99',
+          originalPrice: '',
+          period: '/شهرياً',
+          badge: 'ابدأ مجاناً',
+          subtitle: 'مثالية للمبتدئين',
+          description: 'ابدأ رحلتك في تعلم الزراعة بخطوات صغيرة',
+          features: [
+            'الوصول لـ 5 دورات مجاناً',
+            'شهادة إتمام لكل دورة',
+            'دعم عبر البريد الإلكتروني',
+            'تحديثات المحتوى',
+          ],
+          highlight: false,
+          image: '',
+          buttonText: 'ابدأ الآن',
+        },
+        {
+          id: 'plan-pro',
+          title: 'الخطة الاحترافية',
+          price: '299',
+          originalPrice: '499',
+          period: '/شهرياً',
+          badge: '⭐ الأكثر طلباً',
+          subtitle: 'للراغبين في التميز',
+          description: 'تعلم بشكل أسرع مع وصول كامل لجميع المسارات',
+          features: [
+            'وصول كامل لجميع الدورات',
+            'مسارات تعليمية متكاملة',
+            'شهادات معتمدة',
+            'دعم مباشر مع المدربين',
+            'مشاريع عملية ميدانية',
+          ],
+          highlight: true,
+          image: '',
+          buttonText: 'اشترك الآن',
+        },
+        {
+          id: 'plan-premium',
+          title: 'الخطة الشاملة',
+          price: '599',
+          originalPrice: '999',
+          period: '/سنوياً',
+          badge: '🏆 القيمة الأعلى',
+          subtitle: 'للمحترفين والمؤسسات',
+          description: 'حزمة متكاملة للمحترفين الذين يسعون للتميز',
+          features: [
+            'كل ما في الخطة الاحترافية',
+            'جلسات تدريب فردية شهرية',
+            'عضوية منتدى الخبراء',
+            'أولوية في التدريب العملي',
+            'وصول مدى الحياة للمحتوى',
+          ],
+          highlight: false,
+          image: '',
+          buttonText: 'تواصل معنا',
+        },
+      ]
+    },
     faq: [],
-    pricing: { title: 'Pricing', subtitle: 'Choose your plan', plans: [] },
-    about: { title: '', content: '', image1: '', image2: '' }, // NEW: About Preview
     ctaFinal: { title: '', subtitle: '', buttonText: '', images: [] }
   });
 
@@ -49,41 +108,20 @@ const HomeEditPage = () => {
               ...prev,
               ...data,
               hero: { ...prev.hero, ...(data.hero || {}), stats: (data.hero?.stats && Array.isArray(data.hero.stats)) ? data.hero.stats : [], images: data.hero?.images || [] },
-              partners: Array.isArray(data.partners) ? data.partners : [],
-              mission: { ...prev.mission, ...(data.mission || {}), features: (data.mission?.features && Array.isArray(data.mission.features)) ? data.mission.features : [] },
-              diagnosis: { ...prev.diagnosis, ...(data.diagnosis || {}), items: (data.diagnosis?.items && Array.isArray(data.diagnosis.items)) ? data.diagnosis.items : [] },
+              featuredCourses: { ...prev.featuredCourses, ...(data.featuredCourses || {}) },
+              platformFeatures: { ...prev.platformFeatures, ...(data.platformFeatures || {}), features: (data.platformFeatures?.features && Array.isArray(data.platformFeatures.features)) ? data.platformFeatures.features : [] },
+              tracks: { ...prev.tracks, ...(data.tracks || {}) },
               testimonials: Array.isArray(data.testimonials) ? data.testimonials : [],
+              pricing: { ...prev.pricing, ...(data.pricing || {}), plans: (Array.isArray(data.pricing?.plans) && data.pricing.plans.length > 0) ? data.pricing.plans : prev.pricing.plans },
               faq: Array.isArray(data.faq) ? data.faq : [],
-              pricing: { ...prev.pricing, ...(data.pricing || {}), plans: Array.isArray(data.pricing?.plans) ? data.pricing.plans : [] },
-              about: { ...prev.about, ...(data.about || {}) },
               ctaFinal: { ...prev.ctaFinal, ...(data.ctaFinal || {}), images: (data.ctaFinal?.images && Array.isArray(data.ctaFinal.images)) ? data.ctaFinal.images : [] }
             };
-
-            // Check and initialize roadmap if missing
-            if (!updatedData.roadmap || Object.keys(updatedData.roadmap).length === 0 || !updatedData.roadmap.steps || updatedData.roadmap.steps.length === 0) {
-              updatedData.roadmap = {
-                ...defaultRoadmapData,
-                steps: defaultSteps.map(step => ({ ...step, id: step.id || uuidv4() })) // Ensure IDs for default steps
-              };
-            } else {
-              // If roadmap exists, ensure steps format
-              updatedData.roadmap = {
-                ...updatedData.roadmap,
-                steps: (updatedData.roadmap.steps && Array.isArray(updatedData.roadmap.steps)) ? updatedData.roadmap.steps : []
-              };
-            }
 
             return updatedData;
           });
         } else {
           // No data found in DB, initialize with defaults
-          setFormData(prev => ({
-            ...prev,
-            roadmap: {
-              ...defaultRoadmapData,
-              steps: defaultSteps.map(step => ({ ...step, id: step.id || uuidv4() }))
-            }
-          }));
+          setFormData(prev => ({ ...prev }));
         }
       } catch (error) {
         logger.error('Error fetching home data:', error);
@@ -106,7 +144,24 @@ const HomeEditPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await pageService.updatePageData('home', formData);
+      // Deeply remove undefined values to prevent Firestore crash
+      const removeUndefined = (obj) => {
+        if (Array.isArray(obj)) {
+          return obj.map(removeUndefined);
+        } else if (obj !== null && typeof obj === 'object') {
+          return Object.keys(obj).reduce((acc, key) => {
+            if (obj[key] !== undefined) {
+              acc[key] = removeUndefined(obj[key]);
+            }
+            return acc;
+          }, {});
+        }
+        return obj;
+      };
+
+      const sanitizedData = removeUndefined(formData);
+
+      await pageService.updatePageData('home', sanitizedData);
       // Invalidate cache so changes appear immediately on refresh
       try { localStorage.removeItem('namaa_page_cache_home'); } catch (_e) { /* ignore */ }
       dispatch(addToast({ type: 'success', message: 'تم تحديث الصفحة الرئيسية بنجاح' }));
@@ -178,14 +233,12 @@ const HomeEditPage = () => {
 
   const tabs = [
     { id: 'hero', label: 'الرئيسية (Hero)' },
-    { id: 'partners', label: 'الشركاء' },
-    { id: 'diagnosis', label: 'المشكلة (Diagnosis)' }, // New
-    { id: 'tracks', label: 'المسارات (Tracks)' },
-    { id: 'roadmap', label: 'الرحلة (Roadmap)' }, // New
+    { id: 'featuredCourses', label: 'الدورات المميزة' },
+    { id: 'platformFeatures', label: 'مميزات المنصة' },
+    { id: 'tracks', label: 'المسارات التعليمية' },
     { id: 'testimonials', label: 'آراء العملاء' },
-    { id: 'faq', label: 'الأسئلة الشائعة' },
     { id: 'pricing', label: 'الأسعار' },
-    { id: 'about', label: 'من نحن (About)' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
     { id: 'cta', label: 'الخاتمة (CTA)' }
   ];
 
@@ -227,20 +280,16 @@ const HomeEditPage = () => {
           <HeroSectionAdmin data={formData.hero} onChange={handleChange} />
         )}
 
-        {/* PARTNERS SECTION */}
-        {activeTab === 'partners' && (
-          <PartnersSectionAdmin
-            data={formData.partners}
-            onAddItem={addItem}
-            onUpdateItem={updateItem}
-            onRemoveItem={removeItem}
-          />
+        {/* FEATURED COURSES SECTION */}
+        {activeTab === 'featuredCourses' && (
+          <FeaturedCoursesSectionAdmin data={formData.featuredCourses} onChange={handleChange} />
         )}
 
-        {/* DIAGNOSIS SECTION (NEW) */}
-        {activeTab === 'diagnosis' && (
-          <DiagnosisSectionAdmin
-            data={formData.diagnosis}
+        {/* PLATFORM FEATURES SECTION */}
+        {activeTab === 'platformFeatures' && (
+          <PlatformFeaturesSectionAdmin
+            data={formData.platformFeatures}
+            onChange={handleChange}
             onAddItem={addItem}
             onUpdateItem={updateItem}
             onRemoveItem={removeItem}
@@ -258,31 +307,10 @@ const HomeEditPage = () => {
           />
         )}
 
-        {/* ROADMAP SECTION (NEW) */}
-        {activeTab === 'roadmap' && (
-          <RoadmapSectionAdmin
-            data={formData.roadmap}
-            onChange={handleChange}
-            onAddItem={addItem}
-            onUpdateItem={updateItem}
-            onRemoveItem={removeItem}
-          />
-        )}
-
         {/* TESTIMONIALS SECTION */}
         {activeTab === 'testimonials' && (
           <TestimonialsSectionAdmin
             data={formData.testimonials}
-            onAddItem={addItem}
-            onUpdateItem={updateItem}
-            onRemoveItem={removeItem}
-          />
-        )}
-
-        {/* FAQ SECTION */}
-        {activeTab === 'faq' && (
-          <FaqSectionAdmin
-            data={formData.faq}
             onAddItem={addItem}
             onUpdateItem={updateItem}
             onRemoveItem={removeItem}
@@ -300,9 +328,14 @@ const HomeEditPage = () => {
           />
         )}
 
-        {/* ABOUT SECTION */}
-        {activeTab === 'about' && (
-          <AboutSectionAdmin data={formData.about} onChange={handleChange} />
+        {/* FAQ SECTION */}
+        {activeTab === 'faq' && (
+          <FaqSectionAdmin
+            data={formData.faq}
+            onAddItem={addItem}
+            onUpdateItem={updateItem}
+            onRemoveItem={removeItem}
+          />
         )}
 
         {/* FINAL CTA SECTION */}
