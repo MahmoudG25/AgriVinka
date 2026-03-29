@@ -5,6 +5,38 @@
  * Supports: YouTube, Vimeo, Google Drive, and Direct media links (mp4, pdf, etc).
  */
 
+export const normalizeGoogleDriveLink = (url) => {
+  if (!url || typeof url !== 'string') return null;
+
+  const trimmedUrl = url.trim();
+
+  // 1) Standard share link: /file/d/ID/view or /file/d/ID/preview
+  const fileDrive = trimmedUrl.match(/drive\.google\.com\/(?:file\/d\/)([-\w]+)(?:\/(?:view|preview|download))?/i);
+  if (fileDrive && fileDrive[1]) {
+    return `https://drive.google.com/file/d/${fileDrive[1]}/preview`;
+  }
+
+  // 2) Open link with id query: /open?id=ID
+  const openDrive = trimmedUrl.match(/drive\.google\.com\/open\?id=([-\w]+)/i);
+  if (openDrive && openDrive[1]) {
+    return `https://drive.google.com/file/d/${openDrive[1]}/preview`;
+  }
+
+  // 3) uc link: /uc?id=ID
+  const ucDrive = trimmedUrl.match(/drive\.google\.com\/uc\?id=([-\w]+)/i);
+  if (ucDrive && ucDrive[1]) {
+    return `https://drive.google.com/file/d/${ucDrive[1]}/preview`;
+  }
+
+  // 4) Share link with /file/d/ID?usp=sharing etc
+  const queryDrive = trimmedUrl.match(/drive\.google\.com\/file\/d\/([-\w]+)(?:\?[-\w=&]+)?/i);
+  if (queryDrive && queryDrive[1]) {
+    return `https://drive.google.com/file/d/${queryDrive[1]}/preview`;
+  }
+
+  return null;
+};
+
 export const normalizeMediaLink = (url) => {
   if (!url || typeof url !== 'string') {
     return { error: 'رابط غير صالح' };
@@ -45,18 +77,14 @@ export const normalizeMediaLink = (url) => {
   }
 
   // 3. Google Drive
-  // Matches: drive.google.com/file/d/ID/view, drive.google.com/open?id=ID
-  const driveRegex = /drive\.google\.com\/(?:file\/d\/|open\?id=)([-\w]+)/i;
-  const driveMatch = trimmedUrl.match(driveRegex);
-
-  if (driveMatch && driveMatch[1]) {
-    const fileId = driveMatch[1];
+  const normalizedDrive = normalizeGoogleDriveLink(trimmedUrl);
+  if (normalizedDrive) {
     return {
       provider: 'drive',
       type: 'video', // Assume video or embeddable document
-      url: `https://drive.google.com/file/d/${fileId}/preview`,
+      url: normalizedDrive,
       originalUrl: trimmedUrl,
-      publicId: fileId
+      publicId: normalizedDrive.match(/\/file\/d\/([-\w]+)/i)?.[1] || ''
     };
   }
 

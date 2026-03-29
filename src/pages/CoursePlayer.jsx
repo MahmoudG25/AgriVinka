@@ -177,11 +177,28 @@ const CoursePlayer = () => {
 
   const getEmbedUrl = (url) => {
     if (!url) return '';
-    if (url.includes('youtube.com/watch?v=') || url.includes('youtu.be/')) {
-      const videoId = url.split('v=')[1]?.split('&')[0] || url.split('youtu.be/')[1]?.split('?')[0];
+    const cleanUrl = url.trim();
+
+    // Youtube (watch, short, embed)
+    if (cleanUrl.includes('youtube.com/watch?v=') || cleanUrl.includes('youtu.be/')) {
+      const videoId = cleanUrl.split('v=')[1]?.split('&')[0] || cleanUrl.split('youtu.be/')[1]?.split('?')[0];
       return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
-    return url;
+
+    // Vimeo
+    const vimeoMatch = cleanUrl.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch?.[1]) {
+      return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+    }
+
+    // Google Drive (various forms)
+    const driveMatch = cleanUrl.match(/drive\.google\.com\/(?:file\/d\/([\w-]+)|open\?id=([\w-]+)|uc\?id=([\w-]+))/i);
+    const driveId = driveMatch && (driveMatch[1] || driveMatch[2] || driveMatch[3]);
+    if (driveId) {
+      return `https://drive.google.com/file/d/${driveId}/preview`;
+    }
+
+    return cleanUrl;
   };
 
   // Helper to find next and prev lessons
@@ -416,7 +433,7 @@ const CoursePlayer = () => {
               {activeLesson ? (() => {
                 const videoSrc = activeLesson.video_url || activeLesson.videoUrl || activeLesson.url;
                 return videoSrc ? (
-                  videoSrc.includes('youtube') || videoSrc.includes('youtu.be') ? (
+                  (videoSrc.includes('youtube') || videoSrc.includes('youtu.be') || videoSrc.includes('vimeo.com') || videoSrc.includes('drive.google.com')) ? (
                     <iframe
                       src={getEmbedUrl(videoSrc)}
                       className="absolute inset-0 w-full h-full"

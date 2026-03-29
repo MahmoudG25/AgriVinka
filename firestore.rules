@@ -6,15 +6,46 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function getUserRole(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.role;
+    }
+
     function isAdmin() {
-      return isAuth() && (
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'editor'
-      );
+      return isAuth() && (getUserRole(request.auth.uid) in ['admin', 'superAdmin']);
+    }
+
+    function isSuperAdmin() {
+      return isAuth() && getUserRole(request.auth.uid) == 'superAdmin';
     }
 
     function isOwner(uid) {
       return isAuth() && request.auth.uid == uid;
+    }
+
+    function isRoleUnchanged() {
+      return request.resource.data.role == resource.data.role;
+    }
+
+    function isLimitedRole() {
+      return request.resource.data.role in ['student', 'admin', 'superAdmin'];
+    }
+
+    function isValidUserCreate() {
+      // Regular users can only create their own profile as student.
+      return request.auth.uid == request.resource.id
+        && request.resource.data.role == 'student'
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 0;
+    }
+
+    function isValidUserUpdate() {
+      // Do not allow self role escalation. Admins can update users except role field only by superAdmin.
+      return request.resource.data.keys().hasOnly([
+        'displayName', 'email', 'photoURL', 'phoneNumber', 'role', 'status', 'preferences', 'subscriptionStatus', 'lastLoginAt', 'updatedAt'
+      ])
+      && (isSuperAdmin() || isOwner(request.resource.id) ? true : isAdmin())
+      && (isOwner(request.resource.id) ? request.resource.data.role == resource.data.role : true)
+      && (isAdmin() && !isSuperAdmin() ? request.resource.data.role == resource.data.role : true);
     }
 
     // Certificates (public read for verification)
@@ -38,9 +69,15 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create: if isOwner(uid);
-      allow update: if isOwner(uid) || isAdmin();
-      allow delete: if isAdmin();
+      allow create: if isValidUserCreate() || (isSuperAdmin() && request.auth.uid == uid && isLimitedRole());
+      allow update: if (isOwner(uid) && isValidUserUpdate()) || (isAdmin() && isValidUserUpdate());
+      allow delete: if isSuperAdmin();
+
+      match /aiScans/{scanId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow create: if isOwner(uid);
+        allow update, delete: if isOwner(uid);
+      }
 
       match /enrollments/{courseId} {
         allow read: if isOwner(uid) || isAdmin();
@@ -58,18 +95,18 @@ service cloud.firestore {
       }
 
       match /favorites/{courseId} {
-        allow read: if isOwner(uid);
-        allow write: if isOwner(uid);
-      }
-
-      match /aiScans/{scanId} {
-        allow read: if isOwner(uid) || isAdmin();
-        allow write: if isOwner(uid);
+        allow read, write: if isOwner(uid);
       }
 
       match /trainingApplications/{appId} {
         allow read: if isOwner(uid) || isAdmin();
-        allow write: if isOwner(uid) || isAdmin();
+        allow create: if isOwner(uid) || isAdmin();
+        allow update, delete: if isOwner(uid) || isAdmin();
+      }
+
+      match /ai_usage/{usageId} {
+        allow read, write: if isOwner(uid);
+        allow delete: if false;
       }
     }
 
@@ -112,13 +149,13 @@ service cloud.firestore {
     }
 
     match /orders/{orderId} {
-      allow create: if true;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
       allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
       allow update, delete: if isAdmin();
     }
 
     match /courseRequests/{requestId} {
-      allow create: if true;
+      allow create: if isAuth();
       allow read, update, delete: if isAdmin();
     }
 

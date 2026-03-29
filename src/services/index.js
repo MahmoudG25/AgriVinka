@@ -5,3 +5,5 @@ export * from './createCertificatePdf.js';
 export * from './dbStorage.js';
 export * from './firebase.js';
 export * from './mediaLinkService.js';
+export * from './dataAdapter.js';
+export * from './contentService.js';

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SEOHead from '../components/common/SEOHead';
 import { motion } from 'framer-motion';
+import { contentService } from '../services/contentService';
 import { aboutService, defaultAboutData } from '../services/firestore/aboutService';
 import { logger } from '../utils/logger';
 import { Link } from 'react-router-dom';
@@ -12,7 +13,7 @@ const AboutPage = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const fetchedData = await aboutService.getAboutPage();
+        const fetchedData = await contentService.getAboutPage();
         setData(fetchedData);
       } catch (err) {
         logger.error('Error loading about page:', err);

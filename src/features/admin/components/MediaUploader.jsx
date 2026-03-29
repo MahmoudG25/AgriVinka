@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { MdCloudUpload, MdClose, MdCheckCircle } from 'react-icons/md';
 import { cloudinaryService } from '../../../services/cloudinary';
+import { normalizeMediaLink } from '../../../services/mediaLinkService';
 import clsx from 'clsx';
 
 const MediaUploader = ({
@@ -16,7 +17,9 @@ const MediaUploader = ({
     status: 'idle', // idle, uploading, success, error
     progress: 0,
     error: null,
-    url: null
+    url: null,
+    provider: null,
+    type: null
   });
 
   const onDrop = useCallback(async (acceptedFiles) => {
@@ -34,12 +37,18 @@ const MediaUploader = ({
         status: 'success',
         progress: 100,
         error: null,
-        url: url
+        url,
+        provider: 'cloudinary',
+        type: file.type.startsWith('video/') ? 'video' : file.type.startsWith('image/') ? 'image' : 'raw'
       });
 
       if (onUploadComplete) {
-        // Now returns just a URL string or an object depending on what the parent expects, keeping it consistent with old structure
-        onUploadComplete({ url });
+        const fileType = file.type.startsWith('video/') ? 'video' : file.type.startsWith('image/') ? 'image' : 'raw';
+        onUploadComplete({
+          url,
+          provider: 'cloudinary',
+          type: fileType
+        });
       }
     } catch (err) {
       setUploadState({
@@ -49,7 +58,7 @@ const MediaUploader = ({
         url: null
       });
     }
-  }, [onUploadComplete]);
+  }, [onUploadComplete, folder]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -68,13 +77,38 @@ const MediaUploader = ({
 
   const handleExternalSubmit = (e) => {
     e.preventDefault();
-    if (externalUrl && onUploadComplete) {
-      onUploadComplete({ url: externalUrl });
-      setExternalUrl('');
+    if (!externalUrl) return;
+
+    const normalized = normalizeMediaLink(externalUrl);
+    if (normalized && !normalized.error) {
+      setUploadState({
+        status: 'success',
+        progress: 100,
+        url: normalized.url,
+        provider: normalized.provider,
+        type: normalized.type,
+        error: null
+      });
+      if (onUploadComplete) onUploadComplete(normalized);
+    } else {
+      // fallback on raw value for compatibility and show as plain URL
+      setUploadState({
+        status: 'success',
+        progress: 100,
+        url: externalUrl,
+        provider: 'external',
+        type: 'link',
+        error: null
+      });
+      if (onUploadComplete) onUploadComplete({ url: externalUrl, type: 'link', provider: 'external' });
     }
+
+    setExternalUrl('');
   };
 
   const previewUrl = uploadState.url || currentUrl;
+  const previewType = uploadState.type || null;
+  const previewProvider = uploadState.provider || null;
 
   return (
     <div className="w-full">
@@ -118,14 +152,22 @@ const MediaUploader = ({
           </div>
         ) : previewUrl ? (
           <div className="relative group">
-            {(previewUrl.includes('youtube.com') || previewUrl.includes('youtu.be')) ? (
+            {(previewProvider === 'youtube' || previewUrl.includes('youtube.com') || previewUrl.includes('youtu.be')) ? (
               <div className="text-gray-600 flex flex-col items-center justify-center p-4">
                 <span className="font-bold text-red-600 mb-2">▶ YouTube Video Linked</span>
                 <span className="text-xs break-all text-gray-400 dir-ltr max-w-full px-4">{previewUrl}</span>
               </div>
-            ) : accept && Object.keys(accept).some(k => k.startsWith('video')) && previewUrl.match(/\.(mp4|webm|mkv|mov)$/i) ? (
+            ) : (previewProvider === 'drive' || /drive\.google\.com\/file\/d\/.+\/preview/.test(previewUrl)) ? (
+              <iframe
+                src={previewUrl}
+                className="w-full h-48 mx-auto rounded-lg shadow-sm"
+                title="Google Drive Video Preview"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
+            ) : (previewType === 'video' || (accept && Object.keys(accept).some(k => k.startsWith('video')) && previewUrl.match(/\.(mp4|webm|mkv|mov)$/i))) ? (
               <video src={previewUrl} className="max-h-48 mx-auto rounded-lg shadow-sm" controls />
-            ) : previewUrl.match(/\.(pdf)$/i) ? (
+            ) : previewType === 'pdf' || previewUrl.match(/\.(pdf)$/i) ? (
               <div className="p-8 text-red-500 font-bold flex flex-col items-center justify-center">
                 <span className="material-symbols-outlined text-4xl mb-2">picture_as_pdf</span>
                 ملف PDF مرفق

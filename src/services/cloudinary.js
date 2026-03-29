@@ -128,3 +128,7 @@ export const cloudinaryService = {
     return secureUrl;
   }
 };
+
+// Backward compatibility and named export for adapter mapping
+export const cloudinary = cloudinaryService;
+
