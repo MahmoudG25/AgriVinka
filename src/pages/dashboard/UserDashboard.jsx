@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../app/contexts/AuthContext';
 import { useDashboardData } from '../../hooks/useDashboardData';
@@ -8,7 +8,6 @@ import StatsRow from './components/StatsRow';
 import ContinueWatchingCard from './components/ContinueWatchingCard';
 import MyCoursesGrid from './components/MyCoursesGrid';
 import PendingOrdersSection from './components/PendingOrdersSection';
-import AIHistorySection from './components/AIHistorySection';
 import FavoritesSection from './components/FavoritesSection';
 import CertificatesGrid from './components/CertificatesGrid';
 import RecentActivity from './components/RecentActivity';
@@ -31,10 +30,10 @@ const UserDashboard = () => {
 
   // Extend stats with certificatesCount for StatsRow
   // Many users expect 1 completed course = 1 certificate. We use Math.max so it never shows 0 if they completed courses.
-  const dashStats = {
+  const dashStats = useMemo(() => ({
     ...stats,
     certificatesCount: Math.max(certificates.length, stats.completed),
-  };
+  }), [stats, certificates.length]);
 
   return (
     <div className="min-h-screen bg-gray-50/50 pt-24 pb-12" dir="rtl">
@@ -56,9 +55,6 @@ const UserDashboard = () => {
           
           {/* Main Content (Right column 8/12) */}
           <div className="lg:col-span-8 space-y-8 order-last lg:order-first">
-            {/* AI Analyzer Banner / History */}
-            <AIHistorySection scans={aiScans} loading={loading} />
-
             {/* Current Learning */}
             <ContinueWatchingCard course={continueItem} loading={loading} />
 

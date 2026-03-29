@@ -1,6 +1,15 @@
 import { COLLECTIONS } from '../../constants';
 import { db } from '../firebase';
 import { logger } from '../../utils/logger';
+
+const CACHE_TTL = 1000 * 60 * 2; // 2 minutes
+const enrollmentCache = new Map();
+const roadmapEnrollmentCache = new Map();
+
+const clearEnrollmentCache = (userId) => {
+  enrollmentCache.delete(userId);
+  roadmapEnrollmentCache.delete(userId);
+};
 import {
   collection,
   doc,
@@ -42,6 +51,7 @@ export const enrollmentService = {
       };
 
       await setDoc(enrollmentRef, enrollmentData);
+      clearEnrollmentCache(userId);
       return true;
     } catch (error) {
       logger.error('Error enrolling user in course:', error);
@@ -66,6 +76,7 @@ export const enrollmentService = {
       };
 
       await setDoc(enrollmentRef, enrollmentData);
+      clearEnrollmentCache(userId);
       return true;
     } catch (error) {
       logger.error('Error enrolling user in roadmap:', error);
@@ -107,13 +118,23 @@ export const enrollmentService = {
    * Get all enrollments for a specific user
    */
   getUserEnrollments: async (userId) => {
+    if (!userId) return [];
+
+    const now = Date.now();
+    const cacheEntry = enrollmentCache.get(userId);
+    if (cacheEntry && now - cacheEntry.timestamp < CACHE_TTL) {
+      return cacheEntry.data;
+    }
+
     try {
       const enrollmentsRef = collection(db, COLLECTIONS.USERS, userId, 'enrollments');
       const snapshot = await getDocs(enrollmentsRef);
-      return snapshot.docs.map(doc => ({
+      const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      enrollmentCache.set(userId, { data, timestamp: now });
+      return data;
     } catch (error) {
       logger.error('Error getting user enrollments:', error);
       throw error;
@@ -124,13 +145,23 @@ export const enrollmentService = {
    * Get all roadmap enrollments for a user
    */
   getUserRoadmapEnrollments: async (userId) => {
+    if (!userId) return [];
+
+    const now = Date.now();
+    const cacheEntry = roadmapEnrollmentCache.get(userId);
+    if (cacheEntry && now - cacheEntry.timestamp < CACHE_TTL) {
+      return cacheEntry.data;
+    }
+
     try {
       const enrollmentsRef = collection(db, COLLECTIONS.USERS, userId, 'roadmapEnrollments');
       const snapshot = await getDocs(enrollmentsRef);
-      return snapshot.docs.map(doc => ({
+      const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      roadmapEnrollmentCache.set(userId, { data, timestamp: now });
+      return data;
     } catch (error) {
       logger.error('Error getting user roadmap enrollments:', error);
       return [];
@@ -204,6 +235,7 @@ export const enrollmentService = {
         updateData.lastLessonId = lastLessonId;
       }
       await updateDoc(enrollmentRef, updateData);
+      clearEnrollmentCache(userId);
     } catch (error) {
       logger.error('Error updating enrollment progress:', error);
       throw error;
@@ -222,6 +254,7 @@ export const enrollmentService = {
         progressPercentage: 100,
         completedAt: serverTimestamp()
       });
+      clearEnrollmentCache(userId);
     } catch (error) {
       logger.error('Error updating enrollment certificate:', error);
       throw error;
@@ -237,6 +270,7 @@ export const enrollmentService = {
       await updateDoc(enrollmentRef, {
         lastAccessAt: serverTimestamp()
       });
+      clearEnrollmentCache(userId);
     } catch (error) {
       logger.error('Error updating last access:', error);
     }

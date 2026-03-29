@@ -23,6 +23,7 @@ const AdminTrainingEdit = lazy(() => import('../pages/AdminTrainingEdit'));
 const AdminCertificatesPage = lazy(() => import('../pages/AdminCertificatesPage'));
 const CertificateSettingsPage = lazy(() => import('../pages/CertificateSettingsPage'));
 const AdminTopOfferBar = lazy(() => import('../pages/AdminTopOfferBar'));
+const AIAssistantAdminPage = lazy(() => import('../pages/AIAssistantAdminPage'));
 
 // Loading skeleton
 const AdminPageLoader = () => (
@@ -174,6 +175,14 @@ const AdminRoutes = () => {
           <Suspense fallback={<AdminPageLoader />}>
             <AdminTopOfferBar />
           </Suspense>
+        } />
+
+        <Route path="ai-assistant" element={
+          <RequireAuth allowedRoles={['admin', 'superAdmin']}>
+            <Suspense fallback={<AdminPageLoader />}>
+              <AIAssistantAdminPage />
+            </Suspense>
+          </RequireAuth>
         } />
       </Route>
     </Routes>

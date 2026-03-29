@@ -1,6 +1,10 @@
 import { COLLECTIONS } from '../../constants';
 import { db } from '../firebase';
 import { logger } from '../../utils/logger';
+
+const CACHE_TTL = 1000 * 60 * 2; // 2 minutes
+const memoryFavorites = new Map();
+
 import {
   doc,
   setDoc,
@@ -24,12 +28,14 @@ export const favoritesService = {
 
       if (snap.exists()) {
         await deleteDoc(favRef);
+        memoryFavorites.delete(userId);
         return false; // Removed
       } else {
         await setDoc(favRef, {
           courseId,
           addedAt: serverTimestamp()
         });
+        memoryFavorites.delete(userId);
         return true; // Added
       }
     } catch (error) {
@@ -58,6 +64,13 @@ export const favoritesService = {
    */
   getUserFavorites: async (userId) => {
     if (!userId) return [];
+
+    const now = Date.now();
+    const cached = memoryFavorites.get(userId);
+    if (cached && now - cached.timestamp < CACHE_TTL) {
+      return cached.data;
+    }
+
     try {
       const favsRef = collection(db, COLLECTIONS.USERS, userId, 'favorites');
       const snapshot = await getDocs(favsRef);
@@ -79,7 +92,9 @@ export const favoritesService = {
         })
       );
 
-      return courses.filter(Boolean);
+      const result = courses.filter(Boolean);
+      memoryFavorites.set(userId, { data: result, timestamp: now });
+      return result;
     } catch (error) {
       logger.error('Error fetching user favorites:', error);
       return [];

@@ -21,7 +21,7 @@ const ContactPage = lazy(() => import('../../pages/ContactPage'));
 const TermsPage = lazy(() => import('../../pages/TermsPage'));
 const HelpCenterPage = lazy(() => import('../../pages/HelpCenterPage'));
 const RequestCoursePage = lazy(() => import('../../pages/RequestCoursePage'));
-const AIDiagnosisPage = lazy(() => import('../../pages/ai/AIDiagnosisPage'));
+const AIAssistantPage = lazy(() => import('../../pages/ai/AIAssistantPage'));
 const PracticalTrainingPage = lazy(() => import('../../pages/PracticalTrainingPage'));
 const ApplyTrainingPage = lazy(() => import('../../pages/ApplyTrainingPage'));
 const PlantAnalyzerPage = lazy(() => import('../../features/plant-analyzer/pages/PlantAnalyzerPage'));
@@ -57,7 +57,7 @@ const PublicRoutes = () => {
   const location = useLocation();
   const isPlayerRoute = location.pathname.includes('/play');
   const isAuthRoute = ['/login', '/register', '/reset-password'].includes(location.pathname);
-  const isAnalyzerRoute = location.pathname === '/analyzer' || location.pathname === '/my-analyses';
+  const isAnalyzerRoute = location.pathname === '/analyzer' || location.pathname === '/my-analyses' || location.pathname === '/ai/assistant';
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -118,7 +118,7 @@ const PublicRoutes = () => {
             <Route path="/request-course" element={<RequestCoursePage />} />
             <Route path="/verify/:certificateId" element={<CertificateVerification />} />
             <Route path="/certificate/:certificateId" element={<CertificateViewPage />} />
-            <Route path="/ai/diagnose" element={<AIDiagnosisPage />} />
+            <Route path="/ai/assistant" element={<AIAssistantPage />} />
             <Route path="/practical-training" element={<PracticalTrainingPage />} />
             <Route path="/analyzer" element={<PlantAnalyzerPage />} />
 

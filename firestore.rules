@@ -48,6 +48,20 @@ service cloud.firestore {
       && (isAdmin() && !isSuperAdmin() ? request.resource.data.role == resource.data.role : true);
     }
 
+    // Admin-only: update AI assistant control fields on user documents
+    function isValidAdminAiUpdate() {
+      return isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['aiEnabled', 'aiUsageCount', 'aiLimitOverride', 'updatedAt']);
+    }
+
+    // Users can increment their own aiUsageCount by exactly 1
+    function isValidUserAiUsageIncrement(uid) {
+      return isAuth()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['aiUsageCount', 'updatedAt'])
+        && request.resource.data.aiUsageCount == resource.data.aiUsageCount + 1;
+    }
+
     // Certificates (public read for verification)
     match /certificates/{certId} {
       allow read: if true;
@@ -70,7 +84,10 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
       allow create: if isValidUserCreate() || (isSuperAdmin() && request.auth.uid == uid && isLimitedRole());
-      allow update: if (isOwner(uid) && isValidUserUpdate()) || (isAdmin() && isValidUserUpdate());
+      allow update: if (isOwner(uid) && isValidUserUpdate())
+                    || (isAdmin() && isValidUserUpdate())
+                    || isValidAdminAiUpdate()
+                    || isValidUserAiUsageIncrement(uid);
       allow delete: if isSuperAdmin();
 
       match /aiScans/{scanId} {
@@ -78,6 +95,7 @@ service cloud.firestore {
         allow create: if isOwner(uid);
         allow update, delete: if isOwner(uid);
       }
+
 
       match /enrollments/{courseId} {
         allow read: if isOwner(uid) || isAdmin();
@@ -151,6 +169,35 @@ service cloud.firestore {
     match /orders/{orderId} {
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
       allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    match /ai_sessions/{sessionId} {
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isAuth() && (resource.data.userId == request.auth.uid || isAdmin());
+
+      match /messages/{messageId} {
+        // CREATE: must include userId matching the requester
+        allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+        // READ/DELETE: verify via parent session ownership (avoids resource.data in list queries)
+        allow read: if isAuth() && (
+          get(/databases/$(database)/documents/ai_sessions/$(sessionId)).data.userId == request.auth.uid
+          || isAdmin()
+        );
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // AI global settings — admin writes, any authenticated user can read
+    match /ai_settings/{docId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // AI interaction logs — admin reads, authenticated users write their own
+    match /ai_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAdmin();
     }
 

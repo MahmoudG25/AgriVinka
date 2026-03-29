@@ -1,6 +1,7 @@
 export * from './aboutService.js';
 export * from './adminStatsService.js';
 export * from './aiDiagnosisService.js';
+export * from './aiSessionService.js';
 export * from './courseRequestService.js';
 export * from './courseService.js';
 export * from './enrollmentService.js';

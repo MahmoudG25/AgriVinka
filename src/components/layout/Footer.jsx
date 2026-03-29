@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import siteLogo from '../../assets/Gemini_Generated_Image_n78kqfn78kqfn78k (1).png';
 
 // Map Arabic link labels to real routes
 const LINK_ROUTES = {
@@ -88,10 +89,7 @@ const Footer = ({ data = defaultFooterData }) => {
           {/* Brand Column */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-6 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-xl">eco</span>
-              </div>
-              <span className="text-2xl font-bold text-white tracking-wide">AgriVinka</span>
+              <img src={siteLogo} alt="AgriVinka Logo" className="h-12 w-auto object-contain group-hover:scale-105 transition-transform" />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed ">
               {data?.description || defaultFooterData.description}

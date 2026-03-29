@@ -6,8 +6,11 @@ import PublicRoutes from './routes/PublicRoutes';
 import ScrollToTop from '../components/common/ScrollToTop';
 import MobileBottomNav from '../components/layout/MobileBottomNav';
 import ErrorBoundary from '../components/common/ErrorBoundary';
+import AssistantDrawer from '../components/assistant/AssistantDrawer';
+import AssistantFloatingButton from '../components/assistant/AssistantFloatingButton';
 
 import { AuthProvider } from './contexts/AuthContext';
+import { AssistantProvider } from './contexts/AssistantContext';
 import { themeService } from '../services/firestore/themeService';
 
 function App() {
@@ -45,16 +48,20 @@ function App() {
 				}}
 			/>
 			<AuthProvider>
-				<Router>
-					<ScrollToTop />
-					<div className="pb-20 md:pb-0 min-h-screen">
-						<Routes>
-							<Route path="/features/admin/*" element={<AdminRoutes />} />
-							<Route path="/*" element={<PublicRoutes />} />
-						</Routes>
-					</div>
-					<MobileBottomNav />
-				</Router>
+				<AssistantProvider>
+					<Router>
+						<ScrollToTop />
+						<div className="pb-20 md:pb-0 min-h-screen">
+							<Routes>
+								<Route path="/features/admin/*" element={<AdminRoutes />} />
+								<Route path="/*" element={<PublicRoutes />} />
+							</Routes>
+						</div>
+						<MobileBottomNav />
+						<AssistantFloatingButton />
+						<AssistantDrawer />
+					</Router>
+				</AssistantProvider>
 			</AuthProvider>
 		</ErrorBoundary>
 	);

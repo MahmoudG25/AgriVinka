@@ -40,4 +40,4 @@ const StatsRow = ({ stats, loading }) => {
   );
 };
 
-export default StatsRow;
+export default React.memo(StatsRow);

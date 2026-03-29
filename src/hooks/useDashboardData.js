@@ -1,5 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { enrollmentService } from '../services/firestore/enrollmentService';
+
+const DASHBOARD_CACHE_TTL = 1000 * 60 * 2; // 2 minutes
+const dashboardCache = new Map();
+
 import { orderService } from '../services/firestore/orderService';
 import { favoritesService } from '../services/firestore/favoritesService';
 import { aiDiagnosisService } from '../services/firestore/aiDiagnosisService';
@@ -21,8 +25,35 @@ export const useDashboardData = (uid) => {
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const activeRequestRef = useRef(null);
+
   useEffect(() => {
-    if (!uid) return;
+    if (!uid) {
+      setCourses([]);
+      setPendingOrders([]);
+      setRejectedOrders([]);
+      setFavorites([]);
+      setAiScans([]);
+      setCertificates([]);
+      setLoading(false);
+      return;
+    }
+
+    // Serve from short in-memory cache when available
+    const cached = dashboardCache.get(uid);
+    if (cached && Date.now() - cached.timestamp < DASHBOARD_CACHE_TTL) {
+      setCourses(cached.data.courses || []);
+      setPendingOrders(cached.data.pendingOrders || []);
+      setRejectedOrders(cached.data.rejectedOrders || []);
+      setFavorites(cached.data.favorites || []);
+      setAiScans(cached.data.aiScans || []);
+      setCertificates(cached.data.certificates || []);
+      setLoading(false);
+      return;
+    }
+
+    const requestId = Symbol('dashboardRequest');
+    activeRequestRef.current = requestId;
 
     const fetchAll = async () => {
       setLoading(true);
@@ -64,7 +95,6 @@ export const useDashboardData = (uid) => {
           const timeB = b.enrollment.lastAccessAt?.seconds || 0;
           return timeB - timeA;
         });
-        setCourses(sorted);
 
         let newPendingOrders = [];
         let newRejectedOrders = [];
@@ -77,44 +107,54 @@ export const useDashboardData = (uid) => {
         }
 
         if (trainingData?.status === 'fulfilled') {
-           const trainings = trainingData.value.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-           const pendingTrainings = trainings.filter(t => ['pending', 'in_review'].includes(t.status)).map(t => ({
-             ...t,
-             productTitle: t.trainingTitle,
-             itemType: 'training',
-             totalAmount: 'مجاني' // Or leave empty since trainings are often free/priced later
-           }));
-           const rejectedTrainings = trainings.filter(t => t.status === 'rejected').map(t => ({
-             ...t,
-             productTitle: t.trainingTitle,
-             itemType: 'training',
-             totalAmount: 'مجاني'
-           }));
-           
-           newPendingOrders = [...newPendingOrders, ...pendingTrainings];
-           newRejectedOrders = [...newRejectedOrders, ...rejectedTrainings];
+          const trainings = trainingData.value.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          const pendingTrainings = trainings.filter(t => ['pending', 'in_review'].includes(t.status)).map(t => ({
+            ...t,
+            productTitle: t.trainingTitle,
+            itemType: 'training',
+            totalAmount: 'مجاني'
+          }));
+          const rejectedTrainings = trainings.filter(t => t.status === 'rejected').map(t => ({
+            ...t,
+            productTitle: t.trainingTitle,
+            itemType: 'training',
+            totalAmount: 'مجاني'
+          }));
+
+          newPendingOrders = [...newPendingOrders, ...pendingTrainings];
+          newRejectedOrders = [...newRejectedOrders, ...rejectedTrainings];
         }
 
+        const newFavorites = favsData.status === 'fulfilled' ? favsData.value : [];
+        if (favsData.status !== 'fulfilled') logger.error('Failed to fetch favorites', favsData.reason);
+
+        const newAiScans = scansData.status === 'fulfilled' ? scansData.value.items || [] : [];
+        if (scansData.status !== 'fulfilled') logger.error('Failed to fetch AI scans', scansData.reason);
+
+        const newCertificates = certsData.status === 'fulfilled' ? certsData.value : [];
+        if (certsData.status !== 'fulfilled') logger.error('Failed to fetch certificates', certsData.reason);
+
+        if (activeRequestRef.current !== requestId) return;
+
+        setCourses(sorted);
         setPendingOrders(newPendingOrders);
         setRejectedOrders(newRejectedOrders);
+        setFavorites(newFavorites);
+        setAiScans(newAiScans);
+        setCertificates(newCertificates);
 
-        if (favsData.status === 'fulfilled') {
-          setFavorites(favsData.value);
-        } else {
-          logger.error('Failed to fetch favorites', favsData.reason);
-        }
-
-        if (scansData.status === 'fulfilled') {
-          setAiScans(scansData.value.items || []);
-        } else {
-          logger.error('Failed to fetch AI scans', scansData.reason);
-        }
-
-        if (certsData.status === 'fulfilled') {
-          setCertificates(certsData.value);
-        } else {
-          logger.error('Failed to fetch certificates', certsData.reason);
-        }
+        // Cache dashboard data for short-term reuse
+        dashboardCache.set(uid, {
+          data: {
+            courses: sorted,
+            pendingOrders: newPendingOrders,
+            rejectedOrders: newRejectedOrders,
+            favorites: newFavorites,
+            aiScans: newAiScans,
+            certificates: newCertificates,
+          },
+          timestamp: Date.now()
+        });
       } catch (error) {
         logger.error('Dashboard data fetch error', error);
       } finally {
@@ -123,6 +163,12 @@ export const useDashboardData = (uid) => {
     };
 
     fetchAll();
+
+    return () => {
+      if (activeRequestRef.current === requestId) {
+        activeRequestRef.current = null;
+      }
+    };
   }, [uid]);
 
   // Memoized stats

@@ -17,26 +17,53 @@ import {
 } from 'firebase/firestore';
 
 const COLLECTION_NAME = 'courses';
+const CACHE_TTL = 1000 * 60 * 2; // 2 minutes
+
+const memoryCourseById = new Map();
+const memoryCourseBySlug = new Map();
+let memoryAllCourses = null;
+let memoryPublishedCourses = null;
+
+const clearCourseCache = () => {
+  memoryCourseById.clear();
+  memoryCourseBySlug.clear();
+  memoryAllCourses = null;
+  memoryPublishedCourses = null;
+};
 
 export const courseService = {
   // Get all courses (Admin typically)
   getAllCourses: async () => {
+    const now = Date.now();
+    if (memoryAllCourses && now - memoryAllCourses.timestamp < CACHE_TTL) {
+      return memoryAllCourses.data;
+    }
+
     try {
       const coursesRef = collection(db, COLLECTION_NAME);
       const q = query(coursesRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      memoryAllCourses = { data: courses, timestamp: now };
+      return courses;
     } catch (error) {
       logger.error('Error fetching courses:', error);
       // Fallback without orderBy if index is missing
       const coursesRef = collection(db, COLLECTION_NAME);
       const snapshot = await getDocs(coursesRef);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      memoryAllCourses = { data: courses, timestamp: now };
+      return courses;
     }
   },
 
   // Get published courses with optional pagination
   getPublishedCourses: async (itemsPerPage = 12, lastVisibleDoc = null) => {
+    const now = Date.now();
+    if (!lastVisibleDoc && memoryPublishedCourses && memoryPublishedCourses.timestamp && (now - memoryPublishedCourses.timestamp < CACHE_TTL) && memoryPublishedCourses.itemsPerPage === itemsPerPage) {
+      return memoryPublishedCourses.data;
+    }
+
     try {
       const coursesRef = collection(db, COLLECTION_NAME);
       let q = query(
@@ -68,11 +95,26 @@ export const courseService = {
           })
           .slice(0, itemsPerPage);
 
+        if (!lastVisibleDoc) {
+          memoryPublishedCourses = {
+            data: {
+              courses: published,
+              lastVisible: fallbackSnapshot.docs[fallbackSnapshot.docs.length - 1]
+            },
+            timestamp: now,
+            itemsPerPage
+          };
+        }
+
         return { courses: published, lastVisible: fallbackSnapshot.docs[fallbackSnapshot.docs.length - 1] };
       }
 
       const lastVisible = snapshot.docs[snapshot.docs.length - 1];
       const courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      if (!lastVisibleDoc) {
+        memoryPublishedCourses = { data: { courses, lastVisible }, timestamp: now, itemsPerPage };
+      }
 
       return { courses, lastVisible };
     } catch (error) {
@@ -84,10 +126,17 @@ export const courseService = {
   // Get a single course by ID
   getCourseById: async (id) => {
     try {
+      const now = Date.now();
+      const cacheEntry = memoryCourseById.get(id);
+      if (cacheEntry && now - cacheEntry.timestamp < CACHE_TTL) {
+        return cacheEntry.data;
+      }
       const docRef = doc(db, COLLECTION_NAME, id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() };
+        const course = { id: docSnap.id, ...docSnap.data() };
+        memoryCourseById.set(id, { data: course, timestamp: now });
+        return course;
       } else {
         return null;
       }
@@ -100,13 +149,21 @@ export const courseService = {
   // Get course by slug (for SEO-friendly URLs)
   getCourseBySlug: async (slug) => {
     try {
+      const now = Date.now();
+      const cacheEntry = memoryCourseBySlug.get(slug);
+      if (cacheEntry && now - cacheEntry.timestamp < CACHE_TTL) {
+        return cacheEntry.data;
+      }
+
       const coursesRef = collection(db, COLLECTION_NAME);
       const q = query(coursesRef, where('seo.slug', '==', slug), limit(1));
       const snapshot = await getDocs(q);
 
       if (!snapshot.empty) {
         const docSnap = snapshot.docs[0];
-        return { id: docSnap.id, ...docSnap.data() };
+        const course = { id: docSnap.id, ...docSnap.data() };
+        memoryCourseBySlug.set(slug, { data: course, timestamp: now });
+        return course;
       }
       return null;
     } catch (error) {
@@ -124,13 +181,18 @@ export const courseService = {
         updatedAt: new Date().toISOString(),
       };
 
+      let courseId;
       if (customId) {
+        courseId = customId;
         await setDoc(doc(db, COLLECTION_NAME, customId), dataWithTimestamp);
-        return customId;
       } else {
         const docRef = await addDoc(collection(db, COLLECTION_NAME), dataWithTimestamp);
-        return docRef.id;
+        courseId = docRef.id;
       }
+
+      // Invalidate cache
+      clearCourseCache();
+      return courseId;
     } catch (error) {
       logger.error('Error creating course:', error);
       throw error;
@@ -145,6 +207,10 @@ export const courseService = {
         ...courseData,
         updatedAt: new Date().toISOString(),
       });
+
+      // Cache invalidation
+      clearCourseCache();
+      memoryCourseById.delete(id);
     } catch (error) {
       logger.error('Error updating course:', error);
       throw error;
@@ -155,6 +221,7 @@ export const courseService = {
   deleteCourse: async (id) => {
     try {
       await deleteDoc(doc(db, COLLECTION_NAME, id));
+      clearCourseCache();
     } catch (error) {
       logger.error('Error deleting course:', error);
       throw error;
@@ -261,6 +328,9 @@ export const courseService = {
    * Strips sections from main doc to avoid bloat.
    */
   saveCourseWithModules: async (courseId, courseData, isNew = false) => {
+    // Invalidate course cache, as the course and module content is going to change
+    clearCourseCache();
+
     try {
       const { sections, ...courseMetadata } = courseData;
       // Remove internal flags

@@ -19,8 +19,10 @@ import {
   FaUsersCog
 } from 'react-icons/fa';
 import { useAuth } from '../../app/contexts/AuthContext';
+import { useAssistant } from '../../app/contexts/AssistantContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../services/firebase';
+import siteLogo from '../../assets/Gemini_Generated_Image_n78kqfn78kqfn78k (1).png';
 
 // Map known Arabic link labels to real routes
 const NAVBAR_LINK_ROUTES = {
@@ -54,6 +56,7 @@ const defaultNavbarData = {
 const Navbar = ({ data = defaultNavbarData }) => {
   const navigate = useNavigate();
   const { currentUser, userData, isAdmin } = useAuth();
+  const { openAssistant } = useAssistant();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -148,10 +151,7 @@ const Navbar = ({ data = defaultNavbarData }) => {
         {/* RIGHT SIDE: Logo */}
         <div className="flex items-center shrink-0">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
-              <span className="material-symbols-outlined text-xl">eco</span>
-            </div>
-            <span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wide whitespace-nowrap">AgriVinka</span>
+            <img src={siteLogo} alt="AgriVinka Logo" className="h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-transform" />
           </Link>
         </div>
 
@@ -161,9 +161,9 @@ const Navbar = ({ data = defaultNavbarData }) => {
           <Link to="/courses" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
           <Link to="/learning-paths" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">المسارات</Link>
           <Link to="/practical-training" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap">التدريب العملي</Link>
-          <Link to="/analyzer" className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-primary hover:bg-green-100 rounded-lg transition-all font-semibold whitespace-nowrap">
-            <span className="material-symbols-outlined text-sm">psychiatry</span>
-            فاحص النباتات
+          <Link to="/ai/assistant" className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-all font-semibold whitespace-nowrap">
+            <span className="material-symbols-outlined text-sm">smart_toy</span>
+            المساعد الذكي
           </Link>
         </div>
 

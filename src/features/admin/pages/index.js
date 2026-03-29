@@ -1,3 +1,4 @@
+export { default as AIAssistantAdminPage } from './AIAssistantAdminPage.jsx';
 export { default as AboutEditPage } from './AboutEditPage.jsx';
 export { default as AdminCertificatesPage } from './AdminCertificatesPage.jsx';
 export { default as AdminTopOfferBar } from './AdminTopOfferBar.jsx';

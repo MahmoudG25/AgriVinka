@@ -17,7 +17,8 @@ import {
   MdWork,
   MdChevronRight,
   MdChevronLeft,
-  MdHome
+  MdHome,
+  MdSmartToy
 } from 'react-icons/md';
 import clsx from 'clsx';
 import { signOut } from 'firebase/auth';
@@ -59,6 +60,7 @@ const NAV_SECTIONS = [
     items: [
       { label: 'شريط العروض', path: '/features/admin/top-offer-bar', icon: MdCampaign },
       { label: 'إعدادات الشهادات', path: '/features/admin/certificate-settings', icon: MdSettings, roles: ['admin'] },
+      { label: 'المساعد الذكي', path: '/features/admin/ai-assistant', icon: MdSmartToy, roles: ['admin'] },
     ],
   },
 ];

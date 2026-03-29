@@ -59,4 +59,4 @@ const DashboardWelcomeBanner = ({ userData, continueItem }) => {
   );
 };
 
-export default DashboardWelcomeBanner;
+export default React.memo(DashboardWelcomeBanner);

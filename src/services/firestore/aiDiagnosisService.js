@@ -18,6 +18,10 @@ import {
 // Re-export the real analysis function so dashboard can use it directly
 export { analyzePlantImage, PROVIDERS } from '../../features/plant-analyzer/services/analysisService';
 
+const CACHE_TTL = 1000 * 60 * 2; // 2 minutes
+const aiScansCache = new Map();
+
+
 export const aiDiagnosisService = {
   /**
    * Saves a diagnosis result + image to the user's Firestore history.
@@ -81,6 +85,12 @@ export const aiDiagnosisService = {
       };
 
       await setDoc(scanRef, scanData);
+      // Invalidate cache for user's scans
+      [...aiScansCache.keys()].forEach(key => {
+        if (key.startsWith(`${userId}:`)) {
+          aiScansCache.delete(key);
+        }
+      });
       return scanId;
     } catch (error) {
       logger.error('Error saving scan history for user:', userId, error);
@@ -99,6 +109,13 @@ export const aiDiagnosisService = {
   getUserScans: async (userId, pageSize = 6, lastDoc = null) => {
     try {
       if (!userId) return { items: [], lastDoc: null, hasMore: false };
+
+      const now = Date.now();
+      const cacheKey = `${userId}:${pageSize}:${lastDoc ? lastDoc.id : 'first'}`;
+      const cacheEntry = aiScansCache.get(cacheKey);
+      if (cacheEntry && now - cacheEntry.timestamp < CACHE_TTL) {
+        return cacheEntry.data;
+      }
 
       const scansRef = collection(db, COLLECTIONS.USERS, userId, 'aiScans');
 
@@ -120,11 +137,13 @@ export const aiDiagnosisService = {
         ...d.data()
       }));
 
-      return {
+      const result = {
         items,
         lastDoc: items.length > 0 ? docs[items.length - 1] : null,
         hasMore,
       };
+      aiScansCache.set(cacheKey, { data: result, timestamp: now });
+      return result;
     } catch (error) {
       logger.error('Error fetching user scan history:', error);
       return { items: [], lastDoc: null, hasMore: false };
@@ -142,6 +161,12 @@ export const aiDiagnosisService = {
     try {
       const scanRef = doc(db, COLLECTIONS.USERS, userId, 'aiScans', scanId);
       await deleteDoc(scanRef);
+      // Invalidate cache for user's scans
+      [...aiScansCache.keys()].forEach(key => {
+        if (key.startsWith(`${userId}:`)) {
+          aiScansCache.delete(key);
+        }
+      });
     } catch (error) {
       logger.error('Error deleting scan:', scanId, error);
       throw error;

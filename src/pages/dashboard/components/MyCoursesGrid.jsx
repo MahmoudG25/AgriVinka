@@ -175,4 +175,4 @@ const MyCoursesGrid = ({ courses, loading }) => {
   );
 };
 
-export default MyCoursesGrid;
+export default React.memo(MyCoursesGrid);

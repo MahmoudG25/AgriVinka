@@ -286,4 +286,4 @@ const AIHistorySection = ({ scans: initialScans = [], loading: dashboardLoading 
   );
 };
 
-export default AIHistorySection;
+export default React.memo(AIHistorySection);
