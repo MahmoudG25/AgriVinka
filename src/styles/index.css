@@ -7,18 +7,18 @@
      ═══════════════════════════════════════════════ */
 
   /* Primary — Deep Academic Green */
-  --color-primary: #1B5E20;
-  --color-primary-hover: #145218;
-  --color-primary-light: #E8F5E9;
+  --color-primary: #16A34A;
+  --color-primary-hover: #15803D;
+  --color-primary-light: #F0FDF4;
   --color-primary-foreground: #FFFFFF;
 
   /* Accent — Wheat Gold */
-  --color-accent: #D4A843;
-  --color-accent-hover: #C49A38;
-  --color-accent-foreground: #1A2E1A;
+  --color-accent: #D946EF;
+  --color-accent-hover: #C026D3;
+  --color-accent-foreground: #FFFFFF;
 
   /* Secondary — Fresh Tech Green */
-  --color-secondary: #4CAF50;
+  --color-secondary: #22C55E;
   --color-secondary-foreground: #FFFFFF;
 
   /* Neutral Text */
@@ -36,7 +36,7 @@
   /* Borders */
   --color-border: #E0EAE0;
   --color-border-light: #E0EAE0;
-  --color-ring: #1B5E20;
+  --color-ring: #16A34A;
 
   /* Semantic */
   --color-success: #2D8F5E;
@@ -103,12 +103,12 @@
   /* ═══════════════════════════════════════════════
      ELEVATION (Shadows)
      ═══════════════════════════════════════════════ */
-  --shadow-xs: 0 1px 2px rgba(27, 94, 32, 0.04);
-  --shadow-sm: 0 2px 8px rgba(27, 94, 32, 0.06);
-  --shadow-md: 0 4px 16px rgba(27, 94, 32, 0.08);
-  --shadow-lg: 0 8px 32px rgba(27, 94, 32, 0.10);
-  --shadow-xl: 0 16px 48px rgba(27, 94, 32, 0.12);
-  --shadow-glow: 0 0 30px rgba(76, 175, 80, 0.25);
+  --shadow-xs: 0 1px 2px rgba(22, 163, 74, 0.04);
+  --shadow-sm: 0 2px 8px rgba(22, 163, 74, 0.06);
+  --shadow-md: 0 4px 16px rgba(22, 163, 74, 0.08);
+  --shadow-lg: 0 8px 32px rgba(22, 163, 74, 0.10);
+  --shadow-xl: 0 16px 48px rgba(22, 163, 74, 0.12);
+  --shadow-glow: 0 0 30px rgba(217, 70, 239, 0.25);
 
   /* ═══════════════════════════════════════════════
      TRANSITIONS
@@ -237,7 +237,7 @@
   }
 
   .btn-cta {
-    @apply bg-accent text-heading-dark text-lg px-10 py-4 shadow-glow hover:shadow-xl hover:scale-105 hover:-translate-y-1 active:scale-95 animate-pulse-slow;
+    @apply bg-accent text-white text-lg px-10 py-4 shadow-glow hover:shadow-xl hover:scale-105 hover:-translate-y-1 active:scale-95 animate-pulse-slow rounded-full;
   }
 
   /* Legacy card classes */

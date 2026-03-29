@@ -156,15 +156,15 @@ const Navbar = ({ data = defaultNavbarData }) => {
         </div>
 
         {/* CENTER: Navigation Links (Desktop) */}
-        <div className="hidden lg:flex items-center justify-center flex-1 gap-2 text-[15px] font-medium text-gray-600 px-6">
-          <Link to="/" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الرئيسية</Link>
-          <Link to="/courses" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
-          <Link to="/learning-paths" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors">المسارات</Link>
-          <Link to="/practical-training" className="px-3 py-1.5 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap">التدريب العملي</Link>
-          <Link to="/ai/assistant" className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-all font-semibold whitespace-nowrap">
-            <span className="material-symbols-outlined text-sm">smart_toy</span>
+        <div className="hidden lg:flex items-center justify-center flex-1 gap-2 text-[15px] font-bold text-gray-600 px-6">
+          <Link to="/" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors">الرئيسية</Link>
+          <Link to="/courses" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
+          <Link to="/learning-paths" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors">المسارات</Link>
+          <Link to="/practical-training" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap">التدريب العملي</Link>
+          <button onClick={() => openAssistant()} className="cursor-pointer flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-xl transition-all font-bold whitespace-nowrap">
+            <span className="material-symbols-outlined text-lg">smart_toy</span>
             المساعد الذكي
-          </Link>
+          </button>
         </div>
 
         {/* LEFT SIDE: Notifications + User Auth */}
@@ -370,118 +370,130 @@ const Navbar = ({ data = defaultNavbarData }) => {
         </div>
       </div>
 
-      {/* ===== MOBILE MENU ===== */}
+      {/* ===== MOBILE MENU DRAWER ===== */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-[64px] md:top-[80px] z-40 bg-white border-t border-gray-100 h-[calc(100vh-64px)] overflow-y-auto">
-          <div className="px-6 py-6 pb-24 space-y-6">
-            {currentUser ? (
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <div className="w-12 h-12 rounded-full border border-gray-200 overflow-hidden bg-primary/5 flex items-center justify-center shrink-0">
-                  {avatarUrl
-                    ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
-                    : <span className="text-primary font-black text-xl">{avatarLetter}</span>}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold text-gray-900 truncate">{displayName}</p>
-                  <p className="text-xs text-gray-500 truncate mt-0.5">{currentUser.email}</p>
-                </div>
-                {/* Role Badge */}
-                <div className="shrink-0">
-                  {isAdmin ? (
-                    <span className="inline-block px-2 py-1 text-[10px] font-bold bg-purple-100 text-purple-700 rounded-lg">مدير</span>
-                  ) : (
-                    <span className="inline-block px-2 py-1 text-[10px] font-bold bg-green-100 text-primary rounded-lg">طالب</span>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="flex gap-3">
-                <Link to="/login" onClick={handleLinkClick} className="flex-1 text-center py-3 rounded-xl border border-gray-200 font-bold text-gray-700 hover:bg-gray-50 transition-colors">
-                  دخول
-                </Link>
-                <Link to="/register" onClick={handleLinkClick} className="flex-1 text-center py-3 rounded-xl bg-primary text-white font-bold hover:bg-accent hover:shadow-lg hover:shadow-primary/20 transition-all">
-                  حساب جديد
-                </Link>
-              </div>
-            )}
-
-            <div className="h-px bg-gray-100" />
-
-            {/* Mobile Nav Links */}
-            <div className="space-y-1">
-              <Link to="/" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">الرئيسية</Link>
-              <Link to="/courses" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
-              <Link to="/analyzer" onClick={handleLinkClick} className="flex items-center gap-2 px-4 py-3 mb-1 mt-1 rounded-xl text-[15px] font-bold bg-green-50 text-primary border border-green-100 hover:bg-green-100 transition-all">
-                <span className="material-symbols-outlined mb-0.5">psychiatry</span>
-                فاحص أمراض النبات الذكي
-              </Link>
-              <Link to="/learning-paths" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">المسارات التعليمية</Link>
-              <Link to="/practical-training" onClick={handleLinkClick} className="block px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">التدريب العملي</Link>
+        <div className="lg:hidden fixed inset-0 z-[9999] flex">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm" 
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+          
+          {/* Drawer */}
+          <div className="relative w-[85%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col transform transition-transform animate-slide-in-right overflow-y-auto z-10 ms-auto right-0">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <img src={siteLogo} alt="AgriVinka Logo" className="h-8 w-auto object-contain" />
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-red-500 transition-colors"
+              >
+                <FaTimes size={18} />
+              </button>
             </div>
 
-            {/* Mobile User specific Links */}
-            {currentUser && (
-              <>
-                <div className="h-px bg-gray-100" />
-                <div className="space-y-1">
-                  <p className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">حسابي</p>
-                  <Link to="/dashboard" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 transition-colors">
-                    <FaTachometerAlt className="text-gray-400" /> لوحة التحكم
+            <div className="px-5 py-6 pb-24 flex-1 space-y-6">
+              {currentUser ? (
+                <div className="flex items-center gap-4 py-3 bg-white">
+                  <div className="w-12 h-12 rounded-full border border-gray-200 overflow-hidden bg-primary/5 flex items-center justify-center shrink-0">
+                    {avatarUrl
+                      ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
+                      : <span className="text-primary font-black text-xl">{avatarLetter}</span>}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-bold text-gray-900 truncate">{displayName}</p>
+                    <p className="text-xs text-gray-500 truncate mt-0.5">{currentUser.email}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <Link to="/login" onClick={handleLinkClick} className="w-full text-center py-3.5 rounded-xl bg-gray-50 border border-gray-200 font-bold text-gray-700 hover:bg-gray-100 transition-colors">
+                    تسجيل الدخول
                   </Link>
-                  <Link to="/dashboard" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 transition-colors">
-                    <FaBook className="text-gray-400" /> مقرراتي والشهادات
+                  <Link to="/register" onClick={handleLinkClick} className="w-full text-center py-3.5 rounded-xl bg-primary text-white font-bold hover:bg-accent transition-all shadow-md">
+                    إنشاء حساب جديد
                   </Link>
                 </div>
-              </>
-            )}
+              )}
 
-            {isAdmin && (
-              <>
-                <div className="h-px bg-gray-100" />
-                <div className="space-y-1">
-                  <p className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">الإدارة</p>
-                  <Link to="/admin" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 transition-colors">
-                    <FaTachometerAlt className="text-gray-400" /> لوحة تحكم الإدارة
-                  </Link>
-                  <Link to="/admin/users" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 transition-colors">
-                    <FaUsersCog className="text-gray-400" /> إدارة النظام
-                  </Link>
-                </div>
-              </>
-            )}
+              <div className="h-px bg-gray-100" />
 
-            <div className="h-px bg-gray-100" />
-
-            {/* Mobile Order Search */}
-            {currentUser && (
-              <div className="relative bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                <label htmlFor="search-input-mobile" className="block text-sm font-bold text-gray-700 mb-2">تتبع طلباتك</label>
-                <div className="flex items-center bg-white rounded-xl border border-gray-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all">
-                  <input
-                    type="text"
-                    id="search-input-mobile"
-                    value={searchQuery}
-                    onChange={(e) => { setSearchQuery(e.target.value); setSearchError(''); }}
-                    onKeyDown={handleSearch}
-                    placeholder="رقم الطلب..."
-                    className="bg-transparent border-none outline-none text-sm w-full text-gray-800 placeholder-gray-400 px-4 py-3 font-mono"
-                    disabled={isSearching}
-                  />
-                  <button onClick={handleSearch} disabled={isSearching} className="text-gray-400 hover:text-primary px-4 transition-colors">
-                    {isSearching ? <span className="animate-spin block w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></span> : <FaSearch />}
-                  </button>
-                </div>
-                {searchError && <div className="mt-2 text-red-600 text-xs font-medium px-1">{searchError}</div>}
+              {/* Mobile Nav Links */}
+              <div className="space-y-1.5 flex flex-col">
+                <Link to="/" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">الرئيسية</Link>
+                <Link to="/courses" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">الكورسات</Link>
+                <Link to="/learning-paths" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">المسارات التعليمية</Link>
+                <Link to="/practical-training" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">التدريب العملي</Link>
+                <button onClick={() => { handleLinkClick(); openAssistant(); }} className="mt-2 w-full text-start flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all">
+                  <span className="material-symbols-outlined mb-0.5 text-lg">smart_toy</span>
+                  المساعد الذكي
+                </button>
               </div>
-            )}
 
-            {/* Mobile Logout */}
-            {currentUser && (
-              <button onClick={handleLogout} className="w-full mt-4 text-center bg-red-50 text-red-600 px-6 py-4 rounded-xl font-bold hover:bg-red-100 transition-colors text-[15px] flex items-center justify-center gap-2">
-                <FaSignOutAlt />
-                تسجيل الخروج
-              </button>
-            )}
+              {/* Mobile User specific Links */}
+              {currentUser && (
+                <>
+                  <div className="h-px bg-gray-100" />
+                  <div className="space-y-1.5 flex flex-col">
+                    <p className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">حسابي</p>
+                    <Link to="/dashboard" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 transition-colors">
+                      <FaTachometerAlt className="text-gray-400" /> لوحة التحكم
+                    </Link>
+                    <Link to="/dashboard" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 transition-colors">
+                      <FaBook className="text-gray-400" /> كورساتي والشهادات
+                    </Link>
+                  </div>
+                </>
+              )}
+
+              {isAdmin && (
+                <>
+                  <div className="h-px bg-gray-100" />
+                  <div className="space-y-1.5 flex flex-col">
+                    <p className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">الإدارة</p>
+                    <Link to="/admin" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                      <FaTachometerAlt className="text-gray-400" /> لوحة تحكم الإدارة
+                    </Link>
+                    <Link to="/admin/users" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                      <FaUsersCog className="text-gray-400" /> إدارة النظام
+                    </Link>
+                  </div>
+                </>
+              )}
+
+              <div className="h-px bg-gray-100" />
+
+              {/* Mobile Order Search */}
+              {currentUser && (
+                <div className="relative bg-gray-50 p-4 rounded-2xl border border-gray-100 flex flex-col">
+                  <label htmlFor="search-input-mobile" className="block text-sm font-bold text-gray-700 mb-2">تتبع طلباتك</label>
+                  <div className="flex items-center bg-white rounded-xl border border-gray-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all overflow-hidden">
+                    <input
+                      type="text"
+                      id="search-input-mobile"
+                      value={searchQuery}
+                      onChange={(e) => { setSearchQuery(e.target.value); setSearchError(''); }}
+                      onKeyDown={handleSearch}
+                      placeholder="رقم الطلب..."
+                      className="bg-transparent border-none outline-none text-sm w-full text-gray-800 placeholder-gray-400 px-4 py-3 font-mono"
+                      disabled={isSearching}
+                    />
+                    <button onClick={handleSearch} disabled={isSearching} className="text-gray-400 hover:text-primary px-4 py-3 bg-gray-50 border-r border-gray-100 transition-colors">
+                      {isSearching ? <span className="animate-spin block w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></span> : <FaSearch />}
+                    </button>
+                  </div>
+                  {searchError && <div className="mt-2 text-red-600 text-xs font-medium px-1">{searchError}</div>}
+                </div>
+              )}
+
+              {/* Mobile Logout */}
+              {currentUser && (
+                <button onClick={handleLogout} className="w-full mt-6 text-center bg-red-50 text-red-600 px-6 py-4 rounded-xl font-bold hover:bg-red-100 transition-colors text-[15px] flex items-center justify-center gap-2">
+                  <FaSignOutAlt />
+                  تسجيل الخروج
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

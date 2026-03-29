@@ -5,7 +5,6 @@ import { logger } from '../utils/logger';
 import Hero from '../components/home/Hero';
 import FeaturedCourses from '../components/home/FeaturedCourses';
 import PlatformFeatures from '../components/home/PlatformFeatures';
-import AnalyzerPreview from '../components/home/AnalyzerPreview';
 import Tracks from '../components/home/Tracks';
 import Testimonials from '../components/home/Testimonials';
 import Pricing from '../components/home/Pricing';
@@ -57,7 +56,6 @@ const Home = () => {
         <Hero data={homeData.hero} />
         <FeaturedCourses data={homeData.featuredCourses} />
         <PlatformFeatures data={homeData.platformFeatures} />
-        <AnalyzerPreview />
         <Tracks data={homeData.tracks} />
         <Testimonials testimonials={homeData.testimonials} />
         <Pricing data={homeData.pricing} />

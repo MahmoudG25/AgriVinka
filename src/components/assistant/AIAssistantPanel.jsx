@@ -350,13 +350,13 @@ const AIAssistantPanel = ({ initialSessionId = null, onClose, conversationId = n
               return (
                 <div key={msg.id} className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
                   {isUser ? (
-                    <div className="max-w-[80%] rounded-3xl bg-[#f4f4f4] px-5 py-4 text-gray-800 border border-gray-100 shadow-sm relative group overflow-hidden">
+                    <div className="max-w-[80%] rounded-3xl bg-primary px-5 py-4 text-white shadow-sm relative group overflow-hidden">
                       {msg.imageUrl && (
-                        <div className="mb-3 relative w-full sm:w-[280px] rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                        <div className="mb-3 relative w-full sm:w-[280px] rounded-xl overflow-hidden shadow-sm border border-white/20">
                           <img src={msg.imageUrl} alt="مرفق المستخدم" className="w-full h-auto object-cover max-h-[300px]" />
                         </div>
                       )}
-                      {msg.text && <p className="whitespace-pre-wrap text-[15.5px] leading-relaxed font-medium">{msg.text}</p>}
+                      {msg.text && <p className="whitespace-pre-wrap text-[15.5px] leading-relaxed font-medium text-white">{msg.text}</p>}
                     </div>
                   ) : (
                     <div className="flex w-full max-w-[85%] items-start gap-4 group">
@@ -364,7 +364,7 @@ const AIAssistantPanel = ({ initialSessionId = null, onClose, conversationId = n
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 text-primary mt-1">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
                       </div>
-                      <div className="min-w-0 flex-1 text-gray-800">
+                      <div className="min-w-0 flex-1 text-gray-800 rounded-3xl bg-[#f4f4f4] px-5 py-4 border border-gray-100 shadow-sm">
                         <p className="whitespace-pre-wrap text-[15.5px] leading-relaxed">{msg.text}</p>
                         
                         {/* AI Message Action Menu (Read Aloud) */}
@@ -516,7 +516,7 @@ const AIAssistantPanel = ({ initialSessionId = null, onClose, conversationId = n
                 disabled={!canSend}
                 className={`flex h-[34px] w-[34px] items-center justify-center rounded-full transition-colors ${
                   canSend
-                    ? 'bg-primary text-white hover:bg-primary-hover shadow-sm'
+                    ? 'bg-accent text-white hover:bg-accent-hover shadow-sm'
                     : 'bg-gray-200 text-white cursor-not-allowed'
                 }`}
               >

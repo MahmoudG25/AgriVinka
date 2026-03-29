@@ -3,32 +3,25 @@ import { motion } from 'framer-motion';
 
 const defaultFeatures = [
   {
+    icon: 'smart_toy',
+    title: 'المساعد الذكي للزراعة',
+    description: 'تحدث مع مساعدنا الذكي المدعوم بالذكاء الاصطناعي لتحليل الأمراض، والحصول على إرشادات زراعية فورية ودقيقة.',
+    color: 'text-primary',
+    bg: 'bg-primary-light'
+  },
+  {
     icon: 'school',
-    title: 'خبراء زراعيين',
-    description: 'تعلم من نخبة المهندسين والخبراء في مختلف المجالات الزراعية بخبرات عملية ممتدة.',
+    title: 'كورسات زراعية متخصصة',
+    description: 'تعلم من نخبة المهندسين والخبراء في مختلف المجالات الزراعية عبر مسارات تعليمية وتدريب عملي.',
+    color: 'text-accent',
+    bg: 'bg-purple-50'
+  },
+  {
+    icon: 'auto_awesome',
+    title: 'توصيات ذكية مخصصة',
+    description: 'احصل على توصيات ذكية وخطط زراعية مخصصة بناءً على احتياجات محصولك وبيانات منطقتك.',
     color: 'text-blue-600',
     bg: 'bg-blue-50'
-  },
-  {
-    icon: 'psychiatry',
-    title: 'الذكاء الاصطناعي',
-    description: 'استخدم أداة فاحص النباتات الذكية لاكتشاف الأمراض وعلاجها بسرعة ودقة.',
-    color: 'text-green-600',
-    bg: 'bg-green-50'
-  },
-  {
-    icon: 'eco',
-    title: 'تدريب عملي ميداني',
-    description: 'لا نكتفي بالنظري! نوفر فرص تدريب عملي في مزارع حقيقية لتطبيق ما تعلمته.',
-    color: 'text-orange-600',
-    bg: 'bg-orange-50'
-  },
-  {
-    icon: 'workspace_premium',
-    title: 'شهادات معتمدة',
-    description: 'احصل على شهادات إتمام موثقة تعزز سيرتك الذاتية وتفتح لك أبواب العمل.',
-    color: 'text-purple-600',
-    bg: 'bg-purple-50'
   }
 ];
 
@@ -41,18 +34,18 @@ const PlatformFeatures = ({ data }) => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-sm mb-4 border border-primary/20">
-            {data?.badge || 'لماذا تختار منصتنا؟'}
+            {data?.badge || 'المميزات الأساسية'}
           </div>
           <h2 className="text-3xl md:text-5xl font-black text-heading-dark mb-6 leading-tight">
-            {data?.title || 'طريقك الأمثل لاحتراف المجال الزراعي'}
+            {data?.title || 'ماذا يقدم AgriVinka؟'}
           </h2>
           <p className="text-lg text-body-text/80 font-medium leading-relaxed">
-            {data?.subtitle || 'نقدم لك بيئة تعليمية متكاملة تجمع بين المعرفة الأكاديمية والممارسة العملية الحقيقية باستخدام أحدث التقنيات.'}
+            {data?.subtitle || 'منصة زراعية متكاملة توفر لك كل ما تحتاجه للنجاح، من الاستشارات المدعومة بالذكاء الاصطناعي إلى الكورسات التعليمية المتخصصة.'}
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 xl:gap-8 justify-center">
           {features.map((feature, idx) => (
             <motion.div
               key={idx}

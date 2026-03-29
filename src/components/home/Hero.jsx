@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import VideoModal from '../common/VideoModal';
 
 const DEFAULT_IMAGES = [
@@ -34,9 +34,16 @@ const Hero = ({ data }) => {
   const videoUrl = data?.videoUrl || '';
 
   const allImages = (data?.images?.length > 0) ? data.images : DEFAULT_IMAGES;
-  const sliderImages = useMemo(() => {
-    const mid = Math.ceil(allImages.length / 2);
-    return [allImages.slice(0, mid), allImages.slice(mid)];
+
+  // Active image index for crossfading
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!allImages || allImages.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+    }, 4000); // 4 seconds per image
+    return () => clearInterval(interval);
   }, [allImages]);
 
   return (
@@ -156,57 +163,47 @@ const Hero = ({ data }) => {
 
         </motion.div>
 
-        {/* ─── Left: Animated Slider / Mobile Image ─── */}
+        {/* ─── Left: Image Area (Crossfade) ─── */}
         <motion.div
-          className="relative order-1 lg:order-2 w-full lg:h-[700px] flex justify-center lg:block"
+          className="relative order-1 lg:order-2 w-full lg:h-[550px] flex justify-center items-center"
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
+          <div className="relative w-[90%] sm:w-[80%] lg:w-full max-w-[550px] aspect-square rounded-[2rem] overflow-hidden shadow-2xl ring-1 ring-border shadow-primary/10 bg-white group">
 
-          {/* Mobile Static Image */}
-          <div className="block lg:hidden w-[88%] sm:w-[75%] mx-auto rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/5 relative">
-            <img src={allImages[0]} alt="Hero" className="w-full h-auto" loading="eager" fetchPriority="high" />
-            <div className="absolute inset-0 bg-gradient-to-t from-heading-dark/50 via-transparent to-transparent" />
-            {/* Floating badge on mobile image */}
-            <div className="absolute bottom-4 right-4 left-4 flex justify-end">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-heading-dark shadow-lg">
-                <span className="material-symbols-outlined text-sm text-primary">verified</span>
-                محتوى متخصص
+            {/* Framer Motion Crossfade */}
+            <AnimatePresence mode="popLayout">
+              <motion.img
+                key={currentImageIndex}
+                src={allImages[currentImageIndex]}
+                alt="AgriVinka Hero"
+                className="absolute inset-0 w-full h-full object-cover"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.2, ease: "easeInOut" }}
+                loading="eager"
+                fetchPriority="high"
+              />
+            </AnimatePresence>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-heading-dark/60 via-transparent to-transparent opacity-80" />
+
+            {/* Floating badge */}
+            <div className="absolute bottom-6 right-6 left-6 flex justify-end">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/90 backdrop-blur-md text-sm font-bold text-heading-dark shadow-xl border border-white/20">
+                <span className="material-symbols-outlined text-primary">verified</span>
+                بيئة تعليمية متكاملة
               </span>
             </div>
-          </div>
 
-          {/* Desktop Slider */}
-          <div className="hidden lg:block relative h-full w-full overflow-hidden mask-gradient-b">
-            <div className="grid grid-cols-2 gap-5 h-full w-full rotate-[-3deg] scale-110 origin-center">
-
-              {/* Col 1: Up */}
-              <div className="animate-scroll-up flex flex-col gap-5">
-                {[...sliderImages[0], ...sliderImages[0], ...sliderImages[0]].map((src, i) => (
-                  <div key={`c1-${i}`} className="group w-full relative rounded-2xl overflow-hidden shadow-md ring-1 ring-black/5 hover:shadow-xl transition-shadow duration-500">
-                    <img src={src} className="w-full h-auto group-hover:scale-[1.03] transition-transform duration-700 ease-out" alt="Student" loading="eager" decoding="async" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                ))}
-              </div>
-
-              {/* Col 2: Down */}
-              <div className="animate-scroll-down flex flex-col gap-5 -mt-32">
-                {[...sliderImages[1], ...sliderImages[1], ...sliderImages[1]].map((src, i) => (
-                  <div key={`c2-${i}`} className="group w-full relative rounded-2xl overflow-hidden shadow-md ring-1 ring-black/5 hover:shadow-xl transition-shadow duration-500">
-                    <img src={src} className="w-full h-auto group-hover:scale-[1.03] transition-transform duration-700 ease-out" alt="Student" loading="eager" decoding="async" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                ))}
-              </div>
-
+            {/* Decorative Dots */}
+            <div className="absolute top-4 left-4 grid grid-cols-2 gap-1.5 opacity-50">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full bg-white" />
+              ))}
             </div>
-
-            {/* Bottom fade */}
-            <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-warm-light via-warm-light/80 to-transparent z-20 pointer-events-none" />
-            {/* Top subtle fade */}
-            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-warm-light/60 to-transparent z-20 pointer-events-none" />
           </div>
         </motion.div>
 
