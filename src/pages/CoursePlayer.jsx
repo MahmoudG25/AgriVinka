@@ -11,6 +11,9 @@ import { FaChevronRight, FaChevronLeft, FaPlayCircle, FaCheckCircle, FaLock, FaC
 import { getOrCreateCertificate } from '../features/certificates/services/certificateService.js';
 import { auth } from '../services/firebase';
 import { signOut } from 'firebase/auth';
+import siteLogo from '../assets/Gemini_Generated_Image_n78kqfn78kqfn78k (1).png';
+import { CourseQnA } from '../components/courses/CourseQnA';
+import { CourseNotes } from '../components/courses/CourseNotes';
 
 const CoursePlayer = () => {
   const { courseId } = useParams();
@@ -234,10 +237,7 @@ const CoursePlayer = () => {
           {/* Right: Logo + Links */}
           <div className="flex items-center gap-6">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-xl">eco</span>
-              </div>
-              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wide hidden sm:block">AgriVinka</span>
+              <img src={siteLogo} alt="AgriVinka Logo" className="h-8 sm:h-10 w-auto object-contain group-hover:scale-105 transition-transform" />
             </Link>
             <div className="hidden md:flex items-center gap-4 text-gray-600 font-bold border-r border-gray-200 pr-6 mr-2 h-8">
               <Link to="/dashboard" className="hover:text-primary transition-colors">دوراتي</Link>
@@ -512,71 +512,80 @@ const CoursePlayer = () => {
               {activeTab === 'description' && (
                 <div className="animate-fade-in">
                   <h3 className="text-xl font-bold text-gray-900 mb-5">حول هذا الدرس</h3>
-                  <div className="text-gray-600 leading-[1.8] text-[15px] max-w-4xl font-medium">
+                  <div className="text-gray-600 leading-[1.8] text-[15px] max-w-4xl font-medium whitespace-pre-wrap">
                     {activeLesson?.description ? (
                       <p>{activeLesson.description}</p>
                     ) : (
-                      <p>في هذا الدرس، سنستكشف المكونات الثلاثة الرئيسية لأي محلول مغذي ناجح في الزراعة المائية. سنتناول كيفية خلط العناصر الكبرى والصغرى، وأهمية الحفاظ على استقرار درجة الحرارة لضمان الامتصاص الأمثل للجذور.</p>
+                      <p className="text-gray-400 italic">لا يوجد وصف إضافي لهذا الدرس.</p>
                     )}
                   </div>
 
-                  {/* Mock Resources Cards in Description as requested by UI */}
-                  <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="flex items-center justify-between border border-gray-200 rounded-3xl p-6 bg-white shadow-sm cursor-pointer hover:border-primary/40 hover:shadow-md transition-all group">
-                      <div className="flex items-center gap-5">
-                        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center">
-                          <span className="material-symbols-outlined text-[28px] text-[#1A4F3E]">table</span>
-                        </div>
-                        <div>
-                          <p className="font-bold text-[15px] text-gray-900">جدول قياسات EC لكل نبات</p>
-                          <p className="text-[12px] font-bold text-gray-400 mt-1">PDF • 1.1 MB</p>
-                        </div>
-                      </div>
-                      <button className="w-10 h-10 rounded-full text-[#1A4F3E] group-hover:bg-[#1A4F3E]/10 flex items-center justify-center transition-colors">
-                        <FaDownload size={14} />
-                      </button>
+                  {/* Mock Resources Cards in Description as requested by UI - ONLY if resources exist */}
+                  {(activeLesson?.resources?.length > 0) && (
+                    <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {activeLesson.resources.slice(0, 2).map((res, i) => (
+                        <a key={res.id || i} href={res.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-gray-200 rounded-3xl p-6 bg-white shadow-sm cursor-pointer hover:border-primary/40 hover:shadow-md transition-all group">
+                          <div className="flex items-center gap-5">
+                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center">
+                              <span className="material-symbols-outlined text-[28px] text-[#1A4F3E]">
+                                {res.type === 'pdf' ? 'description' : res.type === 'image' ? 'image' : 'link'}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-bold text-[15px] text-gray-900">{res.title}</p>
+                              <p className="text-[12px] font-bold text-gray-400 mt-1">{res.type === 'link' ? 'رابط' : 'ملف'} • {res.size || 'N/A'}</p>
+                            </div>
+                          </div>
+                          <button className="w-10 h-10 rounded-full text-[#1A4F3E] group-hover:bg-[#1A4F3E]/10 flex items-center justify-center transition-colors shadow-sm bg-gray-50">
+                            {res.type === 'link' ? <span className="material-symbols-outlined text-sm">open_in_new</span> : <FaDownload size={14} />}
+                          </button>
+                        </a>
+                      ))}
                     </div>
-
-                    <div className="flex items-center justify-between border border-gray-200 rounded-3xl p-6 bg-white shadow-sm cursor-pointer hover:border-primary/40 hover:shadow-md transition-all group">
-                      <div className="flex items-center gap-5">
-                        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center">
-                          <span className="material-symbols-outlined text-[28px] text-[#1A4F3E]">description</span>
-                        </div>
-                        <div>
-                          <p className="font-bold text-[15px] text-gray-900">دليل خلط المحاليل المغذية</p>
-                          <p className="text-[12px] font-bold text-gray-400 mt-1">PDF • 2.4 MB</p>
-                        </div>
-                      </div>
-                      <button className="w-10 h-10 rounded-full text-[#1A4F3E] group-hover:bg-[#1A4F3E]/10 flex items-center justify-center transition-colors">
-                        <FaDownload size={14} />
-                      </button>
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
 
               {activeTab === 'resources' && (
-                <div className="animate-fade-in flex flex-col items-center justify-center py-16 text-gray-400 bg-white border border-gray-100 rounded-3xl shadow-sm">
-                  <FaBookOpen size={48} className="mb-5 opacity-40" />
-                  <p className="text-xl font-bold text-gray-800">المصادر الإضافية</p>
-                  <p className="text-[15px] mt-2 text-center max-w-md font-medium">جميع الملفات والأدلة المرفقة مع هذا الدرس ستضاف هنا لتتمكن من تحميلها لاحقاً.</p>
+                <div className="animate-fade-in">
+                  <h3 className="text-xl font-bold text-gray-900 mb-5">جميع المصادر والملحقات</h3>
+                  {(activeLesson?.resources?.length > 0) ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                      {activeLesson.resources.map((res, i) => (
+                        <a key={res.id || i} href={res.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-gray-200 rounded-3xl p-6 bg-white shadow-sm cursor-pointer hover:border-primary/40 hover:shadow-md transition-all group">
+                          <div className="flex items-center gap-5">
+                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center">
+                              <span className="material-symbols-outlined text-[28px] text-[#1A4F3E]">
+                                {res.type === 'pdf' ? 'description' : res.type === 'image' ? 'image' : 'link'}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-bold text-[15px] text-gray-900">{res.title}</p>
+                              <p className="text-[12px] font-bold text-gray-400 mt-1">{res.type === 'link' ? 'رابط خارجي' : 'ملف للتحميل'} • {res.size || 'N/A'}</p>
+                            </div>
+                          </div>
+                          <button className="w-10 h-10 rounded-full text-[#1A4F3E] group-hover:bg-[#1A4F3E]/10 flex items-center justify-center transition-colors shadow-sm bg-gray-50">
+                            {res.type === 'link' ? <span className="material-symbols-outlined text-sm">open_in_new</span> : <FaDownload size={14} />}
+                          </button>
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-16 text-gray-400 bg-white border border-gray-100 rounded-3xl shadow-sm">
+                      <FaBookOpen size={48} className="mb-5 opacity-40" />
+                      <p className="text-xl font-bold text-gray-800">لا توجد مصادر</p>
+                      <p className="text-[15px] mt-2 text-center max-w-md font-medium">لم يتم إرفاق أي ملفات إضافية لهذا الدرس.</p>
+                    </div>
+                  )}
                 </div>
               )}
 
               {activeTab === 'qna' && (
-                <div className="animate-fade-in flex flex-col items-center justify-center py-16 text-gray-400 bg-white border border-gray-100 rounded-3xl shadow-sm">
-                  <span className="material-symbols-outlined text-[56px] mb-5 opacity-40">forum</span>
-                  <p className="text-xl font-bold text-gray-800">الأسئلة والأجوبة</p>
-                  <p className="text-[15px] mt-2 text-center max-w-md font-medium">هل لديك سؤال حول هذا الدرس؟ يمكنك إضافته هنا وسيقوم المدرب أو زملائك بالإجابة عليه.</p>
-                </div>
+                <CourseQnA lessonId={activeLesson?.id || activeLesson?.title} />
               )}
 
               {activeTab === 'notes' && (
-                <div className="animate-fade-in flex flex-col items-center justify-center py-16 text-gray-400 bg-white border border-gray-100 rounded-3xl shadow-sm">
-                  <span className="material-symbols-outlined text-[56px] mb-5 opacity-40">edit_note</span>
-                  <p className="text-xl font-bold text-gray-800">ملاحظاتي</p>
-                  <p className="text-[15px] mt-2 text-center max-w-md font-medium">قم بتدوين ملاحظاتك الخاصة أثناء مشاهدة الفيديو. هذه الملاحظات خاصة بك فقط.</p>
-                </div>
+                <CourseNotes lessonId={activeLesson?.id || activeLesson?.title} />
               )}
             </div>
 

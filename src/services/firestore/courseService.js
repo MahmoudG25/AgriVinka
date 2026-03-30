@@ -365,6 +365,8 @@ export const courseService = {
               free_preview: l.free_preview || false,
               video_url: l.video_url || l.videoUrl || l.url || '',
               videoUrl: l.video_url || l.videoUrl || l.url || '', // Store both for backward compatibility
+              description: l.description || '',
+              resources: l.resources || [],
               order: lIdx
             }))
           };

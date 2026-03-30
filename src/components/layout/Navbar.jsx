@@ -161,22 +161,22 @@ const Navbar = ({ data = defaultNavbarData }) => {
           <Link to="/courses" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors">الكورسات</Link>
           <Link to="/learning-paths" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors">المسارات</Link>
           <Link to="/practical-training" className="px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-primary transition-colors whitespace-nowrap">التدريب العملي</Link>
-          <button onClick={() => openAssistant()} className="cursor-pointer flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-xl transition-all font-bold whitespace-nowrap">
+          <Link to="/ai/assistant" className="cursor-pointer flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-xl transition-all font-bold whitespace-nowrap">
             <span className="material-symbols-outlined text-lg">smart_toy</span>
             المساعد الذكي
-          </button>
+          </Link>
         </div>
 
         {/* LEFT SIDE: Notifications + User Auth */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
 
           {/* Notifications Icon (Mock) */}
-          {currentUser && (
+          {/* {currentUser && (
             <button className="hidden sm:flex relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-colors focus:outline-none">
               <FaBell size={18} />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
-          )}
+          )} */}
 
           {/* === AUTH SECTION === */}
           {currentUser ? (
@@ -184,12 +184,12 @@ const Navbar = ({ data = defaultNavbarData }) => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-2.5 group focus:outline-none p-1 rounded-full hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2.5 group focus:outline-none p-1 rounded-full hover:bg-gray-50 transition-colors cursor-pointer"
                 aria-label="قائمة الملف الشخصي"
                 aria-expanded={profileDropdownOpen}
               >
                 {/* Avatar */}
-                <div className="w-9 h-9 rounded-full border border-gray-200 overflow-hidden bg-primary/10 flex items-center justify-center shadow-sm group-hover:border-primary/50 transition-colors">
+                <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden bg-primary/10 flex items-center justify-center shadow-sm group-hover:border-primary/50 transition-colors">
                   {avatarUrl
                     ? <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
                     : <span className="text-primary font-bold text-sm">{avatarLetter}</span>}
@@ -374,17 +374,17 @@ const Navbar = ({ data = defaultNavbarData }) => {
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-[9999] flex">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm" 
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           ></div>
-          
+
           {/* Drawer */}
           <div className="relative w-[85%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col transform transition-transform animate-slide-in-right overflow-y-auto z-10 ms-auto right-0">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100">
               <img src={siteLogo} alt="AgriVinka Logo" className="h-8 w-auto object-contain" />
-              <button 
+              <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-red-500 transition-colors"
               >
@@ -424,10 +424,10 @@ const Navbar = ({ data = defaultNavbarData }) => {
                 <Link to="/courses" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">الكورسات</Link>
                 <Link to="/learning-paths" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">المسارات التعليمية</Link>
                 <Link to="/practical-training" onClick={handleLinkClick} className="px-4 py-3 rounded-xl text-[15px] font-bold text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-3">التدريب العملي</Link>
-                <button onClick={() => { handleLinkClick(); openAssistant(); }} className="mt-2 w-full text-start flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all">
+                <Link to="/ai/assistant" onClick={handleLinkClick} className="mt-2 w-full text-start flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all">
                   <span className="material-symbols-outlined mb-0.5 text-lg">smart_toy</span>
                   المساعد الذكي
-                </button>
+                </Link>
               </div>
 
               {/* Mobile User specific Links */}

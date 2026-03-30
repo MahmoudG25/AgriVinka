@@ -6,19 +6,19 @@
      COLOR SYSTEM — AgriTech Modern Palette
      ═══════════════════════════════════════════════ */
 
-  /* Primary — Deep Academic Green */
-  --color-primary: #16A34A;
-  --color-primary-hover: #15803D;
-  --color-primary-light: #F0FDF4;
+  /* Primary — Deep Academic Green (Matches Logo "Agri") */
+  --color-primary: #127A45;
+  --color-primary-hover: #0E5C34;
+  --color-primary-light: #EAF4EE;
   --color-primary-foreground: #FFFFFF;
 
-  /* Accent — Wheat Gold */
-  --color-accent: #D946EF;
-  --color-accent-hover: #C026D3;
+  /* Accent — Magenta/Pink (Matches Logo "Vinka" / Flower) */
+  --color-accent: #C22F6E;
+  --color-accent-hover: #A3255C;
   --color-accent-foreground: #FFFFFF;
 
   /* Secondary — Fresh Tech Green */
-  --color-secondary: #22C55E;
+  --color-secondary: #1F9C5A;
   --color-secondary-foreground: #FFFFFF;
 
   /* Neutral Text */
@@ -36,7 +36,7 @@
   /* Borders */
   --color-border: #E0EAE0;
   --color-border-light: #E0EAE0;
-  --color-ring: #16A34A;
+  --color-ring: #127A45;
 
   /* Semantic */
   --color-success: #2D8F5E;
@@ -103,12 +103,12 @@
   /* ═══════════════════════════════════════════════
      ELEVATION (Shadows)
      ═══════════════════════════════════════════════ */
-  --shadow-xs: 0 1px 2px rgba(22, 163, 74, 0.04);
-  --shadow-sm: 0 2px 8px rgba(22, 163, 74, 0.06);
-  --shadow-md: 0 4px 16px rgba(22, 163, 74, 0.08);
-  --shadow-lg: 0 8px 32px rgba(22, 163, 74, 0.10);
-  --shadow-xl: 0 16px 48px rgba(22, 163, 74, 0.12);
-  --shadow-glow: 0 0 30px rgba(217, 70, 239, 0.25);
+  --shadow-xs: 0 1px 2px rgba(18, 122, 69, 0.04);
+  --shadow-sm: 0 2px 8px rgba(18, 122, 69, 0.06);
+  --shadow-md: 0 4px 16px rgba(18, 122, 69, 0.08);
+  --shadow-lg: 0 8px 32px rgba(18, 122, 69, 0.10);
+  --shadow-xl: 0 16px 48px rgba(18, 122, 69, 0.12);
+  --shadow-glow: 0 0 30px rgba(194, 47, 110, 0.25);
 
   /* ═══════════════════════════════════════════════
      TRANSITIONS

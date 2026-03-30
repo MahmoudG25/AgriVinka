@@ -103,7 +103,7 @@ const CourseEditPage = () => {
         if (sec.id === secId) {
           return {
             ...sec,
-            lessons: [...(sec.lessons || []), { id: uuidv4(), title: '', duration: '0:00', free_preview: false, video_url: '' }]
+            lessons: [...(sec.lessons || []), { id: uuidv4(), title: '', duration: '0:00', free_preview: false, video_url: '', description: '', resources: [] }]
           };
         }
         return sec;
@@ -153,6 +153,60 @@ const CourseEditPage = () => {
             [newLessons[index], newLessons[index + 1]] = [newLessons[index + 1], newLessons[index]];
           }
           return { ...sec, lessons: newLessons };
+        }
+        return sec;
+      })
+    }));
+  };
+
+  const addResource = (secId, lessonId) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.map(sec => {
+        if (sec.id === secId) {
+          return {
+            ...sec,
+            lessons: sec.lessons.map(lesson => lesson.id === lessonId ? {
+              ...lesson,
+              resources: [...(lesson.resources || []), { id: uuidv4(), title: '', type: 'link', url: '', size: '' }]
+            } : lesson)
+          };
+        }
+        return sec;
+      })
+    }));
+  };
+
+  const updateResource = (secId, lessonId, resId, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.map(sec => {
+        if (sec.id === secId) {
+          return {
+            ...sec,
+            lessons: sec.lessons.map(lesson => lesson.id === lessonId ? {
+              ...lesson,
+              resources: (lesson.resources || []).map(res => res.id === resId ? { ...res, [field]: value } : res)
+            } : lesson)
+          };
+        }
+        return sec;
+      })
+    }));
+  };
+
+  const deleteResource = (secId, lessonId, resId) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.map(sec => {
+        if (sec.id === secId) {
+          return {
+            ...sec,
+            lessons: sec.lessons.map(lesson => lesson.id === lessonId ? {
+              ...lesson,
+              resources: (lesson.resources || []).filter(res => res.id !== resId)
+            } : lesson)
+          };
         }
         return sec;
       })
@@ -303,6 +357,16 @@ const CourseEditPage = () => {
                               />
                             </div>
 
+                            <div className="w-full mt-2">
+                              <textarea
+                                value={lesson.description || ''}
+                                onChange={(e) => updateLesson(section.id, lesson.id, 'description', e.target.value)}
+                                className="w-full text-sm bg-white border border-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:border-primary shadow-inner custom-scrollbar"
+                                placeholder="اكتب وصفاً إضافياً أو ملاحظات للدرس..."
+                                rows={3}
+                              />
+                            </div>
+
                             <div className="bg-white border border-gray-100 p-3 rounded-lg shadow-inner mt-3">
                               <MediaUploader
                                 label="الدروس المشروحة (رابط فيديو أو رفع مباشر)"
@@ -314,10 +378,69 @@ const CourseEditPage = () => {
                               />
                             </div>
 
-                            <div className="flex items-center gap-2">
-                              <input type="checkbox" id={`free-${lesson.id}`} checked={lesson.free_preview || false} onChange={e => updateLesson(section.id, lesson.id, 'free_preview', e.target.checked)} className="rounded text-primary focus:ring-primary h-4 w-4 border-gray-300" />
-                              <label htmlFor={`free-${lesson.id}`} className="text-xs font-bold text-gray-600 cursor-pointer">معاينة مجانية (يمكن لغير المسجلين المشاهدة)</label>
-                            </div>
+                              <div className="flex items-center gap-2 mt-3">
+                                <input type="checkbox" id={`free-${lesson.id}`} checked={lesson.free_preview || false} onChange={e => updateLesson(section.id, lesson.id, 'free_preview', e.target.checked)} className="rounded text-primary focus:ring-primary h-4 w-4 border-gray-300" />
+                                <label htmlFor={`free-${lesson.id}`} className="text-xs font-bold text-gray-600 cursor-pointer">معاينة مجانية (يمكن لغير المسجلين المشاهدة)</label>
+                              </div>
+
+                              {/* Resources / Attachments */}
+                              <div className="mt-4 border border-gray-100 rounded-lg bg-gray-50/50 p-3">
+                                <div className="flex items-center justify-between mb-3">
+                                  <h4 className="text-xs font-bold text-gray-700">المصادر والمرفقات ({lesson.resources?.length || 0})</h4>
+                                  <button type="button" onClick={() => addResource(section.id, lesson.id)} className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline">
+                                    <MdAdd size={14} /> إضافة مصدر
+                                  </button>
+                                </div>
+                                <div className="space-y-3">
+                                  {(lesson.resources || []).map((res, rIdx) => (
+                                    <div key={res.id} className="bg-white border border-gray-200 rounded-lg p-3 relative flex flex-col gap-2">
+                                      <button type="button" onClick={() => deleteResource(section.id, lesson.id, res.id)} className="absolute left-2 top-2 text-gray-400 hover:text-red-500">
+                                        <MdDelete size={16} />
+                                      </button>
+                                      
+                                      <div className="flex gap-2 w-full pr-8">
+                                        <select
+                                          value={res.type}
+                                          onChange={(e) => updateResource(section.id, lesson.id, res.id, 'type', e.target.value)}
+                                          className="text-xs border border-gray-200 rounded-md p-1.5 outline-none focus:border-primary bg-gray-50 shrink-0"
+                                        >
+                                          <option value="link">رابط</option>
+                                          <option value="pdf">ملف (PDF/صورة)</option>
+                                        </select>
+                                        <input
+                                          type="text"
+                                          placeholder="عنوان المصدر (مثال: ملزمة الدرس)"
+                                          value={res.title}
+                                          onChange={(e) => updateResource(section.id, lesson.id, res.id, 'title', e.target.value)}
+                                          className="flex-1 text-xs border border-gray-200 rounded-md p-1.5 outline-none focus:border-primary"
+                                        />
+                                      </div>
+                                      
+                                      <div className="flex gap-2 w-full">
+                                        <input
+                                          type="text"
+                                          placeholder={res.type === 'link' ? "الرابط (URL)" : "رابط الملف (قم برفعه من خارج الإطار أو ضع الرابط هنا)"}
+                                          value={res.url}
+                                          onChange={(e) => updateResource(section.id, lesson.id, res.id, 'url', e.target.value)}
+                                          className="flex-3 text-xs border border-gray-200 rounded-md p-1.5 outline-none focus:border-primary dir-ltr"
+                                          style={{ flex: 3 }}
+                                        />
+                                        <input
+                                          type="text"
+                                          placeholder="الحجم (2MB)"
+                                          value={res.size}
+                                          onChange={(e) => updateResource(section.id, lesson.id, res.id, 'size', e.target.value)}
+                                          className="flex-1 text-xs border border-gray-200 rounded-md p-1.5 outline-none focus:border-primary dir-ltr"
+                                          style={{ flex: 1 }}
+                                        />
+                                      </div>
+                                    </div>
+                                  ))}
+                                  {(!lesson.resources || lesson.resources.length === 0) && (
+                                    <p className="text-[11px] text-gray-400 text-center py-2">لا يوجد مصادر مضافة لهذا الدرس.</p>
+                                  )}
+                                </div>
+                              </div>
                           </div>
 
                           <div className="shrink-0 mt-1">
