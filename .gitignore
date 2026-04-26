@@ -30,3 +30,4 @@ dist-ssr
 .env.test
 .env.staging
 .env.production.local
+serviceAccountKey.json
